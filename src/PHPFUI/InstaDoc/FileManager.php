@@ -222,7 +222,7 @@ class FileManager
 				}
 			else
 				{
-				$directory = str_replace('/', '\\', $directory);
+				$directory = str_replace('\\', '/', $directory);
 				$rdi = new \RecursiveDirectoryIterator($directory);
 				$iterator = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
 
@@ -248,7 +248,7 @@ class FileManager
 			return $files;
 			}
 
-		$directory = str_replace('/', '\\', $this->namespaces[$namespace][FileManager::REPO_ROOT]);
+		$directory = str_replace('\\', '/', $this->namespaces[$namespace][FileManager::REPO_ROOT]);
 		$rdi = new \RecursiveDirectoryIterator($directory);
 		$iterator = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
 
