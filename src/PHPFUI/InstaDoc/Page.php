@@ -4,11 +4,11 @@ namespace PHPFUI\InstaDoc;
 
 class Page extends \PHPFUI\Page
 	{
+	private $generating = '';
 
 	private $mainColumn;
 	private $menu;
 	private $parameters = [];
-	private $generating = '';
 
 	public function __construct()
 		{
@@ -40,6 +40,7 @@ class Page extends \PHPFUI\Page
 		$searchIcon = new \PHPFUI\FAIcon('fas', 'search');
 		$this->addSearchModal($searchIcon);
 		$titleBar->addRight($searchIcon);
+
 		if (! $this->generating)
 			{
 			$configIcon = new \PHPFUI\FAIcon('fas', 'cog');

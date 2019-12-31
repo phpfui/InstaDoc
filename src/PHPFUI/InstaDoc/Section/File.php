@@ -11,7 +11,7 @@ class File extends \PHPFUI\InstaDoc\Section
 
 		$parameters = $this->controller->getParameters();
 
-		$page->addStyleSheet("/css/Highlight/{$parameters['CSS']}.css");
+		$page->addStyleSheet("highlighter/styles/{$parameters['CSS']}.css");
 		$page->addCSS("code{tab-size:{$parameters['t']};-moz-tab-size:{$parameters['t']}}");
 		$hl = new \Highlight\Highlighter();
 		$php = file_get_contents(str_replace('\\', '/', $fullClassPath));

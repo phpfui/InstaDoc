@@ -4,14 +4,17 @@ namespace PHPFUI\InstaDoc;
 
 class Controller
 	{
+
+	// parameters
+	public const CLASS_NAME = 'c';
+	public const CSS_FILE = 'CSS';
+
 	// pages
 	public const DOC_PAGE = 'd';
 	public const FILE_PAGE = 'f';
 	public const GIT_PAGE = 'g';
 
-	// parameters
-	public const CLASS_NAME = 'c';
-	public const CSS_FILE = 'CSS';
+	// additional parameters
 	public const NAMESPACE = 'n';
 	public const PAGE = 'p';
 	public const TAB_SIZE = 't';
@@ -32,6 +35,7 @@ class Controller
 	private $accordionMenu = null;
 	private $currentPage = Controller::DOC_PAGE;
 	private $fileManager;
+	private $generating = '';
 	private $homePageMarkdown = [];
 
 	private $page;
@@ -40,7 +44,6 @@ class Controller
 	private $requestedNamespace = '';
 	private $requestedTs = 2;
 	private $siteTitle = 'PHPFUI/InstaDoc';
-	private $generating = '';
 
 	public function __construct(FileManager $fileManager)
 		{
@@ -125,11 +128,15 @@ class Controller
 		// add in the index file
 		file_put_contents($directoryPath . 'index' . $extension, $this->display());
 
+		$namespaces = [];
+
 		// loop through all classes and generate all requested pages and namespaces
 		$namespaceTree = new NamespaceTree();
+
 		foreach ($namespaceTree->getAllClasses() as $path => $class)
 			{
 			$parameters = $this->getClassParts($class);
+			$namespaces[$parameters[Controller::NAMESPACE]] = true;
 
 			foreach ($pagesToInclude as $page)
 				{
@@ -138,6 +145,14 @@ class Controller
 				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
 				}
 			}
+
+		$parameters = [];
+
+		foreach ($namespaces as $namespace => $value)
+			{
+			$parameters[Controller::NAMESPACE] = $namespace;
+			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+		}
 
 		$this->generating = '';
 
@@ -149,6 +164,7 @@ class Controller
 		$parts = explode('\\', $namespacedClass);
 		$namespace = '';
 		$backSlash = '';
+
 		while (count($parts) > 1)
 			{
 			$namespace .= $backSlash . array_shift($parts);
@@ -222,7 +238,8 @@ class Controller
 	public function getPage() : \PHPFUI\Page
 		{
 		$page = new Page();
-		$page->addStyleSheet('/css/styles.css');
+		$page->addStyleSheet('css/styles.css');
+
 		return $page;
 		}
 
@@ -257,6 +274,7 @@ class Controller
 			}
 
 		$class = 'PHPFUI\\InstaDoc\\Section\\' . ucfirst($sectionName);
+
 		return new $class($this);
 		}
 
@@ -270,6 +288,7 @@ class Controller
 			}
 
 		$parts = [];
+
 		foreach (Controller::VALID_STATIC_PARTS as $part)
 			{
 			if (isset($parameters[$part]))

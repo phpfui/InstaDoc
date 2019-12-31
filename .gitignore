@@ -3,8 +3,8 @@
 .picasa.ini
 .viminfo
 vendor/
-www/temp/
-FileManager.json
 *.cache
+*.bat
 phpunit.xml
+
 

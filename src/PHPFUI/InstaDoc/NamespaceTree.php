@@ -6,13 +6,13 @@ class NamespaceTree
 	{
 	private static $activeClass;
 	private static $activeNamespace;
-	private static $controller;
-	private static $root = null;
 
 	private $children = [];
 	private $classes = [];
+	private static $controller;
 	private $namespace = '';
 	private $parent = null;
+	private static $root = null;
 
 	/**
 	 * Returns array of all classes
@@ -27,6 +27,7 @@ class NamespaceTree
 			}
 
 		$classes = [];
+
 		foreach ($tree->children as $child)
 			{
 			$classes = array_merge($classes, $this->getAllClasses($child));
@@ -204,6 +205,7 @@ class NamespaceTree
 			{
 			$namespace = $child->getNamespace();
 			$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
+
 			if ($namespace == self::$activeNamespace)
 				{
 				$menuItem->setActive();

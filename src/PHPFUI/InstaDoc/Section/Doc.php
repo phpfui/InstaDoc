@@ -10,6 +10,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$container->add(new \PHPFUI\SubHeader('Docs'));
+		$fullClassPath = str_replace('\\', '/', $fullClassPath);
 		$container->add(new \PHPFUI\SubHeader($fullClassPath));
 
 		return $container;

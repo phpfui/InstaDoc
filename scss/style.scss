@@ -1,0 +1,609 @@
+@import 'settings';
+@import '../vendor/zurb/foundation/scss/foundation';
+@include foundation-everything;
+
+html {
+	overflow-x: hidden;
+}
+
+.close-reveal-modal {
+	color: red !important;
+}
+
+.red {
+	color: red !important;
+}
+
+.warning {
+	color: red;
+}
+
+footer {
+	padding-left: .5em;
+	padding-right: .5em;
+}
+
+p {
+	padding-right: .5em;
+}
+
+.main-section {
+	padding-top: 3em;
+}
+
+.url-upload input {
+	margin: 0;
+	padding: 0;
+}
+
+.link-wrapper input {
+	margin: 0;
+	padding: 0;
+}
+
+.icon {
+	margin: 0em .2em 0em .2em;
+}
+
+.size-12 {
+	font-size: 12px;
+}
+
+.size-14 {
+	font-size: 14px;
+}
+
+.size-16 {
+	font-size: 16px;
+}
+
+.size-18 {
+	font-size: 18px;
+}
+
+.size-21 {
+	font-size: 21px;
+}
+
+.size-24 {
+	font-size: 24px;
+}
+
+.size-36 {
+	font-size: 36px;
+}
+
+.size-48 {
+	font-size: 48px;
+}
+
+.size-60 {
+	font-size: 60px;
+}
+
+.size-72 {
+	font-size: 72px;
+}
+
+.autocomplete-suggestions {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 1px solid #999;
+	background: #FFF;
+	cursor: default;
+	overflow: auto;
+	-webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+	-moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+	box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+}
+
+.autocomplete-suggestion {
+	padding: 2px 5px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.autocomplete-no-suggestion {
+	padding: 2px 5px;
+}
+
+.autocomplete-selected {
+	background: $hover-gray;
+}
+
+.autocomplete-suggestions strong {
+	font-weight: bold;
+	color: #000;
+}
+.autocomplete-group { padding: 2px 5px; font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000; }
+
+button.small, .button.small {
+	padding-top: 0.875rem;
+	padding-right: 1rem;
+	padding-bottom: 0.9375rem;
+	padding-left: 1rem;
+	font-size: 0.8125rem;
+}
+
+button.tiny, .button.tiny {
+	padding-top: 0.625rem;
+	padding-right: 1rem;
+	padding-bottom: 0.6875rem;
+	padding-left: 1rem;
+	font-size: 0.6875rem;
+}
+
+select {
+	height: auto;
+}
+
+select[size], select[multiple] {
+	background-image: none;
+}
+
+input::placeholder {
+  color: black;
+	opacity: 1;
+}
+
+.sortableItem {
+	margin: 0.2em 0.2em 0.2em 0;
+	background-color: #f4f4f4;
+	padding: 0.5em 0.5em 0;
+	border: 1px solid grey;
+}
+
+.draggable {
+	cursor: pointer;
+	cursor: hand;
+}
+
+.ToFromList {
+	overflow: auto;
+	width: auto;
+	height: 15em;
+	min-height: 10em;
+	border-style: solid;
+	border-width: 0.1em;
+}
+
+img.imageCenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.icon-bar {
+	width: auto;
+}
+
+/* icon colors */
+
+.fa-trash-alt {
+	color: red !important;
+}
+
+.fa-thumbs-up {
+	color: green !important;
+}
+
+.fa-thumbs-down {
+	color: red !important;
+}
+
+.ride-cancelled {
+	color: red;
+	font-weight: 900;
+}
+
+.image-icon {
+	width:100%;
+	max-width:100px;
+}
+
+.slick-slider {
+	margin-bottom: 0;
+}
+
+.unaffiliated {
+	color: green;
+	font-weight: 700;
+}
+
+.folder:hover {
+	background-color: #dddddd;
+}
+
+.folder a {
+	display: block;
+	width:100%;
+	height:100%;
+}
+
+.folder {
+	background-color: #eeeeee;
+	color: black;
+	padding: 16px;
+}
+
+.disabled-label {
+  text-decoration: line-through;
+}
+
+.RadioTableCell {
+	padding: 0;
+	}
+
+.RadioTableButton {
+	padding: 1em 1em 0 1em;
+	}
+
+/* Disabled state */
+.checkbox-container:hover input:disabled ~ .checkmark {
+  cursor: not-allowed;
+  background: red;
+}
+.checkbox-container input:disabled ~ .checkmark {
+  cursor: not-allowed;
+  background: pink;
+}
+.checkbox-container:hover input:checked:disabled ~ .checkmark {
+  cursor: not-allowed;
+  background: red;
+}
+.checkbox-container input:checked:disabled ~ .checkmark {
+  cursor: not-allowed;
+  background: pink;
+}
+
+/* Customize the label (the checkbox-container) */
+.checkbox-container {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	padding-left: 1em;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkbox-container input {
+	opacity: 0;
+	cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+	position: absolute;
+	border: 1px solid black;
+	top: 0;
+	left: -1em;
+	height: 1.5em;
+	width: 1.5em;
+	background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.checkbox-container:hover input ~ .checkmark {
+	transition: .2s;
+	background-color: #bbb;
+}
+
+/* On mouse-over checked, mark blue darker */
+.checkbox-container:hover input:checked ~ .checkmark {
+	transition: .2s;
+	background-color: #007095;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkbox-container input:checked ~ .checkmark {
+	transition: .2s;
+	background-color: #008CBA;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+	display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox-container .checkmark:after {
+	left: 8px;
+	top: 4px;
+	width: 5px;
+	height: 10px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+/* disabled state */
+.radio-button:disabled + .radio-label {
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* label hover highlight */
+.radio-label:hover {
+	color: #555555;
+	font-weight: 700;
+}
+
+/* label checked highlight */
+.radio-button:checked + .radio-label {
+	font-weight: 700;
+  color: black;
+}
+
+/* radio button hover unselected */
+.radio-label:hover::before {
+	background-color: #ddd;
+	border: .1em solid black;
+}
+
+/* radio button selected hover */
+.radio-button:checked:hover + .radio-label::before {
+	white-space: pre;
+	content: "    ";
+	color: black;
+	background-color: #007095;
+	border: .1em solid black;
+}
+
+/* hide the browser radio button */
+.radio-button {
+	position: absolute;
+	opacity: 0;
+	visibility: hidden;
+}
+
+/* radio button selected */
+.radio-button:checked + .radio-label::before {
+	white-space: pre;
+	content: "    ";
+	color: black;
+	background-color: #008CBA;
+	border: .1em solid black;
+}
+
+/* radio label unselected */
+.radio-label {
+	align-items: center;
+	font-weight: 700;
+	color: grey;
+	cursor: pointer;
+	transition: all 0.10s linear;
+}
+
+/* radio button unselected */
+.radio-label::before {
+	white-space: pre;
+	content: "    ";
+	margin-right: .2em;
+	background-color: white;
+	border-radius: 50%;
+	transition: all 0.10s linear;
+	border: .1em solid black;
+}
+
+#calendar {
+	width: 100%;
+}
+
+#calendar a {
+	color: #8e352e;
+	text-decoration: none;
+}
+
+header {
+			text-align: center;
+			font-size: 1.6875rem;
+}
+
+#calendar ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
+#calendar li {
+	display: block;
+	float: left;
+	width:14.342%;
+	padding: 5px;
+	box-sizing:border-box;
+	border: 1px solid #ccc;
+	margin-right: -1px;
+	margin-bottom: -1px;
+}
+
+#calendar ul.weekdays {
+	height: 40px;
+	background: #8e352e;
+}
+
+#calendar ul.weekdays li {
+	text-align: center;
+	text-transform: uppercase;
+	line-height: 20px;
+	border: none !important;
+	padding: 10px 6px;
+	color: #fff;
+	font-size: 13px;
+}
+
+#calendar .days li {
+	height: 180px;
+}
+
+#calendar .days li:hover {
+	background: #d3d3d3;
+}
+
+#calendar .date {
+	text-align: center;
+	margin-bottom: 5px;
+	padding: 4px;
+	background: #333;
+	color: #fff;
+	width: 2em;
+	border-radius: 50%;
+	float: right;
+}
+
+#calendar .today {
+	background: #76df9d;
+}
+
+#calendar .holiday {
+	background: fuchsia;
+	}
+
+#calendar .event {
+	clear: both;
+	display: block;
+	font-size: 13px;
+	border-radius: 4px;
+	padding: 5px;
+	margin-bottom : 5px;
+	line-height: 14px;
+	background: #e4f2f2;
+	border: 1px solid #b5dbdc;
+	color: #009aaf;
+	text-decoration: none;
+}
+
+#calendar .event-desc {
+	color: #666;
+	margin: 3px 0 7px 0;
+	text-decoration: none;
+}
+
+#calendar .other-month {
+  background: #bbbbbb;
+  color: #222222;
+}
+
+/* ============================
+				Mobile Responsiveness
+   ============================*/
+
+
+@media(max-width: 1024px) {
+
+	#calendar .weekdays, #calendar .other-month {
+		display: none;
+	}
+
+	#calendar li {
+		height: auto !important;
+		border: 1px solid #ededed;
+		width: 100%;
+		padding: 10px;
+		margin-bottom: -1px;
+	}
+
+	#calendar .date {
+		float: none;
+	}
+}
+
+
+.accordion-menu {
+  // background for main accordion items
+  .is-accordion-submenu-parent {
+    background: $light-gray;
+  }
+
+  .is-accordion-submenu-parent:hover {
+    background: $hover-gray;
+  }
+
+  .is-accordion-submenu-item {
+    padding-left: 1rem;
+  }
+
+	// background for sub accordion items
+  .is-accordion-submenu.menu {
+    background: white;
+  }
+  .is-accordion-submenu.menu a:hover {
+    background: $hover-gray;
+  }
+  .is-accordion-submenu.menu .is-active a:hover {
+    color: black;
+  }
+}
+
+.main-column {
+	padding: 0 0.5em;
+}
+
+.dropdown {
+	margin-right: 0.25em;
+}
+
+.menu li:hover {
+    background: $hover-gray;
+}
+
+$shadow-depth: 1px;
+$shadow-blur: 5px;
+
+$button-shadow: $shadow-depth $shadow-depth $shadow-blur 0px rgba(0,0,0,0.6);
+
+.button {
+	box-shadow: $button-shadow;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
+}
+
+.button:active {
+	top: $shadow-depth;
+	left: $shadow-depth;
+	box-shadow: 0 0 black;
+}
+
+.button {
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.btn:after {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.vertical-line {
+	width: 1px;
+	background-color: white;
+	height: 100%;
+}
+
+.title-bar a {
+	color: white;
+}
+
+.button-group {
+  flex-wrap: wrap;
+}
+
