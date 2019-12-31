@@ -32,11 +32,12 @@ class Section
 		return $breadCrumbs;
 		}
 
-	public function getMenu(string $namespace) : \PHPFUI\Menu
+	public function getMenu(string $className) : \PHPFUI\Menu
 		{
 		$menu = new \PHPFUI\Menu();
 
-		$currentPage = $this->controller->getParameters()['p'];
+		$currentPage = $this->controller->getParameters()[Controller::PAGE];
+		$this->controller->setParameters($this->controller->getClassParts($className));
 		$docItem = new \PHPFUI\MenuItem('Docs', $this->controller->getPageUrl(Controller::DOC_PAGE));
 		$docItem->setActive(Controller::DOC_PAGE == $currentPage);
 		$menu->addMenuItem($docItem);

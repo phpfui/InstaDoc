@@ -6,13 +6,41 @@ class NamespaceTree
 	{
 	private static $activeClass;
 	private static $activeNamespace;
-	private static $baseUrl;
+	private static $controller;
+	private static $root = null;
+
 	private $children = [];
 	private $classes = [];
 	private $namespace = '';
 	private $parent = null;
 
-	private static $root = null;
+	/**
+	 * Returns array of all classes
+	 */
+  public function getAllClasses(?NamespaceTree $tree = null) : array
+		{
+		if (! $tree)
+			{
+			$tree = self::$root;
+			// sort it to be sure
+			self::sort($tree);
+			}
+
+		$classes = [];
+		foreach ($tree->children as $child)
+			{
+			$classes = array_merge($classes, $this->getAllClasses($child));
+			}
+
+		$namespace = $tree->getNamespace();
+
+		foreach ($tree->classes as $class => $path)
+			{
+			$classes[$path] = $namespace . '\\' . $class;
+			}
+
+		return $classes;
+		}
 
 	/**
 	 * Return all the child namespaces of the current node.
@@ -142,12 +170,12 @@ class NamespaceTree
 		}
 
 	/**
-	 * Set the baseURL of the documentation. Used for creating
-	 * links so all documentation is at the same url.
+	 * Set the Controller. Used for creating links so all
+	 * documentation is at the same url.
 	 */
-	public function setBaseUrl(string $baseUrl) : void
+	public function setController(Controller $controller) : void
 		{
-		self::$baseUrl = $baseUrl;
+		self::$controller = $controller;
 		}
 
 	/**
@@ -175,7 +203,7 @@ class NamespaceTree
 		foreach ($tree->children as $child)
 			{
 			$namespace = $child->getNamespace();
-			$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace); //, self::$baseUrl."?n={$namespace}");
+			$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
 			if ($namespace == self::$activeNamespace)
 				{
 				$menuItem->setActive();
@@ -186,7 +214,7 @@ class NamespaceTree
 
 		foreach ($tree->classes as $class => $path)
 			{
-			$menuItem = new \PHPFUI\MenuItem($class, self::$baseUrl . "?n={$namespace}&c={$class}");
+			$menuItem = new \PHPFUI\MenuItem($class, self::$controller->getClassURL($namespace . '\\' . $class));
 
 			if ($class == self::$activeClass && $namespace == self::$activeNamespace)
 				{
@@ -194,7 +222,7 @@ class NamespaceTree
 				}
 			$currentMenu->addMenuItem($menuItem);
 			}
-		$menuItem = new \PHPFUI\MenuItem('\\' . $tree->namespace); //, self::$baseUrl."?n={$namespace}");
+		$menuItem = new \PHPFUI\MenuItem('\\' . $tree->namespace);
 		$menu->addSubMenu($menuItem, $currentMenu);
 
 		return $currentMenu;

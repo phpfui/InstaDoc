@@ -32,3 +32,12 @@ $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
 echo $controller->display();
 ```
 That is it. You are done!
+
+#### To Do List:
+
+ * Generate static files
+ * Create Doc page (the whole point, but do the easy stuff first!)
+ * Add installation script
+ * Add more documentation
+ * Allow for customizable pages (not 100% yet)
+ * .git page

@@ -9,15 +9,16 @@ class Git extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
-		$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
-		$tree = $repo->getHeadCommit()->getTree();
-		$fullClassPath = substr(str_replace('\\', '/', $fullClassPath), 3);
-		$source = $tree->resolvePath($fullClassPath);
-		$entries = $source->getEntries();
-		$pre = new \PHPFUI\HTML5Element('pre');
-		$pre->add($fullClassPath);
-		$pre->add(print_r($entries, true));
-		$container->add($pre);
+//		$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
+//		$tree = $repo->getHeadCommit()->getTree();
+//		$fullClassPath = substr(str_replace('\\', '/', $fullClassPath), 3);
+//		$source = $tree->resolvePath($fullClassPath);
+//		$entries = $source->getEntries();
+//		$pre = new \PHPFUI\HTML5Element('pre');
+//		$pre->add($fullClassPath);
+//		$pre->add(print_r($entries, true));
+//		$container->add($pre);
+		$container->add('.git section coming soon.');
 
 		return $container;
 		}

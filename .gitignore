@@ -5,5 +5,5 @@
 vendor/
 www/temp/
 FileManager.json
-.php_cs.cache
+*.cache
 

@@ -16,7 +16,19 @@ class Controller
 	public const PAGE = 'p';
 	public const TAB_SIZE = 't';
 
+	// allowed page sections
 	private const SECTIONS = ['git', 'file', 'doc', 'landing', 'home'];
+	private const VALID_PARAMETERS = [
+		Controller::NAMESPACE => '',
+		Controller::CLASS_NAME => '',
+		Controller::TAB_SIZE => '',
+		Controller::CSS_FILE => '',
+		Controller::PAGE => '',
+		];
+
+	// valid static page parameters
+	private const VALID_STATIC_PARTS = [Controller::NAMESPACE, Controller::CLASS_NAME, Controller::PAGE, ];
+
 	private $accordionMenu = null;
 	private $currentPage = Controller::DOC_PAGE;
 	private $fileManager;
@@ -27,53 +39,18 @@ class Controller
 	private $requestedCSS = 'qtcreator_dark';
 	private $requestedNamespace = '';
 	private $requestedTs = 2;
-	private $sections = [];
 	private $siteTitle = 'PHPFUI/InstaDoc';
+	private $generating = '';
 
 	public function __construct(FileManager $fileManager)
 		{
 		$this->fileManager = $fileManager;
 		$this->page = new Page();
 		\PHPFUI\Page::setDebug(1);
-		$this->page->addStyleSheet('/css/styles.css');
 
-		$this->sections['git'] = new Section\Git($this);
-		$this->sections['file'] = new Section\File($this);
-		$this->sections['doc'] = new Section\Doc($this);
-		$this->sections['landing'] = new Section\Landing($this);
-		$this->sections['home'] = new Section\Home($this);
-
-		$this->parameters = $this->page->getQueryParameters();
-
-		foreach ($this->parameters as $parameter => $value)
+		foreach ($this->page->getQueryParameters() as $parameter => $value)
 			{
-			switch ($parameter)
-				{
-				case Controller::NAMESPACE:
-					$this->requestedNamespace = $value;
-
-					break;
-
-				case Controller::CLASS_NAME:
-					$this->requestedClass = $value;
-
-					break;
-
-				case Controller::TAB_SIZE:
-					$this->requestedTs = $value;
-
-					break;
-
-				case Controller::CSS_FILE:
-					$this->requestedCSS = $value;
-
-					break;
-
-				case Controller::PAGE:
-					$this->currentPage = $value;
-
-					break;
-				}
+			$this->setParameter($parameter, $value);
 			}
 		}
 
@@ -87,6 +64,7 @@ class Controller
 	public function display() : string
 		{
 		$page = $this->getPage();
+		$page->setGenerating($this->generating);
 		$page->setParameters($this->getParameters());
 		$page->create($this->siteTitle, $this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
@@ -102,7 +80,7 @@ class Controller
 			$fullClassPath = $tree->getPathForClass($this->requestedClass);
 			$section = new Section($this);
 			$mainColumn->add($section->getBreadCrumbs($fullClassName));
-			$mainColumn->add($section->getMenu($this->requestedNamespace));
+			$mainColumn->add($section->getMenu($fullClassName));
 
 			if (Controller::DOC_PAGE == $this->currentPage)
 				{
@@ -130,19 +108,65 @@ class Controller
 		return "{$page}";
 		}
 
-	public function generate(string $path, string $extension = '.html') : Controller
+	/**
+	 * Generate static files for high volume sites.  Pass the path to the directory where you want the files to be placed, it must exist.
+	 */
+	public function generate(string $directoryPath, array $pagesToInclude = [Controller::DOC_PAGE], string $extension = '.html') : Controller
 		{
+		if (! file_exists($directoryPath))
+			{
+			throw new \Exception("The directory {$directoryPath} does not exist");
+			}
+		$this->generating = $extension;
+		$directoryPath .= '/';
+
+		$directoryPath = str_replace('//', '/', $directoryPath);
+
+		// add in the index file
+		file_put_contents($directoryPath . 'index' . $extension, $this->display());
+
+		// loop through all classes and generate all requested pages and namespaces
+		$namespaceTree = new NamespaceTree();
+		foreach ($namespaceTree->getAllClasses() as $path => $class)
+			{
+			$parameters = $this->getClassParts($class);
+
+			foreach ($pagesToInclude as $page)
+				{
+				$parameters[Controller::PAGE] = $page;
+				$this->setParameters($parameters);
+				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+				}
+			}
+
+		$this->generating = '';
+
 		return $this;
 		}
 
-	public function getClassURL(string $namespace, string $class) : string
+	public function getClassParts(string $namespacedClass) : array
 		{
-		$parameters = $this->parameters;
+		$parts = explode('\\', $namespacedClass);
+		$namespace = '';
+		$backSlash = '';
+		while (count($parts) > 1)
+			{
+			$namespace .= $backSlash . array_shift($parts);
+			$backSlash = '\\';
+			}
+		$class = $parts[0];
 
-		unset($parameters['submit']);
-		$parameters[Controller::NAMESPACE] = $namespace;
-		$parameters[Controller::CLASS_NAME] = $class;
-		$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
+		$parameters = [
+			Controller::NAMESPACE => $namespace,
+			Controller::CLASS_NAME => $class,
+			];
+
+		return $parameters;
+		}
+
+	public function getClassURL(string $namespacedClass) : string
+		{
+		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE] + $this->getClassParts($namespacedClass) + $this->getParameters());
 
 		return $url;
 		}
@@ -159,20 +183,20 @@ class Controller
 
 	public function getLandingPageUrl(string $namespace) : string
 		{
-		$parameters = $this->parameters;
+		$parameters = $this->getParameters();
 
-		unset($parameters['submit']);
 		$parameters[Controller::NAMESPACE] = $namespace;
 		unset($parameters[Controller::CLASS_NAME], $parameters[Controller::PAGE]);
 
-		$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
+		$url = $this->getUrl($parameters);
 
 		return $url;
 		}
 
 	public function getMenu() : \PHPFUI\AccordionMenu
 		{
-		if ($this->accordionMenu)
+		// cache if not generating static docs
+		if (! $this->generating && $this->accordionMenu)
 			{
 			return $this->accordionMenu;
 			}
@@ -188,7 +212,7 @@ class Controller
 		$iterator = new NamespaceTree();
 		$iterator->setActiveClass($this->requestedClass);
 		$iterator->setActiveNamespace($this->requestedNamespace);
-		$iterator->setBaseUrl($this->page->getBaseURL());
+		$iterator->setController($this);
 		$this->accordionMenu = new \PHPFUI\AccordionMenu();
 		$iterator->populateMenu($this->accordionMenu);
 
@@ -197,16 +221,17 @@ class Controller
 
 	public function getPage() : \PHPFUI\Page
 		{
-		return clone $this->page;
+		$page = new Page();
+		$page->addStyleSheet('/css/styles.css');
+		return $page;
 		}
 
 	public function getPageURL(string $page) : string
 		{
-		$parameters = $this->parameters;
+		$parameters = $this->getParameters();
 
-		unset($parameters['submit']);
 		$parameters[Controller::PAGE] = $page;
-		$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
+		$url = $this->getUrl($parameters);
 
 		return $url;
 		}
@@ -231,7 +256,31 @@ class Controller
 			throw new \Exception("{$sectionName} is not one of " . implode(', ', $sections));
 			}
 
-		return clone $this->sections[$sectionName];
+		$class = 'PHPFUI\\InstaDoc\\Section\\' . ucfirst($sectionName);
+		return new $class($this);
+		}
+
+	public function getUrl(array $parameters) : string
+		{
+		if (! $this->generating)
+			{
+			$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
+
+			return $url;
+			}
+
+		$parts = [];
+		foreach (Controller::VALID_STATIC_PARTS as $part)
+			{
+			if (isset($parameters[$part]))
+				{
+				$parts[] = str_replace('\\', '_', $parameters[$part]);
+				}
+			}
+
+		$url = implode('_', $parts) . $this->generating;
+
+		return $url;
 		}
 
 	public function setPage(\PHPFUI\Page $page) : Controller
@@ -244,6 +293,49 @@ class Controller
 	public function setPageTitle(string $title) : Controller
 		{
 		$this->siteTitle = $title;
+
+		return $this;
+		}
+
+	public function setParameter(string $parameter, string $value) : Controller
+		{
+		switch ($parameter)
+			{
+			case Controller::NAMESPACE:
+				$this->requestedNamespace = $value;
+
+				break;
+
+			case Controller::CLASS_NAME:
+				$this->requestedClass = $value;
+
+				break;
+
+			case Controller::TAB_SIZE:
+				$this->requestedTs = $value;
+
+				break;
+
+			case Controller::CSS_FILE:
+				$this->requestedCSS = $value;
+
+				break;
+
+			case Controller::PAGE:
+				$this->currentPage = $value;
+
+				break;
+			}
+
+		return $this;
+		}
+
+	public function setParameters(array $parameters) : Controller
+		{
+		foreach ($parameters as $key => $value)
+			{
+			$this->setParameter($key, $value);
+			}
 
 		return $this;
 		}

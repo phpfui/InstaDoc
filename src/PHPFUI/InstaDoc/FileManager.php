@@ -8,7 +8,7 @@ class FileManager
 	private const NAMESPACE = '.Namespace';
 
 	private const REPO_ROOT = '.Root';
-	private const ROOT_NAMESPACE = 'No Namespace';
+	private const ROOT_NAMESPACE = '\\';
 	private $composerJsonPath = '';
 	private $excludedNamespaces = [];
 	private $includedNamespaces = [];

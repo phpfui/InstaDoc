@@ -8,6 +8,7 @@ class Page extends \PHPFUI\Page
 	private $mainColumn;
 	private $menu;
 	private $parameters = [];
+	private $generating = '';
 
 	public function __construct()
 		{
@@ -39,9 +40,12 @@ class Page extends \PHPFUI\Page
 		$searchIcon = new \PHPFUI\FAIcon('fas', 'search');
 		$this->addSearchModal($searchIcon);
 		$titleBar->addRight($searchIcon);
-		$configIcon = new \PHPFUI\FAIcon('fas', 'cog');
-		$this->addConfigModal($configIcon);
-		$titleBar->addRight($configIcon);
+		if (! $this->generating)
+			{
+			$configIcon = new \PHPFUI\FAIcon('fas', 'cog');
+			$this->addConfigModal($configIcon);
+			$titleBar->addRight($configIcon);
+			}
 
 		$div = new \PHPFUI\HTML5Element('div');
 		$stickyTitleBar = new \PHPFUI\Sticky($div);
@@ -73,7 +77,7 @@ class Page extends \PHPFUI\Page
 		$menu = new \PHPFUI\Menu();
 		$menu->addClass('simple');
 		$menu->addMenuItem(new \PHPFUI\MenuItem('Powered By'));
-		$menu->addMenuItem(new \PHPFUI\MenuItem('PHPFUI/InstaDoc', 'https:://www.phpfui.com'));
+		$menu->addMenuItem(new \PHPFUI\MenuItem('PHPFUI/InstaDoc', 'https://www.phpfui.com'));
 		$menu->addMenuItem(new \PHPFUI\MenuItem('github', 'https://github.com/phpfui/InstaDoc'));
 
 		$footer->addLeft($menu);
@@ -82,6 +86,13 @@ class Page extends \PHPFUI\Page
 		$footer->addRight("&copy; {$year} Bruce Wells");
 
 		$this->add($footer);
+		}
+
+	public function setGenerating(string $generating) : Page
+		{
+		$this->generating = $generating;
+
+		return $this;
 		}
 
 	public function setParameters(array $parameters) : Page
