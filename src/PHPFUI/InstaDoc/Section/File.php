@@ -14,7 +14,7 @@ class File extends \PHPFUI\InstaDoc\Section
 		$page->addStyleSheet("/css/Highlight/{$parameters['CSS']}.css");
 		$page->addCSS("code{tab-size:{$parameters['t']};-moz-tab-size:{$parameters['t']}}");
 		$hl = new \Highlight\Highlighter();
-		$php = file_get_contents($fullClassPath);
+		$php = file_get_contents(str_replace('\\', '/', $fullClassPath));
 
 		// Highlight some code.
 		$highlighted = $hl->highlight('php', $php);
