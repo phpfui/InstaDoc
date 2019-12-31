@@ -12,7 +12,7 @@
 				}
 		],
 		"require": {
-				"php": ">=7.1",
+				"php": ">=7.2",
 				"phpfui/phpfui": "^6.0",
 				"erusev/parsedown": "^1.7",
 				"gitonomy/gitlib": "dev-master",
