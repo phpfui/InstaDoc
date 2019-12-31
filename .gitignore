@@ -6,4 +6,5 @@ vendor/
 www/temp/
 FileManager.json
 *.cache
+phpunit.xml
 
