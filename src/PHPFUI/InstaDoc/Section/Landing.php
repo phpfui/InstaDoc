@@ -22,17 +22,22 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 		$parsedown = new \Parsedown();
 		$files = $this->controller->getFileManager()->getFilesInRepository($namespace, '.md');
-		$hr = '';
 
-		foreach ($files as $file)
+		if (count($files))
 			{
-			if (stripos($file, 'readme.md'))
+			$accordion = new \PHPFUI\Accordion();
+			$accordion->addAttribute('data-allow-all-closed', 'true');
+			$container->add(new \PHPFUI\SubHeader('Package Documentation'));
+			foreach ($files as $file)
 				{
-				$container->add($hr);
-				$hr = '<hr>';
+				$parts = explode('/', str_replace('\\', '/', $file));
+				$section = array_pop($parts);
+				$section = str_replace('_', ' ', strtolower($section));
+				$section = str_replace('.md', '', $section);
 				$md = file_get_contents($file);
-				$container->add($parsedown->text($md));
+				$accordion->addTab(ucwords($section), $parsedown->text($md));
 				}
+			$container->add($accordion);
 			}
 
 		return $container;

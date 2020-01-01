@@ -4879,7 +4879,6 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
   font-size: 1.5rem;
   color: #000000;
   cursor: default;
-  text-transform: uppercase;
 }
 .breadcrumbs li:not(:last-child)::after {
   position: relative;

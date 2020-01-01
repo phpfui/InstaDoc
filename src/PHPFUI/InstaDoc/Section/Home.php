@@ -21,6 +21,7 @@ class Home extends \PHPFUI\InstaDoc\Section
 		$container->add(new \PHPFUI\SubHeader('Package Documentation'));
 		$libraries = $this->controller->getFileManager()->getAllNamespaceDirectories(false);
 
+		$uniqueFiles = [];
 		foreach ($libraries as $namespace => $value)
 			{
 			$files = $this->controller->getFileManager()->getFilesInRepository($namespace, '.md');
@@ -29,8 +30,19 @@ class Home extends \PHPFUI\InstaDoc\Section
 				{
 				if (stripos($file, 'readme.md'))
 					{
-					$md = file_get_contents($file);
-					$accordion->addTab($namespace . ' Readme', $parsedown->text($md));
+					$file = str_replace('\\', '/', $file);
+					if (! isset($uniqueFiles[$file]))
+						{
+						$uniqueFiles[$file] = true;
+						$md = file_get_contents($file);
+						$parts = explode('/', $file);
+						$package = $parts[count($parts) - 2];
+						if ($namespace == '\\')
+							{
+							$namespace = '';
+							}
+						$accordion->addTab($namespace . '\\' . $package . ' Readme', $parsedown->text($md));
+						}
 					}
 				}
 			}

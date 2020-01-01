@@ -14,8 +14,8 @@ But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, mayb
 ## PHPFUI\InstaDoc Features
  * Always up to date, even with code that is not yet checked in
  * Documents all projects loaded via Composer automatically
-	* Add any local repo directories
-	* Remove any Composer project you don't care about
+ * Add any local repo directories
+ * Remove any Composer project you don't care about
  * Custom ordering of types (const, static, public, protected, etc.)
  * Alphabetized everything, no more searching unalphabetized pages!
  * Support for markdown and custom markdown pages
@@ -32,9 +32,9 @@ composer require phpfui/InstaDoc
 ### Run Installation Script
 Once installed, you need to run an installation script to copy static files to to your public directory.  From the project root, run the following:
 
-php vendor/phpfui/InstaDoc/install.php yourPublicDirectory/subDirectory
+php vendor/phpfui/instadoc/install.php yourPublicDirectory/subDirectory
 
-Example: php vendor/phpfui/instadoc/install.php public/PHPFUI will add all needed files to public/PHPFUI, which will avoid any conflicts with your current files.  You can specify any directory, but PHPFUI is recomended to keep things simple.
+Example: php vendor/phpfui/instadoc/install.php public/PHPFUI will add all needed files to public/PHPFUI, which will avoid any conflicts with your current files.  You can specify any directory by using \PHPFUI\Page::setResourcePath, but PHPFUI is recomended to keep things simple.
 
 ### Create Document Page
 PHPFUI\InstaDoc does not reply on any framework and can run on a standalone page. It is recommended that you do not make your documentation public, as PHPFUI\InstaDoc will display PHP source files. How you restrict access to the page is up to you.  The following does not restrict access and is simply an example:
@@ -54,5 +54,4 @@ That is it. You are done!
 
  * Create Doc page (the whole point, but do the easy stuff first!)
  * Add more documentation
- * Allow for customizable pages (not 100% yet)
  * .git page

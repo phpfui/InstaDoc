@@ -37,17 +37,17 @@ class Section
 		$menu = new \PHPFUI\Menu();
 
 		$currentPage = $this->controller->getParameters()[Controller::PAGE];
-		$this->controller->setParameters($this->controller->getClassParts($className));
+		$parts = $this->controller->getClassParts($className);
+		$this->controller->setParameters($parts);
 		$docItem = new \PHPFUI\MenuItem('Docs', $this->controller->getPageUrl(Controller::DOC_PAGE));
 		$docItem->setActive(Controller::DOC_PAGE == $currentPage);
 		$menu->addMenuItem($docItem);
 		$fileItem = new \PHPFUI\MenuItem('File', $this->controller->getPageUrl(Controller::FILE_PAGE));
 		$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
 		$menu->addMenuItem($fileItem);
-		//			if ($this->controller->getFileManager()->getGit($namespace))
-		if (false)
+		if ($this->controller->getFileManager()->getGit($parts[Controller::NAMESPACE]))
 			{
-			$gitItem = new \PHPFUI\MenuItem('.git', $this->controller->getPageUrl(Controller::GIT_PAGE));
+			$gitItem = new \PHPFUI\MenuItem('Git', $this->controller->getPageUrl(Controller::GIT_PAGE));
 			$gitItem->setActive(Controller::GIT_PAGE == $currentPage);
 			$menu->addMenuItem($gitItem);
 			}

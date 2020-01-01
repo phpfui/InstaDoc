@@ -184,7 +184,7 @@ class FileManager
 
 			if (0 === strpos($class, $namespace))
 				{
-				$class = substr($class, strlen($namespace) + 1);
+				$class = substr($class, strlen($namespace));
 				}
 			$classes[$file] = substr($class, 0, strlen($class) - strlen($extension));
 			}
@@ -270,7 +270,9 @@ class FileManager
 	 */
 	public function getGit(string $namespace) : bool
 		{
-		return $this->namespaces[$namespace][FileManager::GIT] ?? false;
+		$parts = explode('\\', $namespace);
+
+		return $this->namespaces[$parts[0]][FileManager::GIT] ?? false;
 		}
 
 	/**

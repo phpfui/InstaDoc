@@ -6,13 +6,13 @@ class NamespaceTree
 	{
 	private static $activeClass;
 	private static $activeNamespace;
+	private static $controller;
+	private static $root = null;
 
 	private $children = [];
 	private $classes = [];
-	private static $controller;
 	private $namespace = '';
 	private $parent = null;
-	private static $root = null;
 
 	/**
 	 * Returns array of all classes
@@ -21,13 +21,12 @@ class NamespaceTree
 		{
 		if (! $tree)
 			{
-			$tree = self::$root;
+			$tree = $this->getRoot();
 			// sort it to be sure
 			self::sort($tree);
 			}
 
 		$classes = [];
-
 		foreach ($tree->children as $child)
 			{
 			$classes = array_merge($classes, $this->getAllClasses($child));
@@ -69,7 +68,7 @@ class NamespaceTree
 
 		$tree = $this->parent;
 
-		while ($tree)
+		while ($tree && $namespace)
 			{
 			$namespace = $tree->namespace . '\\' . $namespace;
 			$tree = $tree->parent;
@@ -86,16 +85,11 @@ class NamespaceTree
 	 */
 	public static function getNamespaceTree(string $fullClassName, string $path = '') : NamespaceTree
 		{
-		if (! self::$root)
-			{
-			self::$root = new NamespaceTree();
-			}
-
-		$parts = explode('\\', $fullClassName);
+		$parts = explode('\\', str_replace('\\\\', '\\', $fullClassName));
 		$rootNamespace = array_shift($parts);
 		$className = array_pop($parts);
 
-		if (! isset(self::$root->children[$rootNamespace]))
+		if (! isset(self::getRoot()->children[$rootNamespace]))
 			{
 			$root = new NamespaceTree();
 			$root->namespace = $rootNamespace;
@@ -140,13 +134,23 @@ class NamespaceTree
 		throw new \Exception("Class {$class} not found in namespace {$this->getNamespace()}");
 		}
 
+	public static function getRoot() : NamespaceTree
+		{
+		if (! self::$root)
+			{
+			self::$root = new NamespaceTree();
+			}
+
+		return self::$root;
+		}
+
 	/**
 	 * Populates a menu object with namespaces as sub menus and
 	 * classes as menu items.
 	 */
   public function populateMenu(\PHPFUI\Menu $menu) : void
 		{
-		self::sort(self::$root);
+		self::sort(self::getRoot());
 
 		foreach (self::$root->children as $child)
 			{
@@ -186,7 +190,7 @@ class NamespaceTree
 		{
 		if (! $tree)
 			{
-			$tree = self::root;
+			$tree = self::getRoot();
 			}
 		ksort($tree->classes);
 		ksort($tree->children);
@@ -205,7 +209,6 @@ class NamespaceTree
 			{
 			$namespace = $child->getNamespace();
 			$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
-
 			if ($namespace == self::$activeNamespace)
 				{
 				$menuItem->setActive();

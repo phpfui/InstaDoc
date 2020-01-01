@@ -2,18 +2,19 @@
 
 namespace PHPFUI\InstaDoc;
 
-class Page extends \PHPFUI\Page
+class Page extends \PHPFUI\Page implements PageInterface
 	{
-	private $generating = '';
 
 	private $mainColumn;
 	private $menu;
 	private $parameters = [];
+	private $generating = '';
 
 	public function __construct()
 		{
 		parent::__construct();
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
+		$this->addStyleSheet('css/styles.css');
 		}
 
 	public function addBody($item) : Page
@@ -23,13 +24,11 @@ class Page extends \PHPFUI\Page
 		return $this;
 		}
 
-	public function create(string $siteTitle, \PHPFUI\Menu $menu) : void
+	public function create(\PHPFUI\Menu $menu) : void
 		{
 		$this->menu = $menu;
 
-		$this->setPageName($siteTitle);
-
-		$link = new \PHPFUI\Link($this->getBaseURL(), $siteTitle, false);
+		$link = new \PHPFUI\Link($this->getBaseURL(), $this->getPageName(), false);
 
 		$titleBar = new \PHPFUI\TitleBar($link);
 		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
@@ -40,7 +39,6 @@ class Page extends \PHPFUI\Page
 		$searchIcon = new \PHPFUI\FAIcon('fas', 'search');
 		$this->addSearchModal($searchIcon);
 		$titleBar->addRight($searchIcon);
-
 		if (! $this->generating)
 			{
 			$configIcon = new \PHPFUI\FAIcon('fas', 'cog');
@@ -122,12 +120,14 @@ class Page extends \PHPFUI\Page
 			{
 			$fieldSet->add(new \PHPFUI\Input\Hidden($name, $value));
 			}
-		$cssSelector = new CSSSelector($this->parameters[Controller::CSS_FILE]);
+		$cssSelector = new CSSSelector($this, $this->parameters[Controller::CSS_FILE]);
 		$cssSelector->setLabel('Code Formating Style');
 		$cssSelector->setToolTip('Sets the style sheet for PHP code');
 		$fieldSet->add($cssSelector);
 
 		$tabStop = new \PHPFUI\Input\Number(Controller::TAB_SIZE, 'Tab Stop Spaces', $this->parameters[Controller::TAB_SIZE]);
+		$tabStop->setAttribute('min', 0);
+		$tabStop->setAttribute('max', 10);
 		$tabStop->setToolTip('Indent tabbed files with this number of spaces');
 		$fieldSet->add($tabStop);
 

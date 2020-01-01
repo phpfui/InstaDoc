@@ -4,17 +4,14 @@ namespace PHPFUI\InstaDoc;
 
 class Controller
 	{
-
-	// parameters
-	public const CLASS_NAME = 'c';
-	public const CSS_FILE = 'CSS';
-
 	// pages
 	public const DOC_PAGE = 'd';
 	public const FILE_PAGE = 'f';
 	public const GIT_PAGE = 'g';
 
-	// additional parameters
+	// parameters
+	public const CLASS_NAME = 'c';
+	public const CSS_FILE = 'CSS';
 	public const NAMESPACE = 'n';
 	public const PAGE = 'p';
 	public const TAB_SIZE = 't';
@@ -35,7 +32,6 @@ class Controller
 	private $accordionMenu = null;
 	private $currentPage = Controller::DOC_PAGE;
 	private $fileManager;
-	private $generating = '';
 	private $homePageMarkdown = [];
 
 	private $page;
@@ -44,6 +40,7 @@ class Controller
 	private $requestedNamespace = '';
 	private $requestedTs = 2;
 	private $siteTitle = 'PHPFUI/InstaDoc';
+	private $generating = '';
 
 	public function __construct(FileManager $fileManager)
 		{
@@ -69,7 +66,7 @@ class Controller
 		$page = $this->getPage();
 		$page->setGenerating($this->generating);
 		$page->setParameters($this->getParameters());
-		$page->create($this->siteTitle, $this->getMenu());
+		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
 
 		if (! $this->requestedClass && $this->requestedNamespace)
@@ -132,12 +129,10 @@ class Controller
 
 		// loop through all classes and generate all requested pages and namespaces
 		$namespaceTree = new NamespaceTree();
-
 		foreach ($namespaceTree->getAllClasses() as $path => $class)
 			{
 			$parameters = $this->getClassParts($class);
 			$namespaces[$parameters[Controller::NAMESPACE]] = true;
-
 			foreach ($pagesToInclude as $page)
 				{
 				$parameters[Controller::PAGE] = $page;
@@ -147,11 +142,10 @@ class Controller
 			}
 
 		$parameters = [];
-
 		foreach ($namespaces as $namespace => $value)
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
-			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+			file_put_contents($directoryPath .  $this->getUrl($parameters), $this->display());
 		}
 
 		$this->generating = '';
@@ -164,7 +158,6 @@ class Controller
 		$parts = explode('\\', $namespacedClass);
 		$namespace = '';
 		$backSlash = '';
-
 		while (count($parts) > 1)
 			{
 			$namespace .= $backSlash . array_shift($parts);
@@ -235,10 +228,10 @@ class Controller
 		return $this->accordionMenu;
 		}
 
-	public function getPage() : \PHPFUI\Page
+	public function getPage() : PageInterface
 		{
 		$page = new Page();
-		$page->addStyleSheet('css/styles.css');
+		$page->setPageName($this->siteTitle);
 
 		return $page;
 		}
@@ -288,7 +281,6 @@ class Controller
 			}
 
 		$parts = [];
-
 		foreach (Controller::VALID_STATIC_PARTS as $part)
 			{
 			if (isset($parameters[$part]))
@@ -300,13 +292,6 @@ class Controller
 		$url = implode('_', $parts) . $this->generating;
 
 		return $url;
-		}
-
-	public function setPage(\PHPFUI\Page $page) : Controller
-		{
-		$this->page = $page;
-
-		return $this;
 		}
 
 	public function setPageTitle(string $title) : Controller
@@ -355,17 +340,6 @@ class Controller
 			{
 			$this->setParameter($key, $value);
 			}
-
-		return $this;
-		}
-
-	public function setSection(string $sectionName, Section $section) : Controller
-		{
-		if (! in_array($sectionName, Controller::SECTIONS))
-			{
-			throw new \Exception("{$sectionName} is not one of " . implode(', ', $sections));
-			}
-		$this->sections[$sectionName] = $section;
 
 		return $this;
 		}
