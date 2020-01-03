@@ -16,7 +16,7 @@ But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, mayb
  * Documents all projects loaded via Composer automatically
  * Add any local repo directories
  * Remove any Composer project you don't care about
- * Custom ordering of types (const, static, public, protected, etc.)
+ * Tabbed documentation so you are not looking at irrelevant methods
  * Alphabetized everything, no more searching unalphabetized pages!
  * Support for markdown and custom markdown pages
  * Quick access to highlighed PHP source with user selectable highlighting
@@ -52,6 +52,5 @@ That is it. You are done!
 
 #### To Do List:
 
- * Create Doc page (the whole point, but do the easy stuff first!)
  * Add more documentation
  * .git page
