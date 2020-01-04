@@ -6,6 +6,5 @@ vendor/
 *.cache
 *.bat
 phpunit.xml
-composer.lock
 
 
