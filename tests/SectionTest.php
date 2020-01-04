@@ -38,7 +38,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 				}
 			}
 
-		$this->fileManager = new \PHPFUI\InstaDoc\FileManager('./');
+		$this->fileManager = new \PHPFUI\InstaDoc\FileManager('src/');
 		$this->fileManager->load();
 		$this->controller = new \PHPFUI\InstaDoc\Controller($this->fileManager);
 		}
@@ -48,17 +48,17 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		$this->assertNotEmpty($this->sections, 'No PHPFUI\InstaDoc\Section classes found');
 		}
 
-//	public function testSectionsGenerateValidHTML() : void
-//		{
-//		$page = new \PHPFUI\Page();
-//
-//		foreach ($this->sections as $section)
-//			{
-//			$sectionObject = new $section($this->controller);
-//			$container = $sectionObject->generate($page, 'src/' . $section . '.php');
-//			$this->assertValidHtml("{$container}");
-//			}
-//		}
+	public function testSectionsGenerateValidHTML() : void
+		{
+		$page = new \PHPFUI\Page();
+
+		foreach ($this->sections as $section)
+			{
+			$sectionObject = new $section($this->controller);
+			$container = $sectionObject->generate($page, $section . '.php');
+			$this->assertValidHtml("{$container}");
+			}
+		}
 
 	}
 

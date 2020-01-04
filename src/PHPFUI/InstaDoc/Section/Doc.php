@@ -7,7 +7,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 	private $factory;
 	private $reflection;
-	private $fullClassPath;
+	private $class;
 
 	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
 		{
@@ -17,15 +17,19 @@ class Doc extends \PHPFUI\InstaDoc\Section
 //		$page->addStyleSheet("highlighter/styles/{$parameters['CSS']}.css");
 		$page->addStyleSheet("highlighter/styles/qtcreator_light.css");
 		$this->factory = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
-		$this->fullClassPath = $fullClassPath;
-		$this->fullClassPath = str_replace(['/', '.php'], ['\\', ''], $this->fullClassPath);
-		$start = strpos($this->fullClassPath, '.');
-		if ($start !== false)
-			{
-			$this->fullClassPath = substr($this->fullClassPath, $start + 3);
-			}
+		$parameters = $this->controller->getParameters();
+		$this->class = $parameters[\PHPFUI\InstaDoc\Controller::NAMESPACE] . '\\' . $parameters[\PHPFUI\InstaDoc\Controller::CLASS_NAME];
 
-		$this->reflection = new \ReflectionClass($this->fullClassPath);
+		try
+			{
+			$this->reflection = new \ReflectionClass($this->class);
+			}
+		catch (\throwable $e)
+			{
+			$container->add(new \PHPFUI\SubHeader("{$this->class} is not a class"));
+
+			return $container;
+			}
 
 		$table = new \PHPFUI\Table();
 		$table->addClass('hover');
@@ -52,6 +56,15 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		$container->add($table);
 
+		$comments = $this->reflection->getDocComment();
+		if ($comments)
+			{
+			$docblock = $this->factory->create($comments);
+			$callout = new \PHPFUI\Callout('secondary');
+			$callout->add($docblock->getSummary());
+			$container->add($callout);
+			}
+
 		$tabs = new \PHPFUI\Tabs();
 		$tabs->addTab('Public', $this->getContent('isPublic'), true);
 		$tabs->addTab('Protected', $this->getContent('isProtected'));
@@ -77,7 +90,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			$section = 'Constants';
 			foreach ($constants as $name => $value)
 				{
-				$constant = new \ReflectionClassConstant($this->fullClassPath, $name);
+				$constant = new \ReflectionClassConstant($this->class, $name);
 
 				if ($accessType != 'isStatic' && $constant->$accessType())
 					{
@@ -280,9 +293,9 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			case 'array':
 				$text = '[';
 				$comma = '';
-				foreach ($value as $part)
+				foreach ($value as $key => $part)
 					{
-					$text .= $comma . $this->getValueString($part);
+					$text .= $comma . $this->getValueString($key) . ' => ' . $this->getValueString($part);
 					$comma = ', ';
 					}
 				$text .= ']';
@@ -295,7 +308,15 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				$value = $span;
 				break;
 			case 'object':
-				$value = $this->getClassName(get_class($value));
+				$class = get_class($value);
+				if ($class == 'ReflectionNamedType')
+					{
+					$value = ($value->allowsNull() ? '?' : '') . $value->getName();
+					}
+				else
+					{
+					$value = $this->getClassName(get_class($value));
+					}
 				break;
 			case 'resource':
 				$value = 'resource';

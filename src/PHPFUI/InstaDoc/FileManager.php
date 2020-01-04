@@ -28,6 +28,11 @@ class FileManager
 		$this->composerJsonPath = str_replace('\\', '/', $composerJsonPath);
 		}
 
+	public function getComposerPath() : string
+		{
+		return $this->composerJsonPath;
+		}
+
 	/**
 	 * You can add a Namespace directly.  Specify the namespace (no
 	 * leading \) and the directory containing the class files.

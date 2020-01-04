@@ -9,12 +9,17 @@ class File extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
+		$fullClassPath = str_replace('\\', '/', $fullClassPath);
+		if (! file_exists($fullClassPath))
+			{
+			$fullClassPath = $this->controller->getFileManager()->getComposerPath() . $fullClassPath;
+			}
 		$parameters = $this->controller->getParameters();
 
 		$page->addStyleSheet("highlighter/styles/{$parameters['CSS']}.css");
 		$page->addCSS("code{tab-size:{$parameters['t']};-moz-tab-size:{$parameters['t']}}");
 		$hl = new \Highlight\Highlighter();
-		$php = file_get_contents(str_replace('\\', '/', $fullClassPath));
+		$php = file_get_contents($fullClassPath);
 
 		// Highlight some code.
 		$highlighted = $hl->highlight('php', $php);

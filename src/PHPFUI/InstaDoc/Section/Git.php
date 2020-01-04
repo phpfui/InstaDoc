@@ -27,6 +27,10 @@ class Git extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
+		$container->add(new \PHPFUI\SubHeader('.git support coming soon'));
+
+		return $container;
+
 		$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
 		$result = $repo->run('show-branch');
 		$branch = substr($result, strpos($result, '[') + 1, strpos($result, ']') - 1);
