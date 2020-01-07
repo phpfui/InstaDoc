@@ -50,6 +50,10 @@ echo $controller->display();
 ```
 That is it. You are done!
 
+### Example and Full Documentation
+
+[PHPFUI/InstaDoc](http://www.phpfui.com)
+
 #### To Do List:
 
  * Add more documentation

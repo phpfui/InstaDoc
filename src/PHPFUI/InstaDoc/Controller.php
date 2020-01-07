@@ -128,8 +128,7 @@ class Controller
 		$namespaces = [];
 
 		// loop through all classes and generate all requested pages and namespaces
-		$namespaceTree = new NamespaceTree();
-		foreach ($namespaceTree->getAllClasses() as $path => $class)
+		foreach (NamespaceTree::getAllClasses() as $path => $class)
 			{
 			$parameters = $this->getClassParts($class);
 			$namespaces[$parameters[Controller::NAMESPACE]] = true;
@@ -218,12 +217,11 @@ class Controller
 				}
 			}
 
-		$iterator = new NamespaceTree();
-		$iterator->setActiveClass($this->requestedClass);
-		$iterator->setActiveNamespace($this->requestedNamespace);
-		$iterator->setController($this);
+		NamespaceTree::setActiveClass($this->requestedClass);
+		NamespaceTree::setActiveNamespace($this->requestedNamespace);
+		NamespaceTree::setController($this);
 		$this->accordionMenu = new \PHPFUI\AccordionMenu();
-		$iterator->populateMenu($this->accordionMenu);
+		NamespaceTree::populateMenu($this->accordionMenu);
 
 		return $this->accordionMenu;
 		}

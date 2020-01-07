@@ -607,3 +607,40 @@ $button-shadow: $shadow-depth $shadow-depth $shadow-blur 0px rgba(0,0,0,0.6);
   flex-wrap: wrap;
 }
 
+
+.constant {
+	color: darkred;
+}
+
+.keyword {
+	color: purple;
+}
+
+.type {
+	color: DarkSlateBlue;
+}
+
+.number {
+	color: navy;
+}
+
+.string {
+	color: green;
+}
+
+.operator {
+	color: SlateGray;
+}
+
+.variable {
+	color: black;
+}
+
+.name {
+	color: black;
+	font-weight: bold;
+}
+
+
+
+

@@ -458,16 +458,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.23",
+            "version": "V6.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "0842b29b3fe8a8d475bedd8c6179b64104c80ec8"
+                "reference": "6664040cb86013cf92cede1de620150e89047037"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/0842b29b3fe8a8d475bedd8c6179b64104c80ec8",
-                "reference": "0842b29b3fe8a8d475bedd8c6179b64104c80ec8",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/6664040cb86013cf92cede1de620150e89047037",
+                "reference": "6664040cb86013cf92cede1de620150e89047037",
                 "shasum": ""
             },
             "require": {
@@ -513,7 +513,7 @@
                 "zurb",
                 "zurb-foundation"
             ],
-            "time": "2019-12-31T15:45:46+00:00"
+            "time": "2020-01-01T03:30:29+00:00"
         },
         {
             "name": "scrivo/highlight.php",

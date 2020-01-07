@@ -14,14 +14,19 @@ class NamespaceTree
 	private $namespace = '';
 	private $parent = null;
 
+	// only we can make us to ensure the tree is good
+	private function __construct()
+		{
+		}
+
 	/**
 	 * Returns array of all classes
 	 */
-  public function getAllClasses(?NamespaceTree $tree = null) : array
+  public static function getAllClasses(?NamespaceTree $tree = null) : array
 		{
 		if (! $tree)
 			{
-			$tree = $this->getRoot();
+			$tree = self::getRoot();
 			// sort it to be sure
 			self::sort($tree);
 			}
@@ -29,7 +34,7 @@ class NamespaceTree
 		$classes = [];
 		foreach ($tree->children as $child)
 			{
-			$classes = array_merge($classes, $this->getAllClasses($child));
+			$classes = array_merge($classes, self::getAllClasses($child));
 			}
 
 		$namespace = $tree->getNamespace();
@@ -148,20 +153,20 @@ class NamespaceTree
 	 * Populates a menu object with namespaces as sub menus and
 	 * classes as menu items.
 	 */
-  public function populateMenu(\PHPFUI\Menu $menu) : void
+  public static function populateMenu(\PHPFUI\Menu $menu) : void
 		{
 		self::sort(self::getRoot());
 
 		foreach (self::$root->children as $child)
 			{
-			$this->getMenuTree($child, $menu);
+			$child->getMenuTree($child, $menu);
 			}
     }
 
 	/**
 	 * Set the currently active class for menu generation.
 	 */
-	public function setActiveClass(string $activeClass) : void
+	public static function setActiveClass(string $activeClass) : void
 		{
 		self::$activeClass = $activeClass;
 		}
@@ -169,7 +174,7 @@ class NamespaceTree
 	/**
 	 * Set the currently active namespace for menu generation.
 	 */
-	public function setActiveNamespace(string $activeNamespace) : void
+	public static function setActiveNamespace(string $activeNamespace) : void
 		{
 		self::$activeNamespace = $activeNamespace;
 		}
@@ -178,7 +183,7 @@ class NamespaceTree
 	 * Set the Controller. Used for creating links so all
 	 * documentation is at the same url.
 	 */
-	public function setController(Controller $controller) : void
+	public static function setController(Controller $controller) : void
 		{
 		self::$controller = $controller;
 		}

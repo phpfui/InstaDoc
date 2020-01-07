@@ -1,6 +1,6 @@
 {
 		"name": "phpfui/instadoc",
-		"description": "Instant cocumentation for PHP projects",
+		"description": "Instant and always up to date documentation for PHP projects",
 		"minimum-stability": "stable",
 		"keywords": ["documentation", "phpdoc", "block", "doc", "docblock", "foundation"],
 		"homepage": "https://github.com/phpfui/InstaDoc",

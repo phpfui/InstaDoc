@@ -14,8 +14,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$parameters = $this->controller->getParameters();
-//		$page->addStyleSheet("highlighter/styles/{$parameters['CSS']}.css");
-		$page->addStyleSheet("highlighter/styles/qtcreator_light.css");
 		$this->factory = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 		$parameters = $this->controller->getParameters();
 		$this->class = $parameters[\PHPFUI\InstaDoc\Controller::NAMESPACE] . '\\' . $parameters[\PHPFUI\InstaDoc\Controller::CLASS_NAME];
@@ -31,10 +29,36 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			return $container;
 			}
 
+		$comments = $this->reflection->getDocComment();
+		if ($comments)
+			{
+			$docblock = $this->factory->create($comments);
+			$callout = new \PHPFUI\Callout('secondary');
+			$callout->add($docblock->getSummary());
+			$container->add($callout);
+			}
+
+		$attributes = ['Abstract', 'Anonymous', 'Cloneable', 'Final', 'Instantiable', 'Interface', 'Internal', 'Iterable', 'Trait'];
+
+		$row = new \PHPFUI\GridX();
+		foreach ($attributes as $attribute)
+			{
+			$method = 'is' . $attribute;
+			if ($this->reflection->$method())
+				{
+				$row->add($this->section($attribute));
+				}
+			}
+		if ($row->count())
+			{
+			$container->add($row);
+			}
+
 		$table = new \PHPFUI\Table();
 		$table->addClass('hover');
 		$table->addClass('unstriped');
 		$table->addClass('stack');
+
 		$parent = $this->reflection->getParentClass();
 		if ($parent)
 			{
@@ -55,15 +79,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$container->add($table);
-
-		$comments = $this->reflection->getDocComment();
-		if ($comments)
-			{
-			$docblock = $this->factory->create($comments);
-			$callout = new \PHPFUI\Callout('secondary');
-			$callout->add($docblock->getSummary());
-			$container->add($callout);
-			}
 
 		$tabs = new \PHPFUI\Tabs();
 		$tabs->addTab('Public', $this->getContent('isPublic'), true);
@@ -94,7 +109,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 				if ($accessType != 'isStatic' && $constant->$accessType())
 					{
-					$info = $this->getAccess($constant) . ' ' . $this->getName($constant, $name) . ' = ' . $this->getValueString($value);
+					$info = $this->getAccess($constant) . ' ' . $this->getColor('constant', $this->getColor('constant', $this->getName($constant, $name))) . ' = ' . $this->getValueString($value);
 
 					$info .= $this->getComments($constant);
 
@@ -116,15 +131,15 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					$info = $this->getAccess($property) . ' ';
 					if ($property->isStatic())
 						{
-						$info .= 'static ';
+						$info .= $this->getColor('keyword', 'static') . ' ';
 						}
 					$type = method_exists($property, 'getType') ? $property->getType() : '';
 					if ($type)
 						{
-						$info .= $type->getName() . ' ';
+						$info .= $this->getColor('type', $type->getName()) . ' ';
 						}
 
-					$info .= $this->getName($property, '$' . $property->getName());
+					$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
 
 					$info .= $this->getComments($property);
 
@@ -135,6 +150,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$methods = $this->reflection->getMethods();
+		$types = ['public', 'protected', 'private', 'abstract', 'final', 'static'];
 		if ($methods)
 			{
 			$this->objectSort($methods);
@@ -143,13 +159,17 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				{
 				if ($method->$accessType())
 					{
-					$info = $this->getAccess($method) . ' ';
-					if ($method->isStatic())
+					$info = '';
+					foreach ($types as $type)
 						{
-						$info .= 'static ';
+						$isType = 'is' . ucfirst($type);
+						if ($method->$isType())
+							{
+							$info .= $this->getColor('keyword', $type) . ' ';
+							}
 						}
 
-					$info .= $this->getName($method, $method->name) . '(';
+					$info .= $this->getName($method, $this->getColor('name', $method->name)) . '(';
 					$comma = '';
 					foreach ($method->getParameters() as $parameter)
 						{
@@ -162,14 +182,14 @@ class Doc extends \PHPFUI\InstaDoc\Section
 								{
 								$info .= '?';
 								}
-							$info .= $this->getClassName($type);
+							$info .= $this->getColor('type', $this->getValueString($type));
 							}
 						else
 							{
-							$info .= 'mixed';
+//							$info .= $this->getColor('type', 'mixed');
 							}
 						$info .= ' ';
-						$info .= '$' . $parameter->getName();
+						$info .= $this->getColor('variable', '$' . $parameter->getName());
 						if ($parameter->isDefaultValueAvailable())
 							{
 							$value = $parameter->getDefaultValue();
@@ -192,25 +212,27 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $table;
 		}
 
-	private function getAccess($constant) : string
+	private function getColor(string $class, string $name) : string
 		{
 		$span = new \PHPFUI\HTML5Element('span');
-		$span->addClass('hljs-keyword');
+		$span->addClass($class);
+		$span->add($name);
 
+		return $span;
+		}
+
+	private function getAccess($constant) : string
+		{
 		if ($constant->isPrivate())
 			{
-			$span->add('private');
+			return $this->getColor('keyword', 'private');
 			}
 		elseif ($constant->isProtected())
 			{
-			$span->add('protected');
-			}
-		else
-			{
-			$span->add('public');
+			return $this->getColor('keyword', 'protected');
 			}
 
-		return $span;
+		return $this->getColor('keyword', 'public');
 		}
 
 	private function getClassName(string $class) : string
@@ -220,18 +242,14 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false);
 			}
 
-		$span = new \PHPFUI\HTML5Element('span');
-		$span->add($class);
-		$span->addClass('hljs-type');
-
-		return $span;
+		return $this->getColor('type', $class);
 		}
 
 	private function section(string $name) : string
 		{
 		if (! $name)
 			{
-			return $name;
+			return '';
 			}
 
 		$section = new \PHPFUI\HTML5Element('span');
@@ -291,27 +309,31 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		switch (gettype($value))
 			{
 			case 'array':
-				$text = '[';
+				$index = 0;
+				$text = $this->getColor('operator', '[');
 				$comma = '';
 				foreach ($value as $key => $part)
 					{
-					$text .= $comma . $this->getValueString($key) . ' => ' . $this->getValueString($part);
+					$text .= $comma;
+					if ($index != $key)
+						{
+						$text .= $this->getValueString($key) . ' ';
+						}
+					++$index;
+					$text .= $this->getColor('operator', '=>') . ' ' . $this->getValueString($part);
 					$comma = ', ';
 					}
-				$text .= ']';
+				$text .= $this->getColor('operator', ']');
 				$value = $text;
 				break;
 			case 'string':
-				$span = new \PHPFUI\HTML5Element('span');
-				$span->addClass('hljs-string');
-				$span->add("'{$value}'");
-				$value = $span;
+				$value = $this->getColor('string', "'{$value}'");
 				break;
 			case 'object':
 				$class = get_class($value);
 				if ($class == 'ReflectionNamedType')
 					{
-					$value = ($value->allowsNull() ? '?' : '') . $value->getName();
+					$value = ($value->allowsNull() ? '?' : '') . $this->getClassName($value->getName());
 					}
 				else
 					{
@@ -319,14 +341,16 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				break;
 			case 'resource':
-				$value = 'resource';
+				$value = $this->getColor('keyword', 'resource');
 				break;
 			case 'boolean':
-				$value = $value ? 'true' : 'false';
+				$value = $this->getColor('keyword', $value ? 'true' : 'false');
 				break;
 			case 'NULL':
-				$value = 'NULL';
+				$value = $this->getColor('keyword', 'NULL');
 				break;
+			default:
+				$value = $this->getColor('number', $value);
 			}
 
 		return $value;

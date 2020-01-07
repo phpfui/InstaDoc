@@ -4,6 +4,7 @@ namespace PHPFUI\InstaDoc;
 
 class FileManager
 	{
+	private const CLASSES = '.Classes';
 	private const GIT = '.Git';
 	private const NAMESPACE = '.Namespace';
 
@@ -46,6 +47,7 @@ class FileManager
 		$this->includedNamespaces[$namespace][FileManager::REPO_ROOT] = $directory;
 		$this->includedNamespaces[$namespace][] = $directory;
 		$this->includedNamespaces[$namespace][FileManager::GIT] = $localGit;
+		$this->includedNamespaces[$namespace][FileManager::CLASSES] = [];
 
 		return $this;
 		}
@@ -165,6 +167,7 @@ class FileManager
 					$directories[$namespace][FileManager::GIT] = false;
 					$directories[$namespace][FileManager::REPO_ROOT] = $path;
 					$directories[$namespace][] = $path . $sourceDir;
+					$directories[$namespace][FileManager::CLASSES] = [];
 					}
 				}
 			}
@@ -177,6 +180,11 @@ class FileManager
 	 */
 	public function getClassesInNamespace(string $namespace) : array
 		{
+		if (! empty($this->namespaces[$namespace][FileManager::CLASSES]))
+			{
+			return $this->namespaces[$namespace][FileManager::CLASSES];
+			}
+
 		$classes = [];
 
 		$extension = '.php';
@@ -186,7 +194,7 @@ class FileManager
 		foreach ($files as $file)
 			{
 			$class = substr($file, strlen($namespaceInfo[0]));
-
+			$class = str_replace('/', '\\', $class);
 			if (0 === strpos($class, $namespace))
 				{
 				$class = substr($class, strlen($namespace));
@@ -194,7 +202,7 @@ class FileManager
 			$classes[$file] = substr($class, 0, strlen($class) - strlen($extension));
 			}
 
-		return $classes;
+		return $this->namespaces[$namespace][FileManager::CLASSES] = $classes;
 		}
 
 	/**
@@ -244,14 +252,14 @@ class FileManager
 		return $files;
 		}
 
-	public function getFilesInRepository($namespace, string $extension = '') : array
+	public function getFilesInRepository($namespace, string $extension) : array
 		{
-		$files = [];
-
-		if (! isset($this->namespaces[$namespace]))
+		if (! empty($this->namespaces[$namespace][$extension]))
 			{
-			return $files;
+			return $this->namespaces[$namespace][$extension];
 			}
+
+		$files = [];
 
 		$directory = str_replace('\\', '/', $this->namespaces[$namespace][FileManager::REPO_ROOT]);
 		$rdi = new \RecursiveDirectoryIterator($directory);
@@ -267,7 +275,7 @@ class FileManager
 
 		sort($files);
 
-		return $files;
+		return $this->namespaces[$namespace][$extension] = $files;
 		}
 
 	/**
@@ -294,6 +302,12 @@ class FileManager
 		if (! file_exists($file))
 			{
 			$this->rescan();
+			// load classes for each namespace
+			foreach ($this->getAllNamespaces() as $namespace)
+				{
+				$this->getClassesInNamespace($namespace);
+				$this->getFilesInRepository($namespace, '.md');
+				}
 			$this->save($file);
 			}
 

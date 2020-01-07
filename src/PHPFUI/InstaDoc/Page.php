@@ -76,7 +76,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$menu = new \PHPFUI\Menu();
 		$menu->addClass('simple');
 		$menu->addMenuItem(new \PHPFUI\MenuItem('Powered By'));
-		$menu->addMenuItem(new \PHPFUI\MenuItem('PHPFUI/InstaDoc', 'https://www.phpfui.com'));
+		$menu->addMenuItem(new \PHPFUI\MenuItem('PHPFUI/InstaDoc', 'http://www.phpfui.com/?n=PHPFUI\InstaDoc'));
 		$menu->addMenuItem(new \PHPFUI\MenuItem('github', 'https://github.com/phpfui/InstaDoc'));
 
 		$footer->addLeft($menu);

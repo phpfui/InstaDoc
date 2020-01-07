@@ -8111,4 +8111,37 @@ header {
   flex-wrap: wrap;
 }
 
+.constant {
+  color: darkred;
+}
+
+.keyword {
+  color: purple;
+}
+
+.type {
+  color: DarkSlateBlue;
+}
+
+.number {
+  color: navy;
+}
+
+.string {
+  color: green;
+}
+
+.operator {
+  color: SlateGray;
+}
+
+.variable {
+  color: black;
+}
+
+.name {
+  color: black;
+  font-weight: bold;
+}
+
 /*# sourceMappingURL=styles.css.map */

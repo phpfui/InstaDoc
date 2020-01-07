@@ -20,3 +20,10 @@ $vendor['phpfui'] = [
 
 $phpfuiInstaller->copyFiles('../..', $vendor);
 
+$css = [];
+$css['instadoc/highlighter/styles'] = [
+	'PHP.css' => 'highlighter/styles',
+	];
+
+$phpfuiInstaller->copyFiles('..', $css);
+
