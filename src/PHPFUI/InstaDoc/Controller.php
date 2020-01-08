@@ -77,7 +77,7 @@ class Controller
 			{
 			$fullClassName = $this->requestedNamespace . '\\' . $this->requestedClass;
 			$tree = NamespaceTree::getNamespaceTree($fullClassName);
-			$fullClassPath = $tree->getPathForClass($this->requestedClass);
+			$fullClassPath = $tree->getPathForClass($fullClassName);
 			$section = new Section($this);
 			$mainColumn->add($section->getBreadCrumbs($fullClassName));
 			$mainColumn->add($section->getMenu($fullClassName));
@@ -209,13 +209,13 @@ class Controller
 			return $this->accordionMenu;
 			}
 
-		foreach ($this->fileManager->getAllNamespaces() as $namespace)
-			{
-			foreach ($this->fileManager->getClassesInNamespace($namespace) as $file => $class)
-				{
-				NamespaceTree::getNamespaceTree($namespace . '\\' . $class, $file);
-				}
-			}
+//		foreach ($this->fileManager->getAllNamespaces() as $namespace)
+//			{
+//			foreach ($this->fileManager->getClassesInNamespace($namespace) as $file => $class)
+//				{
+//				NamespaceTree::getNamespaceTree($namespace . '\\' . $class, $file);
+//				}
+//			}
 
 		NamespaceTree::setActiveClass($this->requestedClass);
 		NamespaceTree::setActiveNamespace($this->requestedNamespace);

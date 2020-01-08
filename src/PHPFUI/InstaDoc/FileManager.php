@@ -6,6 +6,7 @@ class FileManager
 	{
 	private const CLASSES = '.Classes';
 	private const GIT = '.Git';
+	private const SOURCE = '.Source';
 	private const NAMESPACE = '.Namespace';
 
 	private const REPO_ROOT = '.Root';
@@ -44,10 +45,7 @@ class FileManager
 	 */
 	public function addNamespace(string $namespace, string $directory, bool $localGit = false) : FileManager
 		{
-		$this->includedNamespaces[$namespace][FileManager::REPO_ROOT] = $directory;
-		$this->includedNamespaces[$namespace][] = $directory;
-		$this->includedNamespaces[$namespace][FileManager::GIT] = $localGit;
-		$this->includedNamespaces[$namespace][FileManager::CLASSES] = [];
+		NamespaceTree::addNameSpace($namespace, $directory, $localGit);
 
 		return $this;
 		}
@@ -91,7 +89,7 @@ class FileManager
 
 		if ($this->composerJsonPath)
 			{
-			$directories = $this->getAllVendorDirectories($this->composerJsonPath);
+			$directories = $this->getAllVendorDirectories();
 			}
 		$directories = array_merge($directories, $this->includedNamespaces);
 
@@ -117,14 +115,9 @@ class FileManager
 	 * Read the composer files to get all namespaces for include
 	 * libraries.
 	 */
-	public function getAllVendorDirectories() : array
+	private function getAllVendorDirectories() : array
 		{
-		$composerJsonPath = $this->composerJsonPath;
-
-		if (is_dir($composerJsonPath))
-			{
-			$composerJsonPath .= '/composer.lock';
-			}
+		$composerJsonPath = $this->composerJsonPath . 'composer.lock';
 		$composerJsonPath = str_replace('//', '/', $composerJsonPath);
 		$json = json_decode(@file_get_contents($composerJsonPath), true);
 
@@ -132,12 +125,11 @@ class FileManager
 			{
 			throw new \Exception("{$composerJsonPath} does not appear to be a valid composer.lock file");
 			}
-		$dir = str_replace('composer.lock', '', $composerJsonPath);
 		$directories = [];
 
 		foreach ($json['packages'] as $package)
 			{
-			$packagePath = $dir . 'vendor/' . $package['name'];
+			$packagePath = $this->composerJsonPath . 'vendor/' . $package['name'];
 			$autoload = $package['autoload'] ?? [];
 			$namespace = $sourceDir = '';
 			$autoLoadTypes = ['psr-4', 'psr-0', 'classmap'];
@@ -166,7 +158,11 @@ class FileManager
 					$path = str_replace('//', '/', $path);
 					$directories[$namespace][FileManager::GIT] = false;
 					$directories[$namespace][FileManager::REPO_ROOT] = $path;
-					$directories[$namespace][] = $path . $sourceDir;
+					if (is_array($sourceDir))
+						{
+						$sourceDir = reset($sourceDir);
+						}
+					$directories[$namespace][FileManager::SOURCE][$path . $sourceDir] = true;
 					$directories[$namespace][FileManager::CLASSES] = [];
 					}
 				}
@@ -191,16 +187,29 @@ class FileManager
 		$files = $this->getFilesInNamespace($namespace, $extension);
 		$namespaceInfo = $this->namespaces[$namespace];
 
+//		echo '<pre>';
 		foreach ($files as $file)
 			{
-			$class = substr($file, strlen($namespaceInfo[0]));
-			$class = str_replace('/', '\\', $class);
-			if (0 === strpos($class, $namespace))
+			$file = str_replace('\\', '/', $file);
+			foreach ($namespaceInfo[FileManager::SOURCE] as $directory => $value)
 				{
-				$class = substr($class, strlen($namespace));
+				$directory = str_replace('\\', '/', $directory);
+				$start = strpos($file, $directory);
+				if ($start !== false)
+					{
+					$class = substr($file, $start + strlen($directory));
+					$class = str_replace(['/', '.php'], ['\\', ''], $class);
+					if (strpos($class, $namespace) !== 0)
+						{
+						$class = str_replace('\\\\', '\\', $namespace . '\\' . $class);
+						}
+					$class = substr($class, strlen($namespace) + 1);
+//					echo "add class {$namespace} => {$class}\n";
+					$classes[$file] = $class;
+					}
 				}
-			$classes[$file] = substr($class, 0, strlen($class) - strlen($extension));
 			}
+//		echo '<pre>';
 
 		return $this->namespaces[$namespace][FileManager::CLASSES] = $classes;
 		}
@@ -219,32 +228,18 @@ class FileManager
 			throw new \Exception('In ' . __METHOD__ . " -> {$namespace} was not found.");
 			}
 
-		foreach ($this->namespaces[$namespace] as $key => $directory)
+		$directory = $this->namespaces[$namespace][FileManager::REPO_ROOT];
+		if (is_dir($directory))
 			{
-			if ('integer' != gettype($key))
-				{
-				continue;
-				}
+			$directory = str_replace('\\', '/', $directory);
+			$rdi = new \RecursiveDirectoryIterator($directory);
+			$iterator = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
 
-			if (is_file($directory))
+			foreach ($iterator as $filename => $fileInfo)
 				{
-				if ($this->hasExtension($filename, $extension))
+				if (! $fileInfo->isDir() && $this->hasExtension($filename, $extension))
 					{
-					$files[] = $directory;
-					}
-				}
-			else
-				{
-				$directory = str_replace('\\', '/', $directory);
-				$rdi = new \RecursiveDirectoryIterator($directory);
-				$iterator = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
-
-				foreach ($iterator as $filename => $fileInfo)
-					{
-					if (! $fileInfo->isDir() && $this->hasExtension($filename, $extension))
-						{
-						$files[] = $filename;
-						}
+					$files[] = $filename;
 					}
 				}
 			}
@@ -299,6 +294,8 @@ class FileManager
 		{
 		$file = $this->getSerializedName($file);
 
+		@unlink($file);
+
 		if (! file_exists($file))
 			{
 			$this->rescan();
@@ -333,7 +330,7 @@ class FileManager
 	 */
 	public function save(string $file = '') : FileManager
 		{
-		file_put_contents($this->getSerializedName($file), json_encode($this->namespaces));
+		file_put_contents($this->getSerializedName($file), json_encode($this->namespaces, JSON_PRETTY_PRINT));
 
 		return $this;
 		}

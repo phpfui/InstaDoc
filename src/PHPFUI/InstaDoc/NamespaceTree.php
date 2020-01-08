@@ -9,14 +9,95 @@ class NamespaceTree
 	private static $controller;
 	private static $root = null;
 
+	/**
+	 * @var array indexed by namespace part containing a NamespaceTree
+	  */
 	private $children = [];
+
+	/**
+	 * @var array indexed by fully qualified class name containing the file name
+	 */
 	private $classes = [];
+
+	/**
+	 * @var string of the namespace part
+	 */
 	private $namespace = '';
+
+	/**
+	 * @var NamespaceTree our parent
+	 */
 	private $parent = null;
 
 	// only we can make us to ensure the tree is good
 	private function __construct()
 		{
+		}
+
+	public static function addNamespace(string $namespace, string $directory, bool $localGit) : void
+		{
+		/*
+		$parts = explode('\\', str_replace('\\\\', '\\', $fullClassName));
+		$rootNamespace = array_shift($parts);
+		$className = array_pop($parts);
+
+		if (! isset(self::getRoot()->children[$rootNamespace]))
+			{
+			$root = new NamespaceTree();
+			$root->namespace = $rootNamespace;
+			self::$root->children[$rootNamespace] = $root;
+			}
+		$parent = self::$root->children[$rootNamespace];
+
+		foreach ($parts as $partialNamespace)
+			{
+			if (! isset($parent->children[$partialNamespace]))
+				{
+				$child = new NamespaceTree();
+				$child->namespace = $partialNamespace;
+				$child->parent = $parent;
+				$parent->children[$partialNamespace] = $child;
+				$parent = $child;
+				}
+			else
+				{
+				$parent = $parent->children[$partialNamespace];
+				}
+			}
+		 */
+		$node = self::findNamespace($namespace);
+
+    $iterator = new \DirectoryIterator($directory);
+    foreach ($iterator as $fileinfo)
+			{
+			$filename = $fileinfo->getFilename();
+      if ($fileinfo->isDir() && strpos($filename, '.') === false)
+				{
+				self::addNamespace($namespace.'/'.$filename, $directory.'/'.$filename, $localGit);
+        }
+			elseif (strpos($filename, '.php') == strlen($filename) - 4)
+				{
+				$class = substr($filename, 0, strlen($filename) - 4);
+				$class = $namespace . '\\' . $class;
+				$file = $directory . '/' . $filename;
+				$node->addClass($class, $file);
+				}
+			}
+		}
+
+	public static function findNamespace(string $namespace) : NamespaceTree
+		{
+		$parts = explode('\\', $namespace);
+
+
+
+		}
+
+	private function addClass(string $class, string $file) : NamespaceTree
+		{
+		$this->classes[$class] = $file;
+
+		return $this;
 		}
 
 	/**
@@ -88,7 +169,7 @@ class NamespaceTree
 	 * Returns the NamespaceTree node that contains the class. If
 	 * you pass in a path, it sets the class's path.
 	 */
-	public static function getNamespaceTree(string $fullClassName, string $path = '') : NamespaceTree
+	public static function getNamespaceTree(string $fullClassName) : NamespaceTree
 		{
 		$parts = explode('\\', str_replace('\\\\', '\\', $fullClassName));
 		$rootNamespace = array_shift($parts);
@@ -116,11 +197,6 @@ class NamespaceTree
 				{
 				$parent = $parent->children[$partialNamespace];
 				}
-			}
-		// if we have a path, then we should add the class, otherwise we are just doing a lookup
-		if ($path)
-			{
-			$parent->classes[$className] = $path;
 			}
 
 		return $parent;
