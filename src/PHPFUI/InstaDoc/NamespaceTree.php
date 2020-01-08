@@ -20,6 +20,16 @@ class NamespaceTree
 	private $classes = [];
 
 	/**
+	 * @var bool true if this namespace is in the local git repo
+	 */
+	private $localGit = false;
+
+	/**
+	 * @var array of unique markdown files indexed by file name
+	 */
+	private $md = [];
+
+	/**
 	 * @var string of the namespace part
 	 */
 	private $namespace = '';
@@ -34,115 +44,115 @@ class NamespaceTree
 		{
 		}
 
-	public static function addNamespace(string $namespace, string $directory, bool $localGit) : void
+	public static function addNamespace(string $namespace, string $directory, bool $localGit = false) : void
 		{
-		/*
-		$parts = explode('\\', str_replace('\\\\', '\\', $fullClassName));
-		$rootNamespace = array_shift($parts);
-		$className = array_pop($parts);
-
-		if (! isset(self::getRoot()->children[$rootNamespace]))
+		$namespaceLength = strlen($namespace);
+		if ($namespaceLength && $namespace[$namespaceLength - 1] == '\\')
 			{
-			$root = new NamespaceTree();
-			$root->namespace = $rootNamespace;
-			self::$root->children[$rootNamespace] = $root;
+			$namespace = substr($namespace, 0, $namespaceLength - 1);
 			}
-		$parent = self::$root->children[$rootNamespace];
 
-		foreach ($parts as $partialNamespace)
-			{
-			if (! isset($parent->children[$partialNamespace]))
-				{
-				$child = new NamespaceTree();
-				$child->namespace = $partialNamespace;
-				$child->parent = $parent;
-				$parent->children[$partialNamespace] = $child;
-				$parent = $child;
-				}
-			else
-				{
-				$parent = $parent->children[$partialNamespace];
-				}
-			}
-		 */
 		$node = self::findNamespace($namespace);
+		$node->localGit = $localGit;
 
     $iterator = new \DirectoryIterator($directory);
     foreach ($iterator as $fileinfo)
 			{
 			$filename = $fileinfo->getFilename();
+			$filenameLength = strlen($filename);
       if ($fileinfo->isDir() && strpos($filename, '.') === false)
 				{
-				self::addNamespace($namespace.'/'.$filename, $directory.'/'.$filename, $localGit);
+				self::addNamespace($namespace . '\\' . $filename, $directory.'/'.$filename, $localGit);
         }
-			elseif (strpos($filename, '.php') == strlen($filename) - 4)
+			elseif (strpos($filename, '.php') == $filenameLength - 4)
 				{
-				$class = substr($filename, 0, strlen($filename) - 4);
+				$class = substr($filename, 0, $filenameLength - 4);
 				$class = $namespace . '\\' . $class;
 				$file = $directory . '/' . $filename;
-				$node->addClass($class, $file);
+				$file = str_replace('//', '/', $file);
+				$node->classes[$class] = $file;
+				}
+			elseif (strpos($filename, '.md') == $filenameLength - 3)
+				{
+				$node->md[$filename] = true;
 				}
 			}
 		}
 
 	public static function findNamespace(string $namespace) : NamespaceTree
 		{
+		$node = self::getRoot();
+
+		if (! strlen($namespace))
+			{
+			return $node;
+			}
+
 		$parts = explode('\\', $namespace);
 
-
-
-		}
-
-	private function addClass(string $class, string $file) : NamespaceTree
-		{
-		$this->classes[$class] = $file;
-
-		return $this;
-		}
-
-	/**
-	 * Returns array of all classes
-	 */
-  public static function getAllClasses(?NamespaceTree $tree = null) : array
-		{
-		if (! $tree)
+		foreach ($parts as $part)
 			{
-			$tree = self::getRoot();
-			// sort it to be sure
-			self::sort($tree);
+			if (empty($node->children[$part]))
+				{
+				$child = new NamespaceTree();
+				$child->namespace = $part;
+				$node->children[$part] = $child;
+				$child->parent = $node;
+				}
+			$node = $node->children[$part];
 			}
 
-		$classes = [];
-		foreach ($tree->children as $child)
-			{
-			$classes = array_merge($classes, self::getAllClasses($child));
-			}
-
-		$namespace = $tree->getNamespace();
-
-		foreach ($tree->classes as $class => $path)
-			{
-			$classes[$path] = $namespace . '\\' . $class;
-			}
-
-		return $classes;
+		return $node;
 		}
 
-	/**
-	 * Return all the child namespaces of the current node.
-	 */
-	public function getChildren() : array
+	public function getGit() : bool
 		{
-		return $this->children;
+		return $this->localGit;
+		}
+
+	public function getMDFiles() : array
+		{
+		return array_keys($this->md);
+		}
+
+	public static function load(string $file) : bool
+		{
+		if (! file_exists($file))
+			{
+			return false;
+			}
+
+		$contents = file_get_contents($file);
+		$temp = unserialize($contents);
+		if (! $temp)
+			{
+			return false;
+			}
+
+		self::$root = $temp;
+
+		return true;
+		}
+
+	public static function save(string $file) : bool
+		{
+		return file_put_contents($file, serialize(self::$root)) > 0;
 		}
 
 	/**
 	 * Return an array with full paths of all the classes in the
 	 * namespace, indexed by class name
 	 */
-	public function getClasses() : array
+  public function getClassFilenames() : array
 		{
 		return $this->classes;
+		}
+
+	public static function deleteNameSpace(string $namespace) : void
+		{
+		$deleteThis = self::findNamespace($namespace);
+		unset($deleteThis->parent->children[$namespace]);
+		unset($deleteThis);
 		}
 
 	/**
@@ -163,59 +173,7 @@ class NamespaceTree
 		return $namespace;
 		}
 
-	/**
-	 * Given a class, return it full path.
-	 *
-	 * Returns the NamespaceTree node that contains the class. If
-	 * you pass in a path, it sets the class's path.
-	 */
-	public static function getNamespaceTree(string $fullClassName) : NamespaceTree
-		{
-		$parts = explode('\\', str_replace('\\\\', '\\', $fullClassName));
-		$rootNamespace = array_shift($parts);
-		$className = array_pop($parts);
-
-		if (! isset(self::getRoot()->children[$rootNamespace]))
-			{
-			$root = new NamespaceTree();
-			$root->namespace = $rootNamespace;
-			self::$root->children[$rootNamespace] = $root;
-			}
-		$parent = self::$root->children[$rootNamespace];
-
-		foreach ($parts as $partialNamespace)
-			{
-			if (! isset($parent->children[$partialNamespace]))
-				{
-				$child = new NamespaceTree();
-				$child->namespace = $partialNamespace;
-				$child->parent = $parent;
-				$parent->children[$partialNamespace] = $child;
-				$parent = $child;
-				}
-			else
-				{
-				$parent = $parent->children[$partialNamespace];
-				}
-			}
-
-		return $parent;
-		}
-
-	/**
-	 * Given a class, return it full path.
-	 */
-	public function getPathForClass(string $class) : string
-		{
-		if (isset($this->classes[$class]))
-			{
-			return $this->classes[$class];
-			}
-
-		throw new \Exception("Class {$class} not found in namespace {$this->getNamespace()}");
-		}
-
-	public static function getRoot() : NamespaceTree
+	private static function getRoot() : NamespaceTree
 		{
 		if (! self::$root)
 			{
@@ -252,6 +210,11 @@ class NamespaceTree
 	 */
 	public static function setActiveNamespace(string $activeNamespace) : void
 		{
+		if (strlen($activeNamespace) && $activeNamespace[0] != '\\')
+			{
+			$activeNamespace = '\\' . $activeNamespace;
+			}
+
 		self::$activeNamespace = $activeNamespace;
 		}
 
@@ -300,9 +263,10 @@ class NamespaceTree
 
 		foreach ($tree->classes as $class => $path)
 			{
-			$menuItem = new \PHPFUI\MenuItem($class, self::$controller->getClassURL($namespace . '\\' . $class));
-
-			if ($class == self::$activeClass && $namespace == self::$activeNamespace)
+			$parts = explode('\\', $class);
+			$baseClass = array_pop($parts);
+			$menuItem = new \PHPFUI\MenuItem($baseClass, self::$controller->getClassURL($class));
+			if ($baseClass == self::$activeClass && $namespace == self::$activeNamespace)
 				{
 				$menuItem->setActive();
 				}

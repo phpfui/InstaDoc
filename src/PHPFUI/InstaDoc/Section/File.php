@@ -17,7 +17,7 @@ class File extends \PHPFUI\InstaDoc\Section
 		$parameters = $this->controller->getParameters();
 
 		$page->addCSS("code{tab-size:{$parameters['t']};-moz-tab-size:{$parameters['t']}}");
-		$php = file_get_contents($fullClassPath);
+		$php = @file_get_contents($fullClassPath);
 		$pre = new \PHPFUI\HTML5Element('pre');
 		if ($parameters['CSS'] != 'PHP')
 			{

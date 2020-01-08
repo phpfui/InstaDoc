@@ -19,31 +19,24 @@ class Home extends \PHPFUI\InstaDoc\Section
 		$accordion = new \PHPFUI\Accordion();
 		$accordion->addAttribute('data-allow-all-closed', 'true');
 		$container->add(new \PHPFUI\SubHeader('Package Documentation'));
-		$libraries = $this->controller->getFileManager()->getAllNamespaceDirectories(false);
 
-		$uniqueFiles = [];
-		foreach ($libraries as $namespace => $value)
+		$namespace = $this->getNamespaceFromClass($fullClassPath);
+
+		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
+
+		foreach ($node->getMDFiles() as $file)
 			{
-			$files = $this->controller->getFileManager()->getFilesInRepository($namespace, '.md');
-
-			foreach ($files as $file)
+			if (stripos($file, 'readme.md'))
 				{
-				if (stripos($file, 'readme.md'))
+				$file = str_replace('\\', '/', $file);
+				$md = file_get_contents($file);
+				$parts = explode('/', $file);
+				$package = $parts[count($parts) - 2];
+				if ($namespace == '\\')
 					{
-					$file = str_replace('\\', '/', $file);
-					if (! isset($uniqueFiles[$file]))
-						{
-						$uniqueFiles[$file] = true;
-						$md = file_get_contents($file);
-						$parts = explode('/', $file);
-						$package = $parts[count($parts) - 2];
-						if ($namespace == '\\')
-							{
-							$namespace = '';
-							}
-						$accordion->addTab($namespace . '\\' . $package . ' Readme', $parsedown->text($md));
-						}
+					$namespace = '';
 					}
+				$accordion->addTab($namespace . '\\' . $package . ' Readme', $parsedown->text($md));
 				}
 			}
 		$container->add($accordion);

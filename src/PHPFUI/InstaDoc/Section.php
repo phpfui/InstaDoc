@@ -12,6 +12,20 @@ class Section
 		$this->controller = $controller;
 		}
 
+	public function getClassBase(string $fullClassName) : string
+		{
+		$parts = explode('\\', $fullClassName);
+
+		return array_pop($parts);
+		}
+
+	public function getNamespaceFromClass(string $class) : string
+		{
+		$parts = explode('\\', $class);
+		array_pop($parts);
+		return implode('\\', $parts);
+		}
+
 	public function generate(\PHPFUI\Page $page, string $object) : \PHPFUI\Container
 		{
 		return new \PHPFUI\Container();
@@ -45,7 +59,8 @@ class Section
 		$fileItem = new \PHPFUI\MenuItem('File', $this->controller->getPageUrl(Controller::FILE_PAGE));
 		$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
 		$menu->addMenuItem($fileItem);
-		if ($this->controller->getFileManager()->getGit($parts[Controller::NAMESPACE]))
+		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
+		if ($node->getGit())
 			{
 			$gitItem = new \PHPFUI\MenuItem('Git', $this->controller->getPageUrl(Controller::GIT_PAGE));
 			$gitItem->setActive(Controller::GIT_PAGE == $currentPage);

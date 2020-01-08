@@ -38,8 +38,9 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 				}
 			}
 
-		$this->fileManager = new \PHPFUI\InstaDoc\FileManager('src/');
-		$this->fileManager->load();
+		$this->fileManager = new \PHPFUI\InstaDoc\FileManager('./');
+		$this->fileManager->addNamespace('PHPFUI', './src', true);
+		$this->fileManager->rescan();
 		$this->controller = new \PHPFUI\InstaDoc\Controller($this->fileManager);
 		}
 

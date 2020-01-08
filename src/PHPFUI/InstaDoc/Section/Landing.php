@@ -11,17 +11,18 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 		$container->add($this->getBreadCrumbs($namespace));
 
-		$namespaceTree = \PHPFUI\InstaDoc\NamespaceTree::getNamespaceTree($namespace . '\\Class');
+		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
 		$ul = new \PHPFUI\UnorderedList();
 
-		foreach ($namespaceTree->getClasses() as $class => $fullPath)
+		foreach ($node->getClassFilenames() as $class => $fullPath)
 			{
-			$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getClassURL($namespace . '\\' . $class), $class, false)));
+			$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));
 			}
 		$container->add($ul);
 
 		$parsedown = new \Parsedown();
-		$files = $this->controller->getFileManager()->getFilesInRepository($namespace, '.md');
+		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
+		$files = $node->getMDFiles();
 
 		if (count($files))
 			{
