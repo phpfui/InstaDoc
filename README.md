@@ -7,7 +7,7 @@ We all document our code with PHP [DocBlocks](https://en.wikipedia.org/wiki/PHPD
 But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, maybe 2). The steps involved:
  * Install PHPFUI\InstaDoc via Composer (30 seconds)
  * Run installation script (30 seconds)
- * Create document page (1 minute, 4 lines of code)
+ * Create document page (1 minute, 5 lines of code)
 
  Two minutes to usable documentation with the following features:
 
@@ -22,7 +22,7 @@ But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, mayb
  * Quick access to highlighed PHP source with user selectable highlighting
  * Quick access to the file's git history for the local repo
  * Ability to generate static html files for high volume sites
- * 4+ line config compatible with all PHP frameworks, or standalone
+ * 5+ line config compatible with all PHP frameworks, or standalone
  * Completely configureable UI if you don't like the default
  * Uses [Foundation CSS framework](https://get.foundation) for a great experience on mobile
 
@@ -42,10 +42,20 @@ PHPFUI\InstaDoc does not reply on any framework and can run on a standalone page
 ```php
 <?php
 include 'yourAutoLoader.php';
+
 // pass the directory containing your composer.json file
 $fileManager = new \PHPFUI\InstaDoc\FileManager('../');
+
+// add you App class tree in
+$fileManager->addNamespace('App', '../App', true);
+
+// load you cached files
 $fileManager->load();
+
+// get the controller
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
+
+// display will return a fully formed page
 echo $controller->display();
 ```
 That is it. You are done!
@@ -53,8 +63,3 @@ That is it. You are done!
 ### Example and Full Documentation
 
 [PHPFUI/InstaDoc](http://www.phpfui.com)
-
-#### To Do List:
-
- * Add more documentation
- * .git page
