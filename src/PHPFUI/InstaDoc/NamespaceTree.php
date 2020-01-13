@@ -274,6 +274,11 @@ class NamespaceTree
 		return $currentMenu;
 		}
 
+	public function getChildren() : array
+		{
+		return $this->children;
+		}
+
 	public static function getAllMDFiles(?NamespaceTree $tree = null, array $files = []) : array
 		{
 		if (! $tree)

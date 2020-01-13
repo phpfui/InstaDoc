@@ -39,7 +39,7 @@ class Section
 		return array_pop($parts);
 		}
 
-	public function getMenu(string $className) : \PHPFUI\Menu
+	public function getMenu(string $className, array $allowedMenus) : ?\PHPFUI\Menu
 		{
 		$menu = new \PHPFUI\Menu();
 
@@ -50,22 +50,39 @@ class Section
 			{
 			$this->controller->setParameter($key, $value);
 			}
-		$docItem = new \PHPFUI\MenuItem('Docs', $this->controller->getPageUrl(Controller::DOC_PAGE));
-		$docItem->setActive(Controller::DOC_PAGE == $currentPage);
-		$menu->addMenuItem($docItem);
-		$fileItem = new \PHPFUI\MenuItem('File', $this->controller->getPageUrl(Controller::FILE_PAGE));
-		$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
-		$menu->addMenuItem($fileItem);
-		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
 
-		if ($node->getGit())
+		if (in_array(Controller::DOC_PAGE, $allowedMenus))
 			{
-			$gitItem = new \PHPFUI\MenuItem('Git', $this->controller->getPageUrl(Controller::GIT_PAGE));
-			$gitItem->setActive(Controller::GIT_PAGE == $currentPage);
-			$menu->addMenuItem($gitItem);
+			$docItem = new \PHPFUI\MenuItem('Docs', $this->controller->getPageUrl(Controller::DOC_PAGE));
+			$docItem->setActive(Controller::DOC_PAGE == $currentPage);
+			$menu->addMenuItem($docItem);
 			}
 
-		return $menu;
+		if (in_array(Controller::FILE_PAGE, $allowedMenus))
+			{
+			$fileItem = new \PHPFUI\MenuItem('File', $this->controller->getPageUrl(Controller::FILE_PAGE));
+			$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
+			$menu->addMenuItem($fileItem);
+			}
+
+		if (in_array(Controller::GIT_PAGE, $allowedMenus))
+			{
+			$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
+			if ($node->getGit())
+				{
+				$gitItem = new \PHPFUI\MenuItem('Git', $this->controller->getPageUrl(Controller::GIT_PAGE));
+				$gitItem->setActive(Controller::GIT_PAGE == $currentPage);
+				$menu->addMenuItem($gitItem);
+				}
+			}
+
+		// only show the menu if more than one
+		if (count($menu) > 1)
+			{
+			return $menu;
+			}
+
+		return null;
 		}
 
 	public function getNamespaceFromClass(string $class) : string
