@@ -6,8 +6,6 @@ class NamespaceTree
 	{
 	private static $activeClass;
 	private static $activeNamespace;
-	private static $controller;
-	private static $root = null;
 
 	/**
 	 * @var array indexed by namespace part containing a NamespaceTree
@@ -18,6 +16,7 @@ class NamespaceTree
 	 * @var array indexed by fully qualified class name containing the file name
 	 */
 	private $classes = [];
+	private static $controller;
 
 	/**
 	 * @var bool true if this namespace is in the local git repo
@@ -38,6 +37,7 @@ class NamespaceTree
 	 * @var NamespaceTree our parent
 	 */
 	private $parent = null;
+	private static $root = null;
 
 	// only we can make us to ensure the tree is good
 	private function __construct()
@@ -47,7 +47,8 @@ class NamespaceTree
 	public static function addNamespace(string $namespace, string $directory, bool $localGit = false) : void
 		{
 		$namespaceLength = strlen($namespace);
-		if ($namespaceLength && $namespace[$namespaceLength - 1] == '\\')
+
+		if ($namespaceLength && '\\' == $namespace[$namespaceLength - 1])
 			{
 			$namespace = substr($namespace, 0, $namespaceLength - 1);
 			}
@@ -56,13 +57,15 @@ class NamespaceTree
 		$node->localGit = $localGit;
 
     $iterator = new \DirectoryIterator($directory);
+
     foreach ($iterator as $fileinfo)
 			{
 			$filename = $fileinfo->getFilename();
 			$filenameLength = strlen($filename);
-      if ($fileinfo->isDir() && strpos($filename, '.') === false)
+
+      if ($fileinfo->isDir() && false === strpos($filename, '.'))
 				{
-				self::addNamespace($namespace . '\\' . $filename, $directory.'/'.$filename, $localGit);
+				self::addNamespace($namespace . '\\' . $filename, $directory . '/' . $filename, $localGit);
         }
 			elseif (strpos($filename, '.php') == $filenameLength - 4)
 				{
@@ -74,9 +77,16 @@ class NamespaceTree
 				}
 			elseif (strpos($filename, '.md') == $filenameLength - 3)
 				{
-				$node->md[$filename] = true;
+				$node->md[$directory . '/' . $filename] = true;
 				}
 			}
+		}
+
+	public static function deleteNameSpace(string $namespace) : void
+		{
+		$deleteThis = self::findNamespace($namespace);
+		unset($deleteThis->parent->children[$namespace], $deleteThis);
+
 		}
 
 	public static function findNamespace(string $namespace) : NamespaceTree
@@ -105,40 +115,6 @@ class NamespaceTree
 		return $node;
 		}
 
-	public function getGit() : bool
-		{
-		return $this->localGit;
-		}
-
-	public function getMDFiles() : array
-		{
-		return array_keys($this->md);
-		}
-
-	public static function load(string $file) : bool
-		{
-		if (! file_exists($file))
-			{
-			return false;
-			}
-
-		$contents = file_get_contents($file);
-		$temp = unserialize($contents);
-		if (! $temp)
-			{
-			return false;
-			}
-
-		self::$root = $temp;
-
-		return true;
-		}
-
-	public static function save(string $file) : bool
-		{
-		return file_put_contents($file, serialize(self::$root)) > 0;
-		}
-
 	/**
 	 * Return an array with full paths of all the classes in the
 	 * namespace, indexed by class name
@@ -148,11 +124,14 @@ class NamespaceTree
 		return $this->classes;
 		}
 
-	public static function deleteNameSpace(string $namespace) : void
+	public function getGit() : bool
 		{
-		$deleteThis = self::findNamespace($namespace);
-		unset($deleteThis->parent->children[$namespace]);
-		unset($deleteThis);
+		return $this->localGit;
+		}
+
+	public function getMDFiles() : array
+		{
+		return array_keys($this->md);
 		}
 
 	/**
@@ -173,14 +152,24 @@ class NamespaceTree
 		return $namespace;
 		}
 
-	private static function getRoot() : NamespaceTree
+	public static function load(string $file) : bool
 		{
-		if (! self::$root)
+		if (! file_exists($file))
 			{
-			self::$root = new NamespaceTree();
+			return false;
 			}
 
-		return self::$root;
+		$contents = file_get_contents($file);
+		$temp = unserialize($contents);
+
+		if (! $temp)
+			{
+			return false;
+			}
+
+		self::$root = $temp;
+
+		return true;
 		}
 
 	/**
@@ -197,6 +186,11 @@ class NamespaceTree
 			}
     }
 
+	public static function save(string $file) : bool
+		{
+		return file_put_contents($file, serialize(self::$root)) > 0;
+		}
+
 	/**
 	 * Set the currently active class for menu generation.
 	 */
@@ -210,7 +204,7 @@ class NamespaceTree
 	 */
 	public static function setActiveNamespace(string $activeNamespace) : void
 		{
-		if (strlen($activeNamespace) && $activeNamespace[0] != '\\')
+		if (strlen($activeNamespace) && '\\' != $activeNamespace[0])
 			{
 			$activeNamespace = '\\' . $activeNamespace;
 			}
@@ -253,6 +247,7 @@ class NamespaceTree
 			{
 			$namespace = $child->getNamespace();
 			$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
+
 			if ($namespace == self::$activeNamespace)
 				{
 				$menuItem->setActive();
@@ -266,6 +261,7 @@ class NamespaceTree
 			$parts = explode('\\', $class);
 			$baseClass = array_pop($parts);
 			$menuItem = new \PHPFUI\MenuItem($baseClass, self::$controller->getClassURL($class));
+
 			if ($baseClass == self::$activeClass && $namespace == self::$activeNamespace)
 				{
 				$menuItem->setActive();
@@ -276,6 +272,32 @@ class NamespaceTree
 		$menu->addSubMenu($menuItem, $currentMenu);
 
 		return $currentMenu;
+		}
+
+	public static function getAllMDFiles(?NamespaceTree $tree = null, array $files = []) : array
+		{
+		if (! $tree)
+			{
+			$tree = self::getRoot();
+			}
+		$files = $files + $tree->md;
+
+		foreach ($tree->children as $child)
+			{
+			$files = self::getAllMDFiles($child, $files);
+			}
+
+		return $files;
+		}
+
+	private static function getRoot() : NamespaceTree
+		{
+		if (! self::$root)
+			{
+			self::$root = new NamespaceTree();
+			}
+
+		return self::$root;
 		}
 
 	}

@@ -641,6 +641,16 @@ $button-shadow: $shadow-depth $shadow-depth $shadow-blur 0px rgba(0,0,0,0.6);
 	font-weight: bold;
 }
 
+.git-removed {
+	background-color: mistyrose;
+}
 
+.git-unchanged {
+	color: black;
+}
+
+.git-added {
+	background-color: Aquamarine;
+}
 
 

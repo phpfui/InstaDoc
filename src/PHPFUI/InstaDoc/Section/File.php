@@ -10,18 +10,22 @@ class File extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$fullClassPath = str_replace('\\', '/', $fullClassPath);
+
 		if (! file_exists($fullClassPath))
 			{
 			$fullClassPath = $this->controller->getFileManager()->getComposerPath() . $fullClassPath;
 			}
-		$parameters = $this->controller->getParameters();
+		$ts = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2);
 
-		$page->addCSS("code{tab-size:{$parameters['t']};-moz-tab-size:{$parameters['t']}}");
+		$page->addCSS("code{tab-size:{$ts};-moz-tab-size:{$ts}}");
 		$php = @file_get_contents($fullClassPath);
 		$pre = new \PHPFUI\HTML5Element('pre');
-		if ($parameters['CSS'] != 'PHP')
+
+		$css = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CSS_FILE, 'qtcreator_dark');
+
+		if ('PHP' != $css)
 			{
-			$page->addStyleSheet("highlighter/styles/{$parameters['CSS']}.css");
+			$page->addStyleSheet("highlighter/styles/{$css}.css");
 			$hl = new \Highlight\Highlighter();
 
 			// Highlight some code.

@@ -458,16 +458,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.24",
+            "version": "V6.0.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "6664040cb86013cf92cede1de620150e89047037"
+                "reference": "f35fe2dc031e5361a7d16f750ca2e03f3cc65827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/6664040cb86013cf92cede1de620150e89047037",
-                "reference": "6664040cb86013cf92cede1de620150e89047037",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/f35fe2dc031e5361a7d16f750ca2e03f3cc65827",
+                "reference": "f35fe2dc031e5361a7d16f750ca2e03f3cc65827",
                 "shasum": ""
             },
             "require": {
@@ -499,7 +499,7 @@
                 }
             ],
             "description": "PHP Object Oriented Wrapper for Zurb Foundation",
-            "homepage": "https://github.com/phpfui/phpfui",
+            "homepage": "http://www.phpfui.com",
             "keywords": [
                 "css",
                 "foundation",
@@ -513,7 +513,7 @@
                 "zurb",
                 "zurb-foundation"
             ],
-            "time": "2020-01-01T03:30:29+00:00"
+            "time": "2020-01-11T01:14:57+00:00"
         },
         {
             "name": "scrivo/highlight.php",

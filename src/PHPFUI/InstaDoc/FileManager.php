@@ -20,11 +20,6 @@ class FileManager
 		$this->composerJsonPath = str_replace('\\', '/', $composerJsonPath);
 		}
 
-	public function getComposerPath() : string
-		{
-		return $this->composerJsonPath;
-		}
-
 	/**
 	 * You can add a Namespace directly.  Specify the namespace (no
 	 * leading \) and the directory containing the class files.
@@ -59,6 +54,77 @@ class FileManager
 		return $this;
 		}
 
+	public function getComposerPath() : string
+		{
+		return $this->composerJsonPath;
+		}
+
+	/**
+	 * Load the namespace index. Pass in a specific file to load, or
+	 * nothing to default to FileManager.serial in the project root
+	 * directory.
+	 *
+	 * If the file is missing, it will be regenerated and saved.
+	 */
+	public function load(string $file = '') : bool
+		{
+		$file = $this->getSerializedName($file);
+
+		$returnValue = true;
+
+		if (! \PHPFUI\InstaDoc\NamespaceTree::load($file))
+			{
+			$this->rescan();
+			$this->save($file);
+			$returnValue = false;
+			}
+
+		return $returnValue;
+		}
+
+	/**
+	 * Rescan the namespaces for the latest changes.
+	 */
+	public function rescan() : FileManager
+		{
+		$this->loadVendorDirectories();
+
+		foreach ($this->includedNamespaces as $parameters)
+			{
+			NamespaceTree::addNameSpace($parameters[0], $parameters[1], $parameters[2]);
+			}
+
+		foreach ($this->excludedNamespaces as $namespace)
+			{
+			NamespaceTree::deleteNamespace($namespace);
+			}
+
+		return $this;
+		}
+
+	/**
+	 * Save the namespace index. Pass in a specific file to save, or
+	 * nothing to default to FileManager.serial in the project root
+	 * directory.
+	 */
+	public function save(string $file = '') : bool
+		{
+		$file = $this->getSerializedName($file);
+
+		return \PHPFUI\InstaDoc\NamespaceTree::save($file);
+		}
+
+	private function getSerializedName(string $file) : string
+		{
+		if (! $file)
+			{
+			$class = __CLASS__;
+			$file = '../' . substr($class, strrpos($class, '\\') + 1) . '.serial';
+			}
+
+		return $file;
+		}
+
 	/**
 	 * Read the composer files to get all namespaces for include
 	 * libraries.
@@ -76,7 +142,7 @@ class FileManager
 
 		if (! $json)
 			{
-			throw new \Exception("{$composerJsonPath} does not appear to be a valid composer.lock file from directory " . getcwd());
+			throw new \Exception("{$composerJsonPath} does not appear to be a valid composer.lock file");
 			}
 
 		foreach ($json['packages'] as $package)
@@ -91,9 +157,10 @@ class FileManager
 				$path = $packagePath . '/';
 				$path = str_replace('\\', '/', $path);
 				$path = str_replace('//', '/', $path);
+
 				foreach ($autoload[$type] ?? [] as $namespace => $sourceDir)
 					{
-					if ($type == 'psr-4')
+					if ('psr-4' == $type)
 						{
 						if (is_array($sourceDir))
 							{
@@ -107,7 +174,7 @@ class FileManager
 							NamespaceTree::addNamespace($namespace, $path . $sourceDir);
 							}
 						}
-					elseif ($type == 'psr-0')
+					elseif ('psr-0' == $type)
 						{
 						if (is_array($sourceDir))
 							{
@@ -135,72 +202,6 @@ class FileManager
 					}
 				}
 			}
-		}
-
-	/**
-	 * Load the namespace index. Pass in a specific file to load, or
-	 * nothing to default to FileManager.serial in the project root
-	 * directory.
-	 *
-	 * If the file is missing, it will be regenerated and saved.
-	 */
-	public function load(string $file = '') : bool
-		{
-		$file = $this->getSerializedName($file);
-
-		$returnValue = true;
-		if (! \PHPFUI\InstaDoc\NamespaceTree::load($file))
-			{
-			$this->rescan();
-			$this->save($file);
-			$returnValue = false;
-			}
-
-		return $returnValue;
-		}
-
-	/**
-	 * Save the namespace index. Pass in a specific file to save, or
-	 * nothing to default to FileManager.serial in the project root
-	 * directory.
-	 */
-	public function save(string $file = '') : bool
-		{
-		$file = $this->getSerializedName($file);
-
-		return \PHPFUI\InstaDoc\NamespaceTree::save($file);
-		}
-
-	/**
-	 * Rescan the namespaces for the latest changes.
-	 */
-	public function rescan() : FileManager
-		{
-		$this->loadVendorDirectories();
-
-		foreach ($this->includedNamespaces as $parameters)
-			{
-			NamespaceTree::deleteNamespace($parameters[0]);
-			NamespaceTree::addNameSpace($parameters[0], $parameters[1], $parameters[2]);
-			}
-
-		foreach ($this->excludedNamespaces as $namespace)
-			{
-			NamespaceTree::deleteNamespace($namespace);
-			}
-
-		return $this;
-		}
-
-	private function getSerializedName(string $file) : string
-		{
-		if (! $file)
-			{
-			$class = __CLASS__;
-			$file = '../' . substr($class, strrpos($class, '\\') + 1) . '.serial';
-			}
-
-		return $file;
 		}
 
 	}

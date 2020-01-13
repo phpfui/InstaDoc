@@ -20,23 +20,17 @@ class Home extends \PHPFUI\InstaDoc\Section
 		$accordion->addAttribute('data-allow-all-closed', 'true');
 		$container->add(new \PHPFUI\SubHeader('Package Documentation'));
 
-		$namespace = $this->getNamespaceFromClass($fullClassPath);
+		$files = array_keys(\PHPFUI\InstaDoc\NamespaceTree::getAllMDFiles());
 
-		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
-
-		foreach ($node->getMDFiles() as $file)
+		foreach ($files as $file)
 			{
 			if (stripos($file, 'readme.md'))
 				{
 				$file = str_replace('\\', '/', $file);
 				$md = file_get_contents($file);
-				$parts = explode('/', $file);
-				$package = $parts[count($parts) - 2];
-				if ($namespace == '\\')
-					{
-					$namespace = '';
-					}
-				$accordion->addTab($namespace . '\\' . $package . ' Readme', $parsedown->text($md));
+				$parts = explode('/', str_replace('.', '', $file));
+				array_pop($parts);
+				$accordion->addTab(implode('\\', $parts). ' Readme', $parsedown->text($md));
 				}
 			}
 		$container->add($accordion);
