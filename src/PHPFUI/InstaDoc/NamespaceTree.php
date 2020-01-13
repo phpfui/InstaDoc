@@ -116,6 +116,32 @@ class NamespaceTree
 		}
 
 	/**
+	 * Returns array of all classes
+	 */
+  public static function getAllClasses(?NamespaceTree $tree = null) : array
+		{
+		if (! $tree)
+			{
+			$tree = self::getRoot();
+			}
+
+		$classes = [];
+		foreach ($tree->children as $child)
+			{
+			$classes = array_merge($classes, self::getAllClasses($child));
+			}
+
+		$namespace = $tree->getNamespace();
+
+		foreach ($tree->classes as $class => $path)
+			{
+			$classes[$path] = $namespace . '\\' . $class;
+			}
+
+		return $classes;
+		}
+
+	/**
 	 * Return an array with full paths of all the classes in the
 	 * namespace, indexed by class name
 	 */

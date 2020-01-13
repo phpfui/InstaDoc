@@ -12,11 +12,38 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
 
-		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
-		$result = $repo->run('show-branch');
+		try
+			{
+			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
+			$result = $repo->run('show-branch');
+			}
+		catch (\Exception $e)
+			{
+			$container->add(new \PHPFUI\SubHeader($this->controller->getGitRoot() . " is not a valid git repo in " . getcwd()));
+
+			return $container;
+			}
+
 		$branch = substr($result, strpos($result, '[') + 1, strpos($result, ']') - 1);
-		$log = $repo->getLog($branch, $fullClassPath, 0, 10);
-		$count = $log->count();
+		if (! $branch)
+			{
+			$container->add(new \PHPFUI\SubHeader("Invalid branch name: {$branch}"));
+
+			return $container;
+			}
+
+		try
+			{
+			$log = $repo->getLog($branch, $fullClassPath, 0, 10);
+			$count = $log->count();
+			}
+		catch (\Exception $e)
+			{
+			$container->add(new \PHPFUI\SubHeader("Error getting git history on {$branch}:{$fullClassPath}"));
+
+			return $container;
+			}
+
 		$lastPage = (int)(($count - 1) / $limit) + 1;
 
 		$log->setOffset($gitPage * $limit);

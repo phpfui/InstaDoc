@@ -4884,7 +4884,7 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
   position: relative;
   margin: 0 0;
   opacity: 1;
-  content: "/";
+  content: "\\";
   color: black;
 }
 .breadcrumbs a {

@@ -156,7 +156,7 @@ class Controller
 		$directoryPath = str_replace('//', '/', $directoryPath);
 
 		// add in the index file
-		file_put_contents($directoryPath . 'index' . $extension, $this->display());
+		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude));
 
 		$namespaces = [];
 
@@ -170,7 +170,7 @@ class Controller
 				{
 				$parameters[Controller::PAGE] = $page;
 				$this->setParameters($parameters);
-				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
 				}
 			}
 
@@ -179,7 +179,7 @@ class Controller
 		foreach ($namespaces as $namespace => $value)
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
-			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
 		}
 
 		$this->generating = '';
@@ -326,7 +326,7 @@ class Controller
 			{
 			$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
 
-			return $url;
+			return str_replace('\\', '%5C', $url);
 			}
 
 		$parts = [];
@@ -340,6 +340,10 @@ class Controller
 			}
 
 		$url = implode('_', $parts) . $this->generating;
+		while ($url[0] == '_')
+			{
+			$url = substr($url, 1);
+			}
 
 		return $url;
 		}
