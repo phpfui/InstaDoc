@@ -193,8 +193,9 @@ class FileManager
 							{
 							if ($sourceDir)
 								{
-								$sourceDir .= $namespace;
+								$sourceDir .= '/' . $namespace;
 								$sourceDir = str_replace('\\', '/', $sourceDir);
+								$sourceDir = str_replace('//', '/', $sourceDir);
 								}
 							NamespaceTree::addNamespace($namespace, $path . $sourceDir);
 							}

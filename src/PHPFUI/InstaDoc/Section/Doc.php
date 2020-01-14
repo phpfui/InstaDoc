@@ -23,7 +23,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 		catch (\throwable $e)
 			{
-			$container->add(new \PHPFUI\SubHeader("{$this->class} is not a class"));
+			$container->add($e->getMessage());
 
 			return $container;
 			}

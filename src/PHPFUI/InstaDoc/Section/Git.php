@@ -11,15 +11,21 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
+		$gitRoot = $this->controller->getGitRoot();
+		if (strpos($fullClassPath, $gitRoot) === 0)
+			{
+			$fullClassPath = substr($fullClassPath, strlen($gitRoot));
+			}
 
 		try
 			{
-			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
+			$repo = new \Gitonomy\Git\Repository($gitRoot);
 			$result = $repo->run('show-branch');
 			}
 		catch (\Exception $e)
 			{
 			$container->add(new \PHPFUI\SubHeader($this->controller->getGitRoot() . " is not a valid git repo in " . getcwd()));
+			$container->add($e->getMessage());
 
 			return $container;
 			}
@@ -39,7 +45,8 @@ class Git extends \PHPFUI\InstaDoc\Section
 			}
 		catch (\Exception $e)
 			{
-			$container->add(new \PHPFUI\SubHeader("Error getting git history on {$branch}:{$fullClassPath}"));
+			$container->add(new \PHPFUI\SubHeader('Git error from directory ' . getcwd()));
+			$container->add($e->getMessage());
 
 			return $container;
 			}
@@ -53,6 +60,12 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$table->setHeaders(['Title', 'Name', 'Date', 'Diff']);
 		$localTZ = new \DateTimeZone(date_default_timezone_get());
 		$parameters = $this->controller->getParameters();
+
+		$commits = $log->getCommits();
+		if (! count($commits))
+			{
+			$container->add(new \PHPFUI\SubHeader('No commits found'));
+			}
 
 		foreach ($log->getCommits() as $commit)
 			{

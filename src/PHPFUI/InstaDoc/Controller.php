@@ -143,13 +143,17 @@ class Controller
 
 	/**
 	 * Generate static files for high volume sites.  Pass the path to the directory where you want the files to be placed, it must exist.
+	 *
+	 * @return array with generation file count and time
 	 */
-	public function generate(string $directoryPath, array $pagesToInclude = [Controller::DOC_PAGE], string $extension = '.html') : Controller
+	public function generate(string $directoryPath, array $pagesToInclude = [Controller::DOC_PAGE], string $extension = '.html') : array
 		{
 		if (! file_exists($directoryPath))
 			{
 			throw new \Exception("The directory {$directoryPath} does not exist");
 			}
+		$count = 1;
+		$start = microtime(true);
 		$this->generating = $extension;
 		$directoryPath .= '/';
 
@@ -171,6 +175,7 @@ class Controller
 				$parameters[Controller::PAGE] = $page;
 				$this->setParameters($parameters);
 				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
+				++$count;
 				}
 			}
 
@@ -180,11 +185,13 @@ class Controller
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
 			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
-		}
+			++$count;
+			}
 
 		$this->generating = '';
+		$milliseconds = microtime(true) - $start;
 
-		return $this;
+		return ['count' => $count, 'seconds' => $milliseconds];
 		}
 
 	public function getClassParts(string $namespacedClass) : array

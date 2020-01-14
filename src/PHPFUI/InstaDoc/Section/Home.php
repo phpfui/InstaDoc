@@ -11,9 +11,12 @@ class Home extends \PHPFUI\InstaDoc\Section
 
 		$parsedown = new \Parsedown();
 
+		$hr = '';
 		foreach ($this->controller->getHomePageMarkdown() as $file)
 			{
 			$md = file_get_contents($file);
+			$container->add($hr);
+			$hr = '<hr>';
 			$container->add($parsedown->text($md));
 			}
 		$accordion = new \PHPFUI\Accordion();
