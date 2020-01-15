@@ -198,7 +198,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $span;
 		}
 
-
 	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
 		{
 		if (! $docBlock)
@@ -212,6 +211,55 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
 		$cell11->add($docBlock->getSummary());
+
+		$tags = $docBlock->getTags();
+		if ($tags)
+			{
+			$ul = new \PHPFUI\UnorderedList();
+			foreach ($tags as $tag)
+				{
+				$name = $tag->getName();
+				$description = trim($tag->getDescription());
+				$body = '';
+				if ($name == 'param' || ! $description)
+					{
+					continue;
+					}
+				if ($name == 'var')
+					{
+					if ($description)
+						{
+						$ul->addItem(new \PHPFUI\ListItem($tag->getDescription()));
+						}
+					continue;
+					}
+				if (method_exists($tag, 'getAuthorName'))
+					{
+					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
+					}
+				if (method_exists($tag, 'getReference'))
+					{
+					$body .= $tag->getReference();
+					}
+				if (method_exists($tag, 'getVersion'))
+					{
+					$body .= $tag->getVersion();
+					}
+				if (method_exists($tag, 'getLink'))
+					{
+					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
+					}
+				if (method_exists($tag, 'getVariableName'))
+					{
+					$body .= '<b>$'. $tag->getVariableName() . '</b> ';
+					}
+				$body .= $description;
+				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> - {$body}"));
+				}
+
+			$cell11->add($ul);
+			}
+
 		$gridX->add($cell11);
 
 		return $gridX;
@@ -320,6 +368,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$info .= $this->getName($method, $this->getColor('name', $method->name)) . '(';
 		$comma = '';
 
+		$parameterComments = $this->getParameterComments($docBlock);
 		foreach ($method->getParameters() as $parameter)
 			{
 			$info .= $comma;
@@ -331,7 +380,14 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				$info .= $this->getColor('type', $this->getValueString($type));
 				}
 			$info .= ' ';
-			$info .= $this->getColor('variable', '$' . $parameter->getName());
+
+			$name = $parameter->getName();
+			$tip = '$' . $name;
+			if (isset($parameterComments[$name]))
+				{
+				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
+				}
+			$info .= $this->getColor('variable', $tip);
 
 			if ($parameter->isDefaultValueAvailable())
 				{
@@ -349,6 +405,29 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		return $info;
 		}
+
+	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
+		{
+		$comments = [];
+
+		if (! $docBlock)
+			{
+			return $comments;
+			}
+
+		foreach ($docBlock->getTags() as $tag)
+			{
+			$name = $tag->getName();
+			$description = trim($tag->getDescription());
+			if ($name == 'param' && $description)
+				{
+				$comments[$tag->getVariableName()] = $description;
+				}
+			}
+
+		return $comments;
+		}
+
 
 	protected function getName($method, string $name, bool $fullyQualify = false) : string
 		{

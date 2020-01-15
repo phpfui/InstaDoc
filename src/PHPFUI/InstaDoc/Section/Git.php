@@ -11,15 +11,10 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
-		$gitRoot = $this->controller->getGitRoot();
-		if (strpos($fullClassPath, $gitRoot) === 0)
-			{
-			$fullClassPath = substr($fullClassPath, strlen($gitRoot));
-			}
 
 		try
 			{
-			$repo = new \Gitonomy\Git\Repository($gitRoot);
+			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
 			$result = $repo->run('show-branch');
 			}
 		catch (\Exception $e)
