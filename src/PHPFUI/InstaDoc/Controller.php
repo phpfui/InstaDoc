@@ -58,6 +58,7 @@ class Controller
 	private $generating = '';
 	private $homePageMarkdown = [];
 	private $gitRoot;
+	private $gitFileOffset;
 	private $page;
 	private $parameters = [];
 	private $siteTitle = 'PHPFUI/InstaDoc';
@@ -68,6 +69,18 @@ class Controller
 		$this->gitRoot = $fileManager->getComposerPath();
 		$this->page = $this->getPage();
 		$this->setParameters($this->page->getQueryParameters());
+		}
+
+	public function getGitFileOffset() : string
+		{
+		return $this->gitRoot;
+		}
+
+	public function setGitFileOffset(string $directory) : Controller
+		{
+		$this->gitFileOffset = $directory;
+
+		return $this;
 		}
 
 	public function getGitRoot() : string

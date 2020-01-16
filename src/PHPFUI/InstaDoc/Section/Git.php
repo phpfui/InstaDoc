@@ -12,6 +12,12 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
 
+		$offset = $this->controller->getGitFileOffset();
+		if (strpos($fullClassPath, $offset) === 0)
+			{
+			$fullClassPath = substr($fullClassPath, strlen($offset));
+			}
+
 		try
 			{
 			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
