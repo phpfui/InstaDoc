@@ -5,7 +5,7 @@ namespace PHPFUI\InstaDoc;
 class FileManager
 	{
 	private $composerJsonPath = '';
-	private $configFile = '.';
+	private $configFile = '..';
 	private $excludedNamespaces = [];
 	private $includedNamespaces = [];
 

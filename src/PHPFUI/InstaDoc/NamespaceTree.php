@@ -136,7 +136,7 @@ class NamespaceTree
 
 		foreach ($tree->classes as $class => $path)
 			{
-			$classes[$path] = $namespace . '\\' . $class;
+			$classes[$path] = $class;
 			}
 
 		return $classes;

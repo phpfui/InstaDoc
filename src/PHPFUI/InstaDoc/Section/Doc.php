@@ -5,9 +5,15 @@ namespace PHPFUI\InstaDoc\Section;
 class Doc extends \PHPFUI\InstaDoc\Section
 	{
 	private $class;
-
+	private $parsedown;
 	private $factory;
 	private $reflection;
+
+	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
+		{
+		parent::__construct($controller);
+		$this->parsedown = new \Parsedown();
+		}
 
 	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
 		{
@@ -34,7 +40,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			{
 			$docblock = $this->factory->create($comments);
 			$callout = new \PHPFUI\Callout('secondary');
-			$callout->add($docblock->getSummary());
+			$callout->add($this->formatComments($docblock));
 			$container->add($callout);
 			}
 
@@ -210,69 +216,81 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$cell1->add('&nbsp;');
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
-		$cell11->add($docBlock->getSummary());
+		$cell11->add($this->formatComments($docBlock));
+		$gridX->add($cell11);
+
+		return $gridX;
+		}
+
+	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
+		{
+		if (! $docBlock)
+			{
+			return '';
+			}
+
+		$container = new \PHPFUI\Container();
+
+		$container->add($docBlock->getSummary());
+		$desc = $docBlock->getDescription();
+		if ($desc)
+			{
+			$container->add('<br><br>');
+			$container->add($this->parsedown->text($desc));
+			}
 
 		$tags = $docBlock->getTags();
-
 		if ($tags)
 			{
 			$ul = new \PHPFUI\UnorderedList();
-
 			foreach ($tags as $tag)
 				{
 				$name = $tag->getName();
 				$description = trim($tag->getDescription());
 				$body = '';
-
-				if ('param' == $name || ! $description)
+				if ($name == 'param')
 					{
 					continue;
 					}
-
-				if ('var' == $name)
+				if ($name == 'var')
 					{
-					if ($description)
+					if (! $description)
 						{
-						$ul->addItem(new \PHPFUI\ListItem($tag->getDescription()));
+						continue;
 						}
-
-					continue;
 					}
-
 				if (method_exists($tag, 'getAuthorName'))
 					{
 					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
 					}
-
 				if (method_exists($tag, 'getReference'))
 					{
 					$body .= $tag->getReference();
 					}
-
 				if (method_exists($tag, 'getVersion'))
 					{
 					$body .= $tag->getVersion();
 					}
-
 				if (method_exists($tag, 'getLink'))
 					{
 					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
 					}
-
+				if (method_exists($tag, 'getType'))
+					{
+					$body .= $this->getColor('type', $tag->getType()) . ' ';
+					}
 				if (method_exists($tag, 'getVariableName'))
 					{
-					$body .= '<b>$' . $tag->getVariableName() . '</b> ';
+					$body .= '<b>$'. $tag->getVariableName() . '</b> ';
 					}
 				$body .= $description;
 				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> - {$body}"));
 				}
 
-			$cell11->add($ul);
+			$container->add($ul);
 			}
 
-		$gridX->add($cell11);
-
-		return $gridX;
+		return $container;
 		}
 
 	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
@@ -379,7 +397,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$comma = '';
 
 		$parameterComments = $this->getParameterComments($docBlock);
-
 		foreach ($method->getParameters() as $parameter)
 			{
 			$info .= $comma;
@@ -394,7 +411,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			$name = $parameter->getName();
 			$tip = '$' . $name;
-
 			if (isset($parameterComments[$name]))
 				{
 				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
@@ -416,6 +432,29 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$info .= $this->getComments($docBlock);
 
 		return $info;
+		}
+
+	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
+		{
+		$comments = [];
+
+		if (! $docBlock)
+			{
+			return $comments;
+			}
+
+		foreach ($docBlock->getTags() as $tag)
+			{
+			$name = $tag->getName();
+			$description = trim($tag->getDescription());
+			if ($name == 'param' && $description)
+				{
+				$var = $tag->getVariableName();
+				$comments[$var] = "{$var} {$description}";
+				}
+			}
+
+		return $comments;
 		}
 
 
@@ -442,29 +481,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		return '';
-		}
-
-	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
-		{
-		$comments = [];
-
-		if (! $docBlock)
-			{
-			return $comments;
-			}
-
-		foreach ($docBlock->getTags() as $tag)
-			{
-			$name = $tag->getName();
-			$description = trim($tag->getDescription());
-
-			if ('param' == $name && $description)
-				{
-				$comments[$tag->getVariableName()] = $description;
-				}
-			}
-
-		return $comments;
 		}
 
 	protected function getProperty(\ReflectionProperty $property) : string
