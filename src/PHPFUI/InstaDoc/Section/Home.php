@@ -12,6 +12,7 @@ class Home extends \PHPFUI\InstaDoc\Section
 		$parsedown = new \Parsedown();
 
 		$hr = '';
+
 		foreach ($this->controller->getHomePageMarkdown() as $file)
 			{
 			$md = file_get_contents($file);
@@ -23,9 +24,7 @@ class Home extends \PHPFUI\InstaDoc\Section
 		$accordion->addAttribute('data-allow-all-closed', 'true');
 		$container->add(new \PHPFUI\SubHeader('Package Documentation'));
 
-		$files = array_keys(\PHPFUI\InstaDoc\NamespaceTree::getAllMDFiles());
-
-		foreach ($files as $file)
+		foreach (\PHPFUI\InstaDoc\NamespaceTree::getAllMDFiles() as $file)
 			{
 			if (stripos($file, 'readme.md'))
 				{
@@ -33,7 +32,7 @@ class Home extends \PHPFUI\InstaDoc\Section
 				$md = file_get_contents($file);
 				$parts = explode('/', str_replace('.', '', $file));
 				array_pop($parts);
-				$accordion->addTab(implode('\\', $parts). ' Readme', $parsedown->text($md));
+				$accordion->addTab(implode('\\', $parts) . ' Readme', $parsedown->text($md));
 				}
 			}
 		$container->add($accordion);

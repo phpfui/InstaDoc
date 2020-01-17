@@ -126,6 +126,7 @@ class NamespaceTree
 			}
 
 		$classes = [];
+
 		foreach ($tree->children as $child)
 			{
 			$classes = array_merge($classes, self::getAllClasses($child));
@@ -139,6 +140,27 @@ class NamespaceTree
 			}
 
 		return $classes;
+		}
+
+	public static function getAllMDFiles(?NamespaceTree $tree = null) : array
+		{
+		if (! $tree)
+			{
+			$tree = self::getRoot();
+			}
+		$files = $tree->getMDFiles();
+
+		foreach ($tree->children as $child)
+			{
+			$files = array_merge($files, self::getAllMDFiles($child));
+			}
+
+		return $files;
+		}
+
+	public function getChildren() : array
+		{
+		return $this->children;
 		}
 
 	/**
@@ -298,27 +320,6 @@ class NamespaceTree
 		$menu->addSubMenu($menuItem, $currentMenu);
 
 		return $currentMenu;
-		}
-
-	public function getChildren() : array
-		{
-		return $this->children;
-		}
-
-	public static function getAllMDFiles(?NamespaceTree $tree = null, array $files = []) : array
-		{
-		if (! $tree)
-			{
-			$tree = self::getRoot();
-			}
-		$files = $files + $tree->md;
-
-		foreach ($tree->children as $child)
-			{
-			$files = self::getAllMDFiles($child, $files);
-			}
-
-		return $files;
 		}
 
 	private static function getRoot() : NamespaceTree

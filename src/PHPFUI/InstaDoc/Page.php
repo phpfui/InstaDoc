@@ -6,6 +6,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 	{
 	private $controller;
 	private $generating = '';
+	private $homeUrl = '#';
 
 	private $mainColumn;
 	private $menu;
@@ -29,7 +30,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 		{
 		$this->menu = $menu;
 
-		$link = new \PHPFUI\Link($this->getBaseURL(), $this->getPageName(), false);
+		$link = new \PHPFUI\Link($this->homeUrl, $this->getPageName(), false);
 
 		$titleBar = new \PHPFUI\TitleBar($link);
 		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
@@ -92,6 +93,13 @@ class Page extends \PHPFUI\Page implements PageInterface
 	public function setGenerating(string $generating) : Page
 		{
 		$this->generating = $generating;
+
+		return $this;
+		}
+
+	public function setHomeUrl(string $url) : Page
+		{
+		$this->homeUrl = $url;
 
 		return $this;
 		}

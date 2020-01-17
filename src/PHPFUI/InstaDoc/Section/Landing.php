@@ -37,9 +37,11 @@ class Landing extends \PHPFUI\InstaDoc\Section
 		$ul = new \PHPFUI\UnorderedList();
 
 		$children = $node->getChildren();
+
 		if ($children)
 			{
 			$ul->addItem(new \PHPFUI\ListItem('<b>Namespaces</b>'));
+
 			foreach ($children as $child)
 				{
 				$namespace = $child->getNamespace();
@@ -48,9 +50,11 @@ class Landing extends \PHPFUI\InstaDoc\Section
 			}
 
 		$classNames = $node->getClassFilenames();
+
 		if ($classNames)
 			{
 			$ul->addItem(new \PHPFUI\ListItem('<b>Classes</b>'));
+
 			foreach ($node->getClassFilenames() as $class => $fullPath)
 				{
 				$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));

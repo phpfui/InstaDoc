@@ -2,6 +2,11 @@
 
 namespace PHPFUI\InstaDoc;
 
+/**
+ * A generic Section with some base functionality
+ *
+ * Override methods to change layout
+ */
 class Section
 	{
 
@@ -68,6 +73,7 @@ class Section
 		if (in_array(Controller::GIT_PAGE, $allowedMenus))
 			{
 			$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
+
 			if ($node->getGit())
 				{
 				$gitItem = new \PHPFUI\MenuItem('Git', $this->controller->getPageUrl(Controller::GIT_PAGE));
@@ -92,6 +98,5 @@ class Section
 
 		return implode('\\', $parts);
 		}
-
 
 	}

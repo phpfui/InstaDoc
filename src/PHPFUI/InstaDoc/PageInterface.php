@@ -10,5 +10,6 @@ interface PageInterface
 	public function addBody($item) : Page;
 	public function create(\PHPFUI\Menu $menu) : void;
 	public function setGenerating(string $generating) : Page;
+	public function setHomeUrl(string $url) : Page;
 
 	}

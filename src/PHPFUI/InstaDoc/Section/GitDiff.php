@@ -26,6 +26,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 
 		$container->add(new \PHPFUI\Header($commit->getSubjectMessage(), 4));
 		$message = $commit->getBodyMessage();
+
 		if ($message)
 			{
 			$callout = new \PHPFUI\Callout('secondary');

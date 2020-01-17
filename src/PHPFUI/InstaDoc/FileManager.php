@@ -5,6 +5,7 @@ namespace PHPFUI\InstaDoc;
 class FileManager
 	{
 	private $composerJsonPath = '';
+	private $configFile = '.';
 	private $excludedNamespaces = [];
 	private $includedNamespaces = [];
 
@@ -17,7 +18,7 @@ class FileManager
 	 */
 	public function __construct(string $composerJsonPath = '')
 		{
-		$this->composerJsonPath = str_replace('\\', '/', $composerJsonPath);
+		$this->setComposerPath($composerJsonPath);
 		}
 
 	/**
@@ -33,6 +34,24 @@ class FileManager
 		$this->includedNamespaces[] = [$namespace, $directory, $localGit];
 
 		return $this;
+		}
+
+	/**
+	 * Delete config files
+	 *
+	 * @return int number of files deleted
+	 */
+	public function delete() : int
+		{
+		$count = 0;
+
+		foreach (glob($this->getSerializedName('.*')) as $filename)
+			{
+			unlink($filename);
+			++$count;
+			}
+
+		return $count;
 		}
 
 	/**
@@ -60,22 +79,18 @@ class FileManager
 		}
 
 	/**
-	 * Load the namespace index. Pass in a specific file to load, or
-	 * nothing to default to FileManager.serial in the project root
-	 * directory.
+	 * Load the namespace index.
 	 *
-	 * If the file is missing, it will be regenerated and saved.
+	 * @return true if file exists, false if generated
 	 */
-	public function load(string $file = '') : bool
+	public function load() : bool
 		{
-		$file = $this->getSerializedName($file);
-
 		$returnValue = true;
 
-		if (! \PHPFUI\InstaDoc\NamespaceTree::load($file))
+		if (! \PHPFUI\InstaDoc\NamespaceTree::load($this->getSerializedName()))
 			{
 			$this->rescan();
-			$this->save($file);
+			$this->save();
 			$returnValue = false;
 			}
 
@@ -103,26 +118,50 @@ class FileManager
 		}
 
 	/**
-	 * Save the namespace index. Pass in a specific file to save, or
-	 * nothing to default to FileManager.serial in the project root
-	 * directory.
+	 * Save the current configuration
 	 */
-	public function save(string $file = '') : bool
+	public function save() : bool
 		{
-		$file = $this->getSerializedName($file);
-
-		return \PHPFUI\InstaDoc\NamespaceTree::save($file);
+		return \PHPFUI\InstaDoc\NamespaceTree::save($this->getSerializedName());
 		}
 
-	private function getSerializedName(string $file) : string
+	public function setComposerPath(string $composerJsonPath) : FileManager
 		{
-		if (! $file)
+		$this->composerJsonPath = str_replace('\\', '/', $composerJsonPath);
+
+		return $this;
+		}
+
+	/**
+	 * The directory or directory/base file name to store settings.
+	 * If it is a directory, the file base name will be FileManager.
+	 * Several file extentions may be used
+	 */
+	public function setConfigName(string $dirOrFilename) : FileManager
+		{
+		$this->configFile = $dirOrFilename;
+
+		return $this;
+		}
+
+	private function getSerializedName(string $type = '.serial') : string
+		{
+		$file = $this->configFile;
+
+		if (empty($file))
 			{
-			$class = __CLASS__;
-			$file = '../' . substr($class, strrpos($class, '\\') + 1) . '.serial';
+			$file = '.';
 			}
 
-		return $file;
+		if (is_dir($file))
+			{
+			$class = __CLASS__;
+			$class = substr($class, strrpos($class, '\\') + 1);
+
+			$file .= '/' . $class;
+			}
+
+		return $file . $type;
 		}
 
 	/**

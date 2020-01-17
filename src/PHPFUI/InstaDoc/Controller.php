@@ -51,14 +51,15 @@ class Controller
 		Controller::CLASS_NAME,
 		Controller::PAGE,
 		];
-
-	private $accordionMenu = null;
 	private $currentPage = Controller::DOC_PAGE;
 	private $fileManager;
 	private $generating = '';
+	private $gitFileOffset = '';
+	private $gitRoot = '';
 	private $homePageMarkdown = [];
-	private $gitRoot;
-	private $gitFileOffset;
+	private $homeUrl = '#';
+
+	private $menu = null;
 	private $page;
 	private $parameters = [];
 	private $siteTitle = 'PHPFUI/InstaDoc';
@@ -71,30 +72,6 @@ class Controller
 		$this->setParameters($this->page->getQueryParameters());
 		}
 
-	public function getGitFileOffset() : string
-		{
-		return $this->gitRoot;
-		}
-
-	public function setGitFileOffset(string $directory) : Controller
-		{
-		$this->gitFileOffset = $directory;
-
-		return $this;
-		}
-
-	public function getGitRoot() : string
-		{
-		return $this->gitRoot;
-		}
-
-	public function setGitRoot(string $directory) : Controller
-		{
-		$this->gitRoot = $directory;
-
-		return $this;
-		}
-
 	public function addHomePageMarkdown(string $path) : Controller
 		{
 		$this->homePageMarkdown[$path] = true;
@@ -102,6 +79,21 @@ class Controller
 		return $this;
 		}
 
+	/**
+	 * Clears the cached menu in case you want to use two or more menu types on a page
+	 */
+	public function clearMenu() : Controller
+		{
+		$this->menu = null;
+
+		return $this;
+		}
+
+	/**
+	 * Display a page according to the parameters passed on the url.
+	 *
+	 * @param array $classPagesToShow limits the allowed pages to display, used for static file generation
+	 */
 	public function display(array $classPagesToShow = Controller::VALID_CLASS_PAGES) : string
 		{
 		$page = $this->getPage();
@@ -207,6 +199,9 @@ class Controller
 		return ['count' => $count, 'seconds' => $milliseconds];
 		}
 
+	/**
+	 * break up a namespaced class into parts
+	 */
 	public function getClassParts(string $namespacedClass) : array
 		{
 		$parts = explode('\\', $namespacedClass);
@@ -228,21 +223,12 @@ class Controller
 		return $parameters;
 		}
 
+	/**
+	 * Get the url given a class
+	 */
 	public function getClassURL(string $namespacedClass) : string
 		{
 		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE] + $this->getClassParts($namespacedClass) + $this->getParameters());
-
-		return $url;
-		}
-
-	public function getNamespaceURL(string $namespace) : string
-		{
-		while (strlen($namespace) && $namespace[0] == '\\')
-			{
-			$namespace = substr($namespace, 1);
-			}
-
-		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE, Controller::NAMESPACE => $namespace] +$this->getParameters());
 
 		return $url;
 		}
@@ -252,11 +238,33 @@ class Controller
 		return $this->fileManager;
 		}
 
+	/**
+	 * The git file offset is a relative path to the source to make it compatible with the git repo path.
+	 */
+	public function getGitFileOffset() : string
+		{
+		return $this->gitFileOffset;
+		}
+
+	/**
+	 * The git root is the directory where the associated git repo lives
+	 */
+	public function getGitRoot() : string
+		{
+		return $this->gitRoot;
+		}
+
+	/**
+	 * Get unique home page markdown files
+	 */
 	public function getHomePageMarkdown() : array
 		{
 		return array_keys($this->homePageMarkdown);
 		}
 
+	/**
+	 * Return a landing page URL
+	 */
 	public function getLandingPageUrl(string $namespace) : string
 		{
 		$parameters = $this->getParameters();
@@ -269,34 +277,72 @@ class Controller
 		return $url;
 		}
 
-	public function getMenu() : \PHPFUI\AccordionMenu
+	/**
+	 * Return a menu
+	 *
+	 * @param \PHPFUI\Menu $menu to use if you don't want the default AccordionMenu
+	 */
+	public function getMenu(?\PHPFUI\Menu $menu = null) : \PHPFUI\Menu
 		{
 		// cache if not generating static docs
-		if (! $this->generating && $this->accordionMenu)
+		if (! $this->generating && $this->menu)
 			{
-			return $this->accordionMenu;
+			return $this->menu;
 			}
 
 		NamespaceTree::setActiveClass($this->getParameter(Controller::CLASS_NAME));
 		NamespaceTree::setActiveNamespace($this->getParameter(Controller::NAMESPACE));
 		NamespaceTree::setController($this);
-		$this->accordionMenu = new \PHPFUI\AccordionMenu();
-		NamespaceTree::populateMenu($this->accordionMenu);
 
-		return $this->accordionMenu;
+		if (! $menu)
+			{
+			$menu = new \PHPFUI\AccordionMenu();
+			}
+		$this->menu = $menu;
+
+		NamespaceTree::populateMenu($this->menu);
+
+		return $this->menu;
 		}
 
+	/**
+	 * Get the url for a namespace
+	 */
+	public function getNamespaceURL(string $namespace) : string
+		{
+		while (strlen($namespace) && '\\' == $namespace[0])
+			{
+			$namespace = substr($namespace, 1);
+			}
+
+		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE, Controller::NAMESPACE => $namespace] + $this->getParameters());
+
+		return $url;
+		}
+
+	/**
+	 * Gets a blank page and sets the page title. Override to change the generated page layout.
+	 */
 	public function getPage() : PageInterface
 		{
 		$page = new Page($this);
 		$page->setPageName($this->siteTitle);
+		$page->setHomeUrl($this->homeUrl);
 
 		return $page;
 		}
 
+	/**
+	 * Get the url for the specified page
+	 */
 	public function getPageURL(string $page) : string
 		{
 		$parameters = $this->getParameters();
+
+		if (! in_array($page, Controller::VALID_CLASS_PAGES))
+			{
+			throw new \Exception("Page {$page} is not in " . implode(', ', Controller::VALID_CLASS_PAGES));
+			}
 
 		$parameters[Controller::PAGE] = $page;
 		$url = $this->getUrl($parameters);
@@ -304,6 +350,9 @@ class Controller
 		return $url;
 		}
 
+	/**
+	 * Get a specific parameter
+	 */
 	public function getParameter(string $parameter, ?string $default = null) : string
 		{
 		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
@@ -314,11 +363,17 @@ class Controller
 		return $this->parameters[$parameter] ?? $default ?? '';
 		}
 
+	/**
+	 * Get all parameters
+	 */
 	public function getParameters() : array
 		{
 		return $this->parameters;
 		}
 
+	/**
+	 * Get a section for display. Override to change layout
+	 */
 	public function getSection(string $sectionName) : Section
 		{
 		if (! in_array($sectionName, Controller::SECTIONS))
@@ -331,6 +386,9 @@ class Controller
 		return new $class($this);
 		}
 
+	/**
+	 * Get a url given parameters.  Remove invalid parameters.
+	 */
 	public function getUrl(array $parameters) : string
 		{
 		// nuke blank parameters
@@ -360,7 +418,8 @@ class Controller
 			}
 
 		$url = implode('_', $parts) . $this->generating;
-		while ($url[0] == '_')
+
+		while ('_' == $url[0])
 			{
 			$url = substr($url, 1);
 			}
@@ -368,6 +427,44 @@ class Controller
 		return $url;
 		}
 
+	/**
+	 * The git file offset is a relative path to the source to make it compatible with the git repo path.
+	 */
+	public function setGitFileOffset(string $directory) : Controller
+		{
+		$this->gitFileOffset = $directory;
+
+		return $this;
+		}
+
+	/**
+	 * This allows InstaDoc to open and display commits from the associated git repo
+	 */
+	public function setGitRoot(string $directory) : Controller
+		{
+		$this->gitRoot = $directory;
+
+		if (empty($this->getGitFileOffset()))
+			{
+			$this->setGitFileOffset($directory);
+			}
+
+		return $this;
+		}
+
+	/**
+	 * Set the home URL for the nav bar menu
+	 */
+	public function setHomeUrl(string $url) : Controller
+		{
+		$this->homeUrl = $url;
+
+		return $this;
+		}
+
+	/**
+	 * Set the title for the page
+	 */
 	public function setPageTitle(string $title) : Controller
 		{
 		$this->siteTitle = $title;
@@ -375,6 +472,9 @@ class Controller
 		return $this;
 		}
 
+	/**
+	 * Set a parameter, must be valid
+	 */
 	public function setParameter(string $parameter, string $value) : Controller
 		{
 		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
@@ -386,6 +486,9 @@ class Controller
 		return $this;
 		}
 
+	/**
+	 * Set the valid parameters from an array
+	 */
 	public function setParameters(array $parameters) : Controller
 		{
 		$this->parameters = [];
