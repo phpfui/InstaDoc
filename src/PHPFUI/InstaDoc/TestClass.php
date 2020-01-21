@@ -63,6 +63,8 @@ class TestClass
 
 	/**
 	 * This function does nothing.
+	 *
+	 * @throw //garbage dfsadfsfd
 	 */
 	private function private_function_no_return(string $fred = 'Eythel') : void {}
 

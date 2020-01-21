@@ -248,7 +248,8 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				$name = $tag->getName();
 				$description = trim($tag->getDescription());
 				$body = '';
-				if ($name == 'param')
+				// punt on useless tags
+				if (in_array($name, ['method', 'param', 'inheritdoc']))
 					{
 					continue;
 					}
@@ -259,6 +260,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 						continue;
 						}
 					}
+
 				if (method_exists($tag, 'getAuthorName'))
 					{
 					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
@@ -277,7 +279,11 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				if (method_exists($tag, 'getType'))
 					{
-					$body .= $this->getColor('type', $tag->getType()) . ' ';
+					$type = $tag->getType();
+					if ($type)
+						{
+						$body .= $this->getColor('type', $tag->getType()) . ' ';
+						}
 					}
 				if (method_exists($tag, 'getVariableName'))
 					{
@@ -374,7 +380,16 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			return null;
 			}
 
-		return $this->factory->create($comments);
+		try
+			{
+			$docBlock = $this->factory->create($comments);
+			}
+		catch (\Exception $e)
+			{
+			$docBlock = null;
+			}
+
+		return $docBlock;
 		}
 
 	protected function getMethod(\ReflectionMethod $method) : string
