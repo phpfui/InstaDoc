@@ -153,10 +153,29 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$tabs = new \PHPFUI\Tabs();
-		$tabs->addTab('Public', $this->getContent('isPublic'), true);
-		$tabs->addTab('Protected', $this->getContent('isProtected'));
-		$tabs->addTab('Private', $this->getContent('isPrivate'));
-		$tabs->addTab('Static', $this->getContent('isStatic'));
+		$table = $this->getContent('isPublic');
+		if (count($table))
+			{
+			$tabs->addTab('Public', $table, true);
+			}
+
+		$table = $this->getContent('isProtected');
+		if (count($table))
+			{
+			$tabs->addTab('Protected', $table);
+			}
+
+		$table = $this->getContent('isPrivate');
+		if (count($table))
+			{
+			$tabs->addTab('Private', $table);
+			}
+
+		$table = $this->getContent('isStatic');
+		if (count($table))
+			{
+			$tabs->addTab('Static', $table);
+			}
 
 		$container->add($tabs);
 
@@ -255,7 +274,8 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				if ($name == 'var')
 					{
-					if (! $description)
+					// useless if no description or type
+					if (! $description && ! $tag->getType())
 						{
 						continue;
 						}
@@ -287,10 +307,14 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				if (method_exists($tag, 'getVariableName'))
 					{
-					$body .= '<b>$'. $tag->getVariableName() . '</b> ';
+					$varname = $tag->getVariableName();
+					if ($varname)
+						{
+						$body .= '<b>$' . $varname . '</b> ';
+						}
 					}
 				$body .= $description;
-				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> - {$body}"));
+				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> {$body}"));
 				}
 
 			$container->add($ul);
@@ -320,7 +344,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($constants)
 			{
 			ksort($constants);
-			$table->addRow([$this->section('Constants')]);
+			$section = 'Contants';
 
 			foreach ($constants as $name => $value)
 				{
@@ -328,6 +352,12 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 				if ('isStatic' != $accessType && $constant->{$accessType}())
 					{
+					if ($section)
+						{
+						$table->addRow([$this->section($section)]);
+						$section = '';
+						}
+
 					$table->addNextRowAttribute('class', $this->getRowClasses($constant));
 					$table->addRow([$this->getConstant($constant, $name, $value)]);
 					}
@@ -339,12 +369,18 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($properties)
 			{
 			$this->objectSort($properties);
-			$table->addRow([$this->section('Properties')]);
+			$section = 'Properties';
 
 			foreach ($properties as $property)
 				{
 				if ($property->{$accessType}())
 					{
+					if ($section)
+						{
+						$table->addRow([$this->section($section)]);
+						$section = '';
+						}
+
 					$table->addNextRowAttribute('class', $this->getRowClasses($property));
 					$table->addRow([$this->getProperty($property)]);
 					}
@@ -356,12 +392,18 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($methods)
 			{
 			$this->objectSort($methods);
-			$table->addRow([$this->section('Methods')]);
+			$section = 'Methods';
 
 			foreach ($methods as $method)
 				{
 				if ($method->{$accessType}())
 					{
+					if ($section)
+						{
+						$table->addRow([$this->section($section)]);
+						$section = '';
+						}
+
 					$table->addNextRowAttribute('class', $this->getRowClasses($method));
 					$table->addRow([$this->getMethod($method)]);
 					}

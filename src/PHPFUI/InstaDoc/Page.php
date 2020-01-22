@@ -151,7 +151,10 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$fieldSet = new \PHPFUI\FieldSet('Search Namespaces \ Classes');
 		$search = new \PHPFUI\Input\SelectAutoComplete($this, 'search');
 
-		$this->addSearchOptions($this->menu, $search);
+		foreach (NamespaceTree::getAllClasses() as $class)
+			{
+			$search->addOption(str_replace('\\', '\\\\', $class), $this->controller->getClassURL($class));
+			}
 
 		$id = $search->getHiddenField()->getId();
 		$js = "function goToSearchSelection(){window.location=$('#{$id}').val();}";
@@ -160,21 +163,6 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$fieldSet->add($search);
 		$form->add($fieldSet);
 		$modal->add($form);
-		}
-
-	private function addSearchOptions(\PHPFUI\Menu $menu, \PHPFUI\Input\Select $search) : void
-		{
-		foreach ($menu->getMenuItems() as $item)
-			{
-			if ($item instanceof \PHPFUI\MenuItem)
-				{
-				$search->addOption(str_replace('\\', '\\\\', $item->getName()), str_replace('\\', '\\\\', $item->getLink()));
-				}
-			else
-				{
-				$this->addSearchOptions($item, $search);
-				}
-			}
 		}
 
 	}

@@ -228,7 +228,7 @@ class Controller
 	 */
 	public function getClassURL(string $namespacedClass) : string
 		{
-		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE] + $this->getClassParts($namespacedClass) + $this->getParameters());
+		$url = $this->getUrl($this->getClassParts($namespacedClass) + $this->getParameters());
 
 		return $url;
 		}
