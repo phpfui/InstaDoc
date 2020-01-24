@@ -8137,11 +8137,16 @@ header {
 
 .variable {
   color: black;
+  font-style: italic;
 }
 
 .name {
   color: black;
   font-weight: bold;
+}
+
+.description {
+  color: black;
 }
 
 .git-removed {

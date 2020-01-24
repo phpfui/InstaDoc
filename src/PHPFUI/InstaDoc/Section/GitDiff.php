@@ -59,9 +59,9 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			$file = 0;
 			}
 		$classes = [
-			\Gitonomy\Git\Diff\FileChange::LINE_ADD => 'git-removed',
+			\Gitonomy\Git\Diff\FileChange::LINE_ADD => 'git-added',
 			\Gitonomy\Git\Diff\FileChange::LINE_CONTEXT => 'git-unchanged',
-			\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-added',
+			\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-removed',
 			];
 
 		if ($file)

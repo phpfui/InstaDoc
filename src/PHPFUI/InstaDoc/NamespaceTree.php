@@ -200,6 +200,24 @@ class NamespaceTree
 		return $namespace;
 		}
 
+	public static function hasClass(string $namespacedClass) : bool
+		{
+		$node = self::getRoot();
+		$parts = explode('\\', $namespacedClass);
+		$class = array_pop($parts);
+		foreach ($parts as $part)
+			{
+			if (empty($node->children[$part]))
+				{
+				return false;
+				}
+			$node = $node->children[$part];
+			}
+		$classes = $node->getClassFilenames();
+
+		return isset($classes[$namespacedClass]);
+		}
+
 	public static function load(string $file) : bool
 		{
 		if (! file_exists($file))

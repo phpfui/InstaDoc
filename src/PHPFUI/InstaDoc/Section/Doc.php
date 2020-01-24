@@ -153,35 +153,22 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$tabs = new \PHPFUI\Tabs();
-		$table = $this->getContent('isPublic');
-		if (count($table))
+		foreach ($this->controller->getAccessTabs() as $section)
 			{
-			$tabs->addTab('Public', $table, true);
+			$table = $this->getContent('is' . $section);
+			if (count($table))
+				{
+				$tabs->addTab($section, $table, 'Public' == $section);
+				}
 			}
-
-		$table = $this->getContent('isProtected');
-		if (count($table))
-			{
-			$tabs->addTab('Protected', $table);
-			}
-
-		$table = $this->getContent('isPrivate');
-		if (count($table))
-			{
-			$tabs->addTab('Private', $table);
-			}
-
-		$table = $this->getContent('isStatic');
-		if (count($table))
-			{
-			$tabs->addTab('Static', $table);
-			}
-
 		$container->add($tabs);
 
 		return $container;
 		}
 
+	/**
+	 * Return the color coded access level (public, private, protected)
+	 */
 	protected function getAccess($constant) : string
 		{
 		if ($constant->isPrivate())
@@ -206,14 +193,32 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 	protected function getClassName(string $class, bool $asLink = true) : string
 		{
-		if ($asLink && (false !== strpos($class, '\\')))
+		if ($asLink && $class)
 			{
-			return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false);
+			if ($class[0] == '\\')
+				{
+				$class = substr($class, 1);
+				}
+			// if fully qualified, we are done
+			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
+				{
+				return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false);
+				}
+
+			// try name in current namespace tree
+			$namespacedClass = $this->reflection->getNamespaceName() . '\\' . $class;
+			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
+				{
+				return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false);
+				}
 			}
 
 		return $this->getColor('type', $class);
 		}
 
+	/**
+	 * Add a color to a thing by class
+	 */
 	protected function getColor(string $class, string $name) : string
 		{
 		$span = new \PHPFUI\HTML5Element('span');
@@ -223,6 +228,9 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $span;
 		}
 
+	/**
+	 * Get comments indented
+	 */
 	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
 		{
 		if (! $docBlock)
@@ -241,6 +249,9 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $gridX;
 		}
 
+	/**
+	 * Format comments without indentation
+	 */
 	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
 		{
 		if (! $docBlock)
@@ -255,7 +266,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($desc)
 			{
 			$container->add('<br><br>');
-			$container->add($this->parsedown->text($desc));
+			$container->add($this->getColor('description', $this->parsedown->text($desc)));
 			}
 
 		$tags = $docBlock->getTags();
@@ -302,7 +313,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					$type = $tag->getType();
 					if ($type)
 						{
-						$body .= $this->getColor('type', $tag->getType()) . ' ';
+						$body .= $this->getClassName($type) . ' ';
 						}
 					}
 				if (method_exists($tag, 'getVariableName'))
@@ -310,11 +321,11 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					$varname = $tag->getVariableName();
 					if ($varname)
 						{
-						$body .= '<b>$' . $varname . '</b> ';
+						$body .= $this->getColor('variable', '$' . $varname) . ' ';
 						}
 					}
 				$body .= $description;
-				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> {$body}"));
+				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
 			$container->add($ul);
@@ -344,13 +355,13 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($constants)
 			{
 			ksort($constants);
-			$section = 'Contants';
+			$section = 'Constants';
 
 			foreach ($constants as $name => $value)
 				{
 				$constant = new \ReflectionClassConstant($this->class, $name);
 
-				if ('isStatic' != $accessType && $constant->{$accessType}())
+				if (method_exists($constant, $accessType) && $constant->{$accessType}())
 					{
 					if ($section)
 						{
@@ -373,7 +384,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			foreach ($properties as $property)
 				{
-				if ($property->{$accessType}())
+				if (method_exists($property, $accessType) && $property->{$accessType}())
 					{
 					if ($section)
 						{
@@ -396,7 +407,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			foreach ($methods as $method)
 				{
-				if ($method->{$accessType}())
+				if (method_exists($method, $accessType) && $method->{$accessType}())
 					{
 					if ($section)
 						{

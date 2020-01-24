@@ -51,14 +51,14 @@ class Controller
 		Controller::CLASS_NAME,
 		Controller::PAGE,
 		];
-	private $currentPage = Controller::DOC_PAGE;
+
+	private $accessTabs = ['Public', 'Protected', 'Private', 'Static'];
 	private $fileManager;
 	private $generating = '';
 	private $gitFileOffset = '';
 	private $gitRoot = '';
 	private $homePageMarkdown = [];
 	private $homeUrl = '#';
-
 	private $menu = null;
 	private $page;
 	private $parameters = [];
@@ -87,6 +87,16 @@ class Controller
 		$this->menu = null;
 
 		return $this;
+		}
+
+	public function getAccessTabs() : array
+		{
+		return $this->accessTabs;
+		}
+
+	public function setAccessTabs(array $tabs) : Controller
+		{
+		$this->accessTabs = $tabs;
 		}
 
 	/**

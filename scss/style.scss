@@ -634,11 +634,16 @@ $button-shadow: $shadow-depth $shadow-depth $shadow-blur 0px rgba(0,0,0,0.6);
 
 .variable {
 	color: black;
+	font-style: italic;
 }
 
 .name {
 	color: black;
 	font-weight: bold;
+}
+
+.description {
+	color: black;
 }
 
 .git-removed {
@@ -652,5 +657,4 @@ $button-shadow: $shadow-depth $shadow-depth $shadow-blur 0px rgba(0,0,0,0.6);
 .git-added {
 	background-color: Aquamarine;
 }
-
 

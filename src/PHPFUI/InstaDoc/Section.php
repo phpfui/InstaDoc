@@ -48,7 +48,7 @@ class Section
 		{
 		$menu = new \PHPFUI\Menu();
 
-		$currentPage = $this->controller->getParameter(Controller::PAGE);
+		$currentPage = $this->controller->getParameter(Controller::PAGE, Controller::DOC_PAGE);
 		$parts = $this->controller->getClassParts($className);
 
 		foreach ($parts as $key => $value)
