@@ -104,5 +104,13 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		$this->assertNotWarningHtml("{$page}");
 		}
 
+	public function testTestClass() : void
+		{
+		$this->controller->setParameters($this->controller->getClassParts('\\PHPFUI\\InstaDoc\\TestClass'));
+		$page = $this->controller->display();
+		$this->assertValidHtml("{$page}");
+		$this->assertNotWarningHtml("{$page}");
+		}
+
 	}
 

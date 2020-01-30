@@ -266,7 +266,10 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($desc)
 			{
 			$container->add('<br><br>');
-			$container->add($this->getColor('description', $this->parsedown->text($desc)));
+			$div = new \PHPFUI\HTML5Element('div');
+			$div->addClass('description');
+			$div->add($this->parsedown->text($desc));
+			$container->add($div);
 			}
 
 		$tags = $docBlock->getTags();
