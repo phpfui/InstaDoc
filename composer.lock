@@ -96,16 +96,16 @@
         },
         {
             "name": "fortawesome/font-awesome",
-            "version": "5.12.0",
+            "version": "5.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                "reference": "d8db3d032d22e7a5e21f3b40905b7867be19bb02"
+                "reference": "0d1f27efb836eb2ab994ba37221849ed64a73e5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/d8db3d032d22e7a5e21f3b40905b7867be19bb02",
-                "reference": "d8db3d032d22e7a5e21f3b40905b7867be19bb02",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/0d1f27efb836eb2ab994ba37221849ed64a73e5c",
+                "reference": "0d1f27efb836eb2ab994ba37221849ed64a73e5c",
                 "shasum": ""
             },
             "type": "library",
@@ -155,7 +155,7 @@
                 "icon",
                 "svg"
             ],
-            "time": "2019-12-10T22:52:13+00:00"
+            "time": "2020-02-05T14:36:40+00:00"
         },
         {
             "name": "froala/wysiwyg-editor",
@@ -458,16 +458,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.26",
+            "version": "V6.0.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "5459f254b558ffaa6db1337106f39c9897cd220c"
+                "reference": "90323d395e0955705aff8e2b42620e8740817dbb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/5459f254b558ffaa6db1337106f39c9897cd220c",
-                "reference": "5459f254b558ffaa6db1337106f39c9897cd220c",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/90323d395e0955705aff8e2b42620e8740817dbb",
+                "reference": "90323d395e0955705aff8e2b42620e8740817dbb",
                 "shasum": ""
             },
             "require": {
@@ -513,20 +513,20 @@
                 "zurb",
                 "zurb-foundation"
             ],
-            "time": "2020-01-14T21:16:15+00:00"
+            "time": "2020-01-23T02:31:26+00:00"
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.17.1.0",
+            "version": "v9.18.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "5451a9ad6d638559cf2a092880f935c39776134e"
+                "reference": "a57c858cb753f543965a1e17af386a648012ed8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/5451a9ad6d638559cf2a092880f935c39776134e",
-                "reference": "5451a9ad6d638559cf2a092880f935c39776134e",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/a57c858cb753f543965a1e17af386a648012ed8f",
+                "reference": "a57c858cb753f543965a1e17af386a648012ed8f",
                 "shasum": ""
             },
             "require": {
@@ -536,8 +536,8 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8|^5.7",
-                "symfony/finder": "^3.4",
-                "symfony/var-dumper": "^3.4"
+                "symfony/finder": "^2.8|^3.4",
+                "symfony/var-dumper": "^2.8|^3.4"
             },
             "suggest": {
                 "ext-dom": "Needed to make use of the features in the utilities namespace"
@@ -581,7 +581,7 @@
                 "highlight.php",
                 "syntax"
             ],
-            "time": "2019-12-13T21:54:06+00:00"
+            "time": "2020-02-03T02:19:36+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -643,16 +643,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.0.2",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "ea2dc31b59d63abd9bc2356ac72eb7b3f3469f0e"
+                "reference": "f9ffd870f5ac01abec7b2b5e15f904ca9400ecd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/ea2dc31b59d63abd9bc2356ac72eb7b3f3469f0e",
-                "reference": "ea2dc31b59d63abd9bc2356ac72eb7b3f3469f0e",
+                "url": "https://api.github.com/repos/symfony/process/zipball/f9ffd870f5ac01abec7b2b5e15f904ca9400ecd1",
+                "reference": "f9ffd870f5ac01abec7b2b5e15f904ca9400ecd1",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +688,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-12-10T11:06:55+00:00"
+            "time": "2020-01-09T09:53:06+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -743,12 +743,12 @@
             "version": "v6.5.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zurb/foundation-sites.git",
+                "url": "https://github.com/foundation/foundation-sites.git",
                 "reference": "b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zurb/foundation-sites/zipball/b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba",
+                "url": "https://api.github.com/repos/foundation/foundation-sites/zipball/b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba",
                 "reference": "b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba",
                 "shasum": ""
             },
