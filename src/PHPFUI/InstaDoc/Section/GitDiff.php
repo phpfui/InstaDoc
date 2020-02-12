@@ -5,7 +5,7 @@ namespace PHPFUI\InstaDoc\Section;
 class GitDiff extends \PHPFUI\InstaDoc\Section
 	{
 
-	public function generate(\PHPFUI\Page $page, string $fullClassName) : \PHPFUI\Container
+	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassName) : \PHPFUI\Container
 		{
 		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
 		$container = new \PHPFUI\Container();

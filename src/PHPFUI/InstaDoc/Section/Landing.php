@@ -5,7 +5,7 @@ namespace PHPFUI\InstaDoc\Section;
 class Landing extends \PHPFUI\InstaDoc\Section
 	{
 
-	public function generate(\PHPFUI\Page $page, string $namespace) : \PHPFUI\Container
+	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $namespace) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
 

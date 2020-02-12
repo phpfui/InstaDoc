@@ -89,16 +89,6 @@ class Controller
 		return $this;
 		}
 
-	public function getAccessTabs() : array
-		{
-		return $this->accessTabs;
-		}
-
-	public function setAccessTabs(array $tabs) : Controller
-		{
-		$this->accessTabs = $tabs;
-		}
-
 	/**
 	 * Display a page according to the parameters passed on the url.
 	 *
@@ -207,6 +197,11 @@ class Controller
 		$milliseconds = microtime(true) - $start;
 
 		return ['count' => $count, 'seconds' => $milliseconds];
+		}
+
+	public function getAccessTabs() : array
+		{
+		return $this->accessTabs;
 		}
 
 	/**
@@ -435,6 +430,11 @@ class Controller
 			}
 
 		return $url;
+		}
+
+	public function setAccessTabs(array $tabs) : Controller
+		{
+		$this->accessTabs = $tabs;
 		}
 
 	/**

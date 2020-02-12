@@ -19,7 +19,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$this->addStyleSheet('css/styles.css');
 		}
 
-	public function addBody($item) : Page
+	public function addBody($item) : PageInterface
 		{
 		$this->mainColumn->add($item);
 
@@ -90,14 +90,14 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$this->add($footer);
 		}
 
-	public function setGenerating(string $generating) : Page
+	public function setGenerating(string $generating) : PageInterface
 		{
 		$this->generating = $generating;
 
 		return $this;
 		}
 
-	public function setHomeUrl(string $url) : Page
+	public function setHomeUrl(string $url) : PageInterface
 		{
 		$this->homeUrl = $url;
 

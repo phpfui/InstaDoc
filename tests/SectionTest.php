@@ -54,7 +54,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 
 	public function testSectionsGenerateValidHTML() : void
 		{
-		$page = new \PHPFUI\Page();
+		$page = new \PHPFUI\InstaDoc\Page($this->controller);
 
 		foreach ($this->sections as $section)
 			{

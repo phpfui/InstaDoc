@@ -5,7 +5,7 @@ namespace PHPFUI\InstaDoc\Section;
 class Git extends \PHPFUI\InstaDoc\Section
 	{
 
-	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
+	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
 
@@ -97,7 +97,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		return $container;
 		}
 
-	private function getReveal(\PHPFUI\Page $page, \PHPFUI\HTML5Element $opener, string $url) : \PHPFUI\Reveal
+	private function getReveal(\PHPFUI\InstaDoc\PageInterface $page, \PHPFUI\HTML5Element $opener, string $url) : \PHPFUI\Reveal
 		{
 		$reveal = new \PHPFUI\Reveal($page, $opener);
 		$reveal->addClass('large');

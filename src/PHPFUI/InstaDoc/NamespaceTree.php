@@ -205,6 +205,7 @@ class NamespaceTree
 		$node = self::getRoot();
 		$parts = explode('\\', $namespacedClass);
 		$class = array_pop($parts);
+
 		foreach ($parts as $part)
 			{
 			if (empty($node->children[$part]))

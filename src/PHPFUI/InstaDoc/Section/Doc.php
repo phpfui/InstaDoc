@@ -5,8 +5,8 @@ namespace PHPFUI\InstaDoc\Section;
 class Doc extends \PHPFUI\InstaDoc\Section
 	{
 	private $class;
-	private $parsedown;
 	private $factory;
+	private $parsedown;
 	private $reflection;
 
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
@@ -15,7 +15,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$this->parsedown = new \Parsedown();
 		}
 
-	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
+	public function generate(\PHPFUI\Instadoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
 
@@ -153,15 +153,116 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$tabs = new \PHPFUI\Tabs();
+
 		foreach ($this->controller->getAccessTabs() as $section)
 			{
 			$table = $this->getContent('is' . $section);
+
 			if (count($table))
 				{
 				$tabs->addTab($section, $table, 'Public' == $section);
 				}
 			}
 		$container->add($tabs);
+
+		return $container;
+		}
+
+	/**
+	 * Format comments without indentation
+	 */
+	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
+		{
+		if (! $docBlock)
+			{
+			return '';
+			}
+
+		$container = new \PHPFUI\Container();
+
+		$container->add($docBlock->getSummary());
+		$desc = $docBlock->getDescription();
+
+		if ($desc)
+			{
+			$container->add('<br><br>');
+			$div = new \PHPFUI\HTML5Element('div');
+			$div->addClass('description');
+			$div->add($this->parsedown->text($desc));
+			$container->add($div);
+			}
+
+		$tags = $docBlock->getTags();
+
+		if ($tags)
+			{
+			$ul = new \PHPFUI\UnorderedList();
+
+			foreach ($tags as $tag)
+				{
+				$name = $tag->getName();
+				$description = trim($tag->getDescription());
+				$body = '';
+				// punt on useless tags
+				if (in_array($name, ['method', 'param', 'inheritdoc']))
+					{
+					continue;
+					}
+
+				if ('var' == $name)
+					{
+					// useless if no description or type
+					if (! $description && ! $tag->getType())
+						{
+						continue;
+						}
+					}
+
+				if (method_exists($tag, 'getAuthorName'))
+					{
+					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
+					}
+
+				if (method_exists($tag, 'getReference'))
+					{
+					$body .= $tag->getReference();
+					}
+
+				if (method_exists($tag, 'getVersion'))
+					{
+					$body .= $tag->getVersion();
+					}
+
+				if (method_exists($tag, 'getLink'))
+					{
+					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
+					}
+
+				if (method_exists($tag, 'getType'))
+					{
+					$type = $tag->getType();
+
+					if ($type)
+						{
+						$body .= $this->getClassName($type) . ' ';
+						}
+					}
+
+				if (method_exists($tag, 'getVariableName'))
+					{
+					$varname = $tag->getVariableName();
+
+					if ($varname)
+						{
+						$body .= $this->getColor('variable', '$' . $varname) . ' ';
+						}
+					}
+				$body .= $description;
+				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
+				}
+
+			$container->add($ul);
+			}
 
 		return $container;
 		}
@@ -195,7 +296,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		{
 		if ($asLink && $class)
 			{
-			if ($class[0] == '\\')
+			if ('\\' == $class[0])
 				{
 				$class = substr($class, 1);
 				}
@@ -207,6 +308,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			// try name in current namespace tree
 			$namespacedClass = $this->reflection->getNamespaceName() . '\\' . $class;
+
 			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
 				{
 				return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false);
@@ -247,94 +349,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$gridX->add($cell11);
 
 		return $gridX;
-		}
-
-	/**
-	 * Format comments without indentation
-	 */
-	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
-		{
-		if (! $docBlock)
-			{
-			return '';
-			}
-
-		$container = new \PHPFUI\Container();
-
-		$container->add($docBlock->getSummary());
-		$desc = $docBlock->getDescription();
-		if ($desc)
-			{
-			$container->add('<br><br>');
-			$div = new \PHPFUI\HTML5Element('div');
-			$div->addClass('description');
-			$div->add($this->parsedown->text($desc));
-			$container->add($div);
-			}
-
-		$tags = $docBlock->getTags();
-		if ($tags)
-			{
-			$ul = new \PHPFUI\UnorderedList();
-			foreach ($tags as $tag)
-				{
-				$name = $tag->getName();
-				$description = trim($tag->getDescription());
-				$body = '';
-				// punt on useless tags
-				if (in_array($name, ['method', 'param', 'inheritdoc']))
-					{
-					continue;
-					}
-				if ($name == 'var')
-					{
-					// useless if no description or type
-					if (! $description && ! $tag->getType())
-						{
-						continue;
-						}
-					}
-
-				if (method_exists($tag, 'getAuthorName'))
-					{
-					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
-					}
-				if (method_exists($tag, 'getReference'))
-					{
-					$body .= $tag->getReference();
-					}
-				if (method_exists($tag, 'getVersion'))
-					{
-					$body .= $tag->getVersion();
-					}
-				if (method_exists($tag, 'getLink'))
-					{
-					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
-					}
-				if (method_exists($tag, 'getType'))
-					{
-					$type = $tag->getType();
-					if ($type)
-						{
-						$body .= $this->getClassName($type) . ' ';
-						}
-					}
-				if (method_exists($tag, 'getVariableName'))
-					{
-					$varname = $tag->getVariableName();
-					if ($varname)
-						{
-						$body .= $this->getColor('variable', '$' . $varname) . ' ';
-						}
-					}
-				$body .= $description;
-				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
-				}
-
-			$container->add($ul);
-			}
-
-		return $container;
 		}
 
 	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
@@ -468,6 +482,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$comma = '';
 
 		$parameterComments = $this->getParameterComments($docBlock);
+
 		foreach ($method->getParameters() as $parameter)
 			{
 			$info .= $comma;
@@ -482,6 +497,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			$name = $parameter->getName();
 			$tip = '$' . $name;
+
 			if (isset($parameterComments[$name]))
 				{
 				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
@@ -503,29 +519,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$info .= $this->getComments($docBlock);
 
 		return $info;
-		}
-
-	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
-		{
-		$comments = [];
-
-		if (! $docBlock)
-			{
-			return $comments;
-			}
-
-		foreach ($docBlock->getTags() as $tag)
-			{
-			$name = $tag->getName();
-			$description = trim($tag->getDescription());
-			if ($name == 'param' && $description)
-				{
-				$var = $tag->getVariableName();
-				$comments[$var] = "{$var} {$description}";
-				}
-			}
-
-		return $comments;
 		}
 
 
@@ -552,6 +545,30 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		return '';
+		}
+
+	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
+		{
+		$comments = [];
+
+		if (! $docBlock)
+			{
+			return $comments;
+			}
+
+		foreach ($docBlock->getTags() as $tag)
+			{
+			$name = $tag->getName();
+			$description = trim($tag->getDescription());
+
+			if ('param' == $name && $description)
+				{
+				$var = $tag->getVariableName();
+				$comments[$var] = "{$var} {$description}";
+				}
+			}
+
+		return $comments;
 		}
 
 	protected function getProperty(\ReflectionProperty $property) : string
@@ -656,7 +673,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 	protected function objectCompare($lhs, $rhs) : int
 		{
-		return $lhs->name <=> $rhs->name;
+		return strcasecmp($lhs->name, $rhs->name);
 		}
 
 	protected function objectSort(array &$objects) : void

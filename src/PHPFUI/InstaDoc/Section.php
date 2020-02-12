@@ -17,7 +17,7 @@ class Section
 		$this->controller = $controller;
 		}
 
-	public function generate(\PHPFUI\Page $page, string $object) : \PHPFUI\Container
+	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $object) : \PHPFUI\Container
 		{
 		return new \PHPFUI\Container();
 		}

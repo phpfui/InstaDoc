@@ -5,7 +5,7 @@ namespace PHPFUI\InstaDoc\Section;
 class File extends \PHPFUI\InstaDoc\Section
 	{
 
-	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
+	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
 
