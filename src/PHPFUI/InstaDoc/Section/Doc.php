@@ -80,9 +80,21 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		$parent = $this->reflection->getParentClass();
 
+		$parentNames = [];
 		if ($parent)
 			{
-			$table->addRow([$this->section('Extends'), $this->getClassName($parent->getName())]);
+			while ($parent)
+				{
+				$parentNames[] = $parent->getName();
+				$parent = $parent->getParentClass();
+				}
+			}
+
+		$extends = $this->section('Extends');
+		foreach ($parentNames as $name)
+			{
+			$table->addRow([$extends, $this->getClassName($name)]);
+			$extends = '';
 			}
 
 		$interfaces = $this->reflection->getInterfaces();
@@ -102,18 +114,12 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		$container->add($table);
 
-
 		$parent = $this->reflection->getParentClass();
 
-		if ($parent)
+		if ($parentNames)
 			{
-			$parts = ['All', 'self'];
+			$parts = array_merge(['All', 'self'], $parentNames);
 
-			while ($parent)
-				{
-				$parts[] = $parent->getName();
-				$parent = $parent->getParentClass();
-				}
 			$filterMenu = new \PHPFUI\Menu();
 
 			foreach ($parts as $name)
