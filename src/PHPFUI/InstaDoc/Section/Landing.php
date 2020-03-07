@@ -34,18 +34,18 @@ class Landing extends \PHPFUI\InstaDoc\Section
 			}
 
 		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
-		$ul = new \PHPFUI\UnorderedList();
+		$ul = new \PHPFUI\DescriptionList();
 
 		$children = $node->getChildren();
 
 		if ($children)
 			{
-			$ul->addItem(new \PHPFUI\ListItem('<b>Namespaces</b>'));
+			$ul->add(new \PHPFUI\DescriptionTitle('Namespaces'));
 
 			foreach ($children as $child)
 				{
 				$namespace = $child->getNamespace();
-				$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getNamespaceURL($namespace), $namespace, false)));
+				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getNamespaceURL($namespace), $namespace, false)));
 				}
 			}
 
@@ -53,11 +53,11 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 		if ($classNames)
 			{
-			$ul->addItem(new \PHPFUI\ListItem('<b>Classes</b>'));
+			$ul->add(new \PHPFUI\DescriptionTitle('Classes'));
 
 			foreach ($node->getClassFilenames() as $class => $fullPath)
 				{
-				$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));
+				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));
 				}
 			}
 

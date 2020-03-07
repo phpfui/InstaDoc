@@ -411,26 +411,25 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "2e32a6d48972b2c1976ed5d8967145b6cec4a4a9"
+                "reference": "7462d5f123dfc080dfdf26897032a6513644fc95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/2e32a6d48972b2c1976ed5d8967145b6cec4a4a9",
-                "reference": "2e32a6d48972b2c1976ed5d8967145b6cec4a4a9",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/7462d5f123dfc080dfdf26897032a6513644fc95",
+                "reference": "7462d5f123dfc080dfdf26897032a6513644fc95",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1",
+                "php": "^7.2",
                 "phpdocumentor/reflection-common": "^2.0"
             },
             "require-dev": {
-                "ext-tokenizer": "^7.1",
-                "mockery/mockery": "~1",
-                "phpunit/phpunit": "^7.0"
+                "ext-tokenizer": "^7.2",
+                "mockery/mockery": "~1"
             },
             "type": "library",
             "extra": {
@@ -454,20 +453,20 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "time": "2019-08-22T18:11:29+00:00"
+            "time": "2020-02-18T18:59:58+00:00"
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.27",
+            "version": "V6.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "90323d395e0955705aff8e2b42620e8740817dbb"
+                "reference": "337d3f9ebb4b18b65a463d7f97cbb9013591637a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/90323d395e0955705aff8e2b42620e8740817dbb",
-                "reference": "90323d395e0955705aff8e2b42620e8740817dbb",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/337d3f9ebb4b18b65a463d7f97cbb9013591637a",
+                "reference": "337d3f9ebb4b18b65a463d7f97cbb9013591637a",
                 "shasum": ""
             },
             "require": {
@@ -476,7 +475,7 @@
                 "froala/wysiwyg-editor": "2.9.5",
                 "igorescobar/jquery-mask-plugin": "^1.14",
                 "php": ">=7.1",
-                "zurb/foundation": "6.5.*"
+                "zurb/foundation": "^6.6"
             },
             "require-dev": {
                 "phpfui/html-unit-tester": "^1.0",
@@ -498,35 +497,34 @@
                     "email": "brucekwells@gmail.com"
                 }
             ],
-            "description": "PHP Object Oriented Wrapper for Zurb Foundation",
+            "description": "PHP Object Oriented Wrapper for the Foundation CSS Framework",
             "homepage": "http://www.phpfui.com",
             "keywords": [
                 "css",
                 "foundation",
+                "framework",
                 "html",
                 "object oriented",
                 "object-oriented",
                 "php",
                 "responsive",
                 "scss",
-                "ui",
-                "zurb",
-                "zurb-foundation"
+                "ui"
             ],
-            "time": "2020-01-23T02:31:26+00:00"
+            "time": "2020-03-07T03:16:22+00:00"
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.18.1.0",
+            "version": "v9.18.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "a57c858cb753f543965a1e17af386a648012ed8f"
+                "reference": "52fc21c99fd888e33aed4879e55a3646f8d40558"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/a57c858cb753f543965a1e17af386a648012ed8f",
-                "reference": "a57c858cb753f543965a1e17af386a648012ed8f",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/52fc21c99fd888e33aed4879e55a3646f8d40558",
+                "reference": "52fc21c99fd888e33aed4879e55a3646f8d40558",
                 "shasum": ""
             },
             "require": {
@@ -536,6 +534,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8|^5.7",
+                "sabberworm/php-css-parser": "^8.3",
                 "symfony/finder": "^2.8|^3.4",
                 "symfony/var-dumper": "^2.8|^3.4"
             },
@@ -581,20 +580,20 @@
                 "highlight.php",
                 "syntax"
             ],
-            "time": "2020-02-03T02:19:36+00:00"
+            "time": "2020-03-02T05:59:21+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.13.1",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "f8f0b461be3385e56d6de3dbb5a0df24c0c275e3"
+                "reference": "fbdeaec0df06cf3d51c93de80c7eb76e271f5a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/f8f0b461be3385e56d6de3dbb5a0df24c0c275e3",
-                "reference": "f8f0b461be3385e56d6de3dbb5a0df24c0c275e3",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/fbdeaec0df06cf3d51c93de80c7eb76e271f5a38",
+                "reference": "fbdeaec0df06cf3d51c93de80c7eb76e271f5a38",
                 "shasum": ""
             },
             "require": {
@@ -606,7 +605,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -639,20 +638,20 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2019-11-27T13:56:44+00:00"
+            "time": "2020-01-13T11:15:53+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v5.0.4",
+            "version": "v5.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "f9ffd870f5ac01abec7b2b5e15f904ca9400ecd1"
+                "reference": "fd4a86dd7e36437f2fc080d8c42c7415d828a0a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/f9ffd870f5ac01abec7b2b5e15f904ca9400ecd1",
-                "reference": "f9ffd870f5ac01abec7b2b5e15f904ca9400ecd1",
+                "url": "https://api.github.com/repos/symfony/process/zipball/fd4a86dd7e36437f2fc080d8c42c7415d828a0a8",
+                "reference": "fd4a86dd7e36437f2fc080d8c42c7415d828a0a8",
                 "shasum": ""
             },
             "require": {
@@ -688,20 +687,20 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2020-01-09T09:53:06+00:00"
+            "time": "2020-02-08T17:00:58+00:00"
         },
         {
             "name": "webmozart/assert",
-            "version": "1.6.0",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "573381c0a64f155a0d9a23f4b0c797194805b925"
+                "reference": "aed98a490f9a8f78468232db345ab9cf606cf598"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/573381c0a64f155a0d9a23f4b0c797194805b925",
-                "reference": "573381c0a64f155a0d9a23f4b0c797194805b925",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/aed98a490f9a8f78468232db345ab9cf606cf598",
+                "reference": "aed98a490f9a8f78468232db345ab9cf606cf598",
                 "shasum": ""
             },
             "require": {
@@ -736,20 +735,20 @@
                 "check",
                 "validate"
             ],
-            "time": "2019-11-24T13:36:37+00:00"
+            "time": "2020-02-14T12:15:55+00:00"
         },
         {
             "name": "zurb/foundation",
-            "version": "v6.5.3",
+            "version": "v6.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/foundation/foundation-sites.git",
-                "reference": "b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba"
+                "reference": "ef9389ea56bac2654b81e04b28f1cfad6d743c33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/foundation/foundation-sites/zipball/b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba",
-                "reference": "b58d2354f54bb601f1b4ae7ee8536ac7ccfb18ba",
+                "url": "https://api.github.com/repos/foundation/foundation-sites/zipball/ef9389ea56bac2654b81e04b28f1cfad6d743c33",
+                "reference": "ef9389ea56bac2654b81e04b28f1cfad6d743c33",
                 "shasum": ""
             },
             "type": "library",
@@ -765,7 +764,7 @@
                 }
             ],
             "description": "The most advanced responsive front-end framework in the world.",
-            "homepage": "http://foundation.zurb.com",
+            "homepage": "https://get.foundation",
             "keywords": [
                 "JS",
                 "css",
@@ -775,7 +774,7 @@
                 "sass",
                 "scss"
             ],
-            "time": "2019-01-27T22:05:45+00:00"
+            "time": "2019-12-13T19:45:58+00:00"
         }
     ],
     "packages-dev": [
