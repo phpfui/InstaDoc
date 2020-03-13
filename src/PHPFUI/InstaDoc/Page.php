@@ -60,6 +60,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$grid = new \PHPFUI\GridX();
 		$menuColumn = new \PHPFUI\Cell(4, 4, 3);
 		$menuColumn->addClass('show-for-medium');
+		$menuId = $menu->getId();
 		$menuColumn->add($menu);
 		$grid->add($menuColumn);
 
@@ -69,7 +70,9 @@ class Page extends \PHPFUI\Page implements PageInterface
 
 		$offCanvas = new \PHPFUI\OffCanvas($body);
 		$div = new \PHPFUI\HTML5Element('div');
-		$div->add($menu);
+		$offCanvasId = $div->getId();
+		// copy over the menu with JQuery at run time
+		$this->addJavaScriptFirst('$("#' . $menuId . '").clone().prependTo("#' . $offCanvasId . '");');
 		$offId = $offCanvas->addOff($div, $hamburger);
 		$offCanvas->setPosition($offId, 'left')->setTransition($offId, 'over');
 
