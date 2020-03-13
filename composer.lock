@@ -457,16 +457,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.34",
+            "version": "V6.0.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "337d3f9ebb4b18b65a463d7f97cbb9013591637a"
+                "reference": "c437e87391ca278e15864df3209f4f6a6c9e0ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/337d3f9ebb4b18b65a463d7f97cbb9013591637a",
-                "reference": "337d3f9ebb4b18b65a463d7f97cbb9013591637a",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/c437e87391ca278e15864df3209f4f6a6c9e0ce1",
+                "reference": "c437e87391ca278e15864df3209f4f6a6c9e0ce1",
                 "shasum": ""
             },
             "require": {
@@ -511,7 +511,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-03-07T03:16:22+00:00"
+            "time": "2020-03-13T02:24:49+00:00"
         },
         {
             "name": "scrivo/highlight.php",
