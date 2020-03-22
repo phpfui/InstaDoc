@@ -101,7 +101,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		if ($interfaces)
 			{
-			ksort($interfaces);
+			ksort($interfaces, SORT_FLAG_CASE | SORT_STRING);
 			$section = 'Implements';
 
 			foreach ($interfaces as $interface)
@@ -377,7 +377,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		if ($constants)
 			{
-			ksort($constants);
+			ksort($constants, SORT_FLAG_CASE | SORT_STRING);
 			$section = 'Constants';
 
 			foreach ($constants as $name => $value)

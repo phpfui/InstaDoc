@@ -72,4 +72,19 @@ class TestClass
 	 */
 	private function private_function_no_return(string $fred = 'Eythel') : void {}
 
+	/**
+	 * Testing method sorting
+	 */
+	private function UpperCaseMethodName() : void {}
+
+	/**
+	 * Testing method sorting
+	 */
+	private function upperTest() : void {}
+
+	/**
+	 * Testing method sorting
+	 */
+	private function theLowerTest() : void {}
+
 	}

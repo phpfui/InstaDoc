@@ -297,8 +297,8 @@ class NamespaceTree
 			{
 			$tree = self::getRoot();
 			}
-		ksort($tree->classes);
-		ksort($tree->children);
+		ksort($tree->classes, SORT_FLAG_CASE | SORT_STRING);
+		ksort($tree->children,  SORT_FLAG_CASE | SORT_STRING);
 
 		foreach ($tree->children as &$child)
 			{
