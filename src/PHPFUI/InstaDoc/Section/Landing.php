@@ -11,7 +11,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 		$container->add($this->getBreadCrumbs($namespace));
 
-		$parsedown = new \Parsedown();
+		$parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
 		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
 		$files = $node->getMDFiles();
 
@@ -27,8 +27,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 				$section = array_pop($parts);
 				$section = str_replace('_', ' ', strtolower($section));
 				$section = str_replace('.md', '', $section);
-				$md = @file_get_contents($file);
-				$accordion->addTab(ucwords($section), $parsedown->text($md));
+				$accordion->addTab(ucwords($section), $parsedown->fileText($file));
 				}
 			$container->add($accordion);
 			}

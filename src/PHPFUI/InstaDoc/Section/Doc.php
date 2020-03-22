@@ -12,7 +12,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct($controller);
-		$this->parsedown = new \Parsedown();
+		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
 		}
 
 	public function generate(\PHPFUI\Instadoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
