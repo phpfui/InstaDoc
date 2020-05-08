@@ -134,10 +134,6 @@ button.tiny, .button.tiny {
 	font-size: 0.6875rem;
 }
 
-select {
-	height: auto;
-}
-
 select[size], select[multiple] {
 	background-image: none;
 }
@@ -398,129 +394,10 @@ img.imageCenter {
 	border: .1em solid black;
 }
 
-#calendar {
-	width: 100%;
-}
-
-#calendar a {
-	color: #8e352e;
-	text-decoration: none;
-}
-
 header {
 			text-align: center;
 			font-size: 1.6875rem;
 }
-
-#calendar ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	width: 100%;
-}
-
-#calendar li {
-	display: block;
-	float: left;
-	width:14.342%;
-	padding: 5px;
-	box-sizing:border-box;
-	border: 1px solid #ccc;
-	margin-right: -1px;
-	margin-bottom: -1px;
-}
-
-#calendar ul.weekdays {
-	height: 40px;
-	background: #8e352e;
-}
-
-#calendar ul.weekdays li {
-	text-align: center;
-	text-transform: uppercase;
-	line-height: 20px;
-	border: none !important;
-	padding: 10px 6px;
-	color: #fff;
-	font-size: 13px;
-}
-
-#calendar .days li {
-	height: 180px;
-}
-
-#calendar .days li:hover {
-	background: #d3d3d3;
-}
-
-#calendar .date {
-	text-align: center;
-	margin-bottom: 5px;
-	padding: 4px;
-	background: #333;
-	color: #fff;
-	width: 2em;
-	border-radius: 50%;
-	float: right;
-}
-
-#calendar .today {
-	background: #76df9d;
-}
-
-#calendar .holiday {
-	background: fuchsia;
-	}
-
-#calendar .event {
-	clear: both;
-	display: block;
-	font-size: 13px;
-	border-radius: 4px;
-	padding: 5px;
-	margin-bottom : 5px;
-	line-height: 14px;
-	background: #e4f2f2;
-	border: 1px solid #b5dbdc;
-	color: #009aaf;
-	text-decoration: none;
-}
-
-#calendar .event-desc {
-	color: #666;
-	margin: 3px 0 7px 0;
-	text-decoration: none;
-}
-
-#calendar .other-month {
-  background: #bbbbbb;
-  color: #222222;
-}
-
-/* ============================
-				Mobile Responsiveness
-   ============================*/
-
-
-@media(max-width: 1024px) {
-
-	#calendar .weekdays, #calendar .other-month {
-		display: none;
-	}
-
-	#calendar li {
-		height: auto !important;
-		border: 1px solid #ededed;
-		width: 100%;
-		padding: 10px;
-		margin-bottom: -1px;
-	}
-
-	#calendar .date {
-		float: none;
-	}
-}
-
 
 .accordion-menu {
   // background for main accordion items
