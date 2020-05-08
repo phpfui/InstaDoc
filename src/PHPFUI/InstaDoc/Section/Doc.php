@@ -186,12 +186,11 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		$container = new \PHPFUI\Container();
 
-		$container->add($docBlock->getSummary());
+		$container->add($this->parsedown->text($docBlock->getSummary()));
 		$desc = $docBlock->getDescription();
 
 		if ($desc)
 			{
-			$container->add('<br><br>');
 			$div = new \PHPFUI\HTML5Element('div');
 			$div->addClass('description');
 			$div->add($this->parsedown->text($desc));
