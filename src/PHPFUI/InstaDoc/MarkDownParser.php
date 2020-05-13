@@ -15,15 +15,15 @@ class MarkDownParser
 		$this->parser->enableNewlines = true;
 		}
 
-	public function text(string $markdown) : string
-		{
-		return $this->parser->parse($markdown);
-		}
-
 	public function fileText(string $filename) : string
 		{
 		$markdown = @file_get_contents($filename);
 
+		return $this->parser->parse($markdown);
+		}
+
+	public function text(string $markdown) : string
+		{
 		return $this->parser->parse($markdown);
 		}
 

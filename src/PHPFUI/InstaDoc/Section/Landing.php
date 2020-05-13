@@ -56,7 +56,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 			foreach ($node->getClassFilenames() as $class => $fullPath)
 				{
-				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));
+				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false)));
 				}
 			}
 

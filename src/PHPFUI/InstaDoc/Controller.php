@@ -231,7 +231,7 @@ class Controller
 	/**
 	 * Get the url given a class
 	 */
-	public function getClassURL(string $namespacedClass) : string
+	public function getClassUrl(string $namespacedClass) : string
 		{
 		$url = $this->getUrl($this->getClassParts($namespacedClass) + $this->getParameters());
 

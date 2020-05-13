@@ -156,7 +156,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 
 		foreach (NamespaceTree::getAllClasses() as $class)
 			{
-			$search->addOption(str_replace('\\', '\\\\', $class), $this->controller->getClassURL($class));
+			$search->addOption(str_replace('\\', '\\\\', $class), $this->controller->getClassUrl($class));
 			}
 
 		$id = $search->getHiddenField()->getId();

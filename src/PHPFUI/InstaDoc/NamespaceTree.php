@@ -313,13 +313,17 @@ class NamespaceTree
 		foreach ($tree->children as $child)
 			{
 			$namespace = $child->getNamespace();
-			$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
 
-			if ($namespace == self::$activeNamespace)
+			if (count(self::getAllClasses($child)))
 				{
-				$menuItem->setActive();
+				$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
+
+				if ($namespace == self::$activeNamespace)
+					{
+					$menuItem->setActive();
+					}
+				$currentMenu->addSubMenu($menuItem, $this->getMenuTree($child, $currentMenu));
 				}
-			$currentMenu->addSubMenu($menuItem, $this->getMenuTree($child, $currentMenu));
 			}
 		$namespace = $tree->getNamespace();
 
@@ -327,7 +331,7 @@ class NamespaceTree
 			{
 			$parts = explode('\\', $class);
 			$baseClass = array_pop($parts);
-			$menuItem = new \PHPFUI\MenuItem($baseClass, self::$controller->getClassURL($class));
+			$menuItem = new \PHPFUI\MenuItem($baseClass, self::$controller->getClassUrl($class));
 
 			if ($baseClass == self::$activeClass && $namespace == self::$activeNamespace)
 				{

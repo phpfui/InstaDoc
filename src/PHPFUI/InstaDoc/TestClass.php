@@ -75,16 +75,16 @@ class TestClass
 	/**
 	 * Testing method sorting
 	 */
+	private function theLowerTest() : void {}
+
+	/**
+	 * Testing method sorting
+	 */
 	private function UpperCaseMethodName() : void {}
 
 	/**
 	 * Testing method sorting
 	 */
 	private function upperTest() : void {}
-
-	/**
-	 * Testing method sorting
-	 */
-	private function theLowerTest() : void {}
 
 	}
