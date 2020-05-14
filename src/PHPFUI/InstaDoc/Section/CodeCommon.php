@@ -218,7 +218,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			if ('param' == $name && $description)
 				{
 				$var = $tag->getVariableName();
-				$comments[$var] = "{$var} {$description}";
+				$comments[$var] = $description;
 				}
 			}
 
