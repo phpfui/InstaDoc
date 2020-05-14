@@ -51,6 +51,7 @@ class NamespaceTree
 			return;
 			}
 		$namespaceLength = strlen($namespace);
+
 		if ($namespaceLength && '\\' == $namespace[$namespaceLength - 1])
 			{
 			$namespace = substr($namespace, 0, $namespaceLength - 1);
@@ -88,8 +89,7 @@ class NamespaceTree
 	public static function deleteNameSpace(string $namespace) : void
 		{
 		$deleteThis = self::findNamespace($namespace);
-		unset($deleteThis->parent->children[$namespace], $deleteThis);
-
+		unset($deleteThis->parent->children[$deleteThis->namespace], $deleteThis);
 		}
 
 	public static function findNamespace(string $namespace) : NamespaceTree
