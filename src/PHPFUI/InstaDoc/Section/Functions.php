@@ -93,6 +93,7 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 		$container->add($gridX);
 
 		$container->add($this->getColor('keyword', 'function'));
+		$container->add(' ');
 
 		if ($this->reflection->returnsReference())
 			{
@@ -103,7 +104,6 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($namespace)
 			{
-			$container->add(' ');
 			$container->add(new \PHPFUI\Link($this->controller->getLandingPageUrl($namespace), $namespace, false));
 			$container->add('\\');
 			}
