@@ -25,17 +25,21 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 		$needle = 'function ';
 
 		$functions = [];
+
 		while ($index = strpos($file, $needle, $index))
 			{
 			// find next function
 			$index += strlen($needle);
 			$end = strpos($file, '(', $index);
 			$name = trim(substr($file, $index, $end - $index));
-			if (strpos($name, ' ') === false)
+
+			if (false === strpos($name, ' '))
 				{
 				$functions[] = trim(substr($file, $index, $end - $index));
 				}
 			}
+
+		sort($functions);
 
 		$namespace = '';
 		$needle = 'namespace ';
