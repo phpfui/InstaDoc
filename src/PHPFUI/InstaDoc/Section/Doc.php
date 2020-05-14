@@ -157,6 +157,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			}
 
 		$tabs = new \PHPFUI\Tabs();
+		$first = true;
 
 		foreach ($this->controller->getAccessTabs() as $section)
 			{
@@ -164,7 +165,8 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			if (count($table))
 				{
-				$tabs->addTab($section, $table, 'Public' == $section);
+				$tabs->addTab($section, $table, $first);
+				$first = false;
 				}
 			}
 		$container->add($tabs);
