@@ -30,7 +30,11 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 			// find next function
 			$index += strlen($needle);
 			$end = strpos($file, '(', $index);
-			$functions[] = trim(substr($file, $index, $end - $index));
+			$name = trim(substr($file, $index, $end - $index));
+			if (strpos($name, ' ') === false)
+				{
+				$functions[] = trim(substr($file, $index, $end - $index));
+				}
 			}
 
 		$namespace = '';
