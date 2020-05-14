@@ -14,13 +14,17 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		$container = new \PHPFUI\Container();
 
+		if (! file_exists($fullClassPath))
+			{
+			return $container;
+			}
 		// parse out the function names
-		$functions = [];
 		$file = file_get_contents($fullClassPath);
 		$file = str_replace("\n", ' ', $file);
 		$index = 0;
 		$needle = 'function ';
 
+		$functions = [];
 		while ($index = strpos($file, $needle, $index))
 			{
 			// find next function
