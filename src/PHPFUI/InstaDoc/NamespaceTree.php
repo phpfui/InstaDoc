@@ -46,8 +46,11 @@ class NamespaceTree
 
 	public static function addNamespace(string $namespace, string $directory, bool $localGit = false) : void
 		{
+		if (! $namespace)
+			{
+			return;
+			}
 		$namespaceLength = strlen($namespace);
-
 		if ($namespaceLength && '\\' == $namespace[$namespaceLength - 1])
 			{
 			$namespace = substr($namespace, 0, $namespaceLength - 1);

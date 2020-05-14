@@ -14,9 +14,6 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		$container = new \PHPFUI\Container();
 
-		// include the file to make sure the function are loaded
-		require_once $fullClassPath;
-
 		// parse out the function names
 		$functions = [];
 		$file = file_get_contents($fullClassPath);
