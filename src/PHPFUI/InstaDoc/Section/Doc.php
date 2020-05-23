@@ -330,6 +330,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 	protected function getProperty(\ReflectionProperty $property) : string
 		{
+		$property->setAccessible(true);
 		$docBlock = $this->getDocBlock($property);
 		$info = $this->getAccess($property) . ' ';
 
@@ -344,6 +345,15 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$info .= $this->getColor('type', $type->getName()) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
+		if ($property->isStatic())
+			{
+			$value = $property->getValue();
+			if ($value)
+				{
+				$info .= ' = ' . $this->getValueString($value);
+				}
+			}
+
 		$info .= $this->getComments($docBlock);
 
 		return $info;

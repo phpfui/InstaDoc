@@ -284,7 +284,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					$text .= $comma;
 
-					if ($index != $key)
+					if ($index !== $key)
 						{
 						$text .= $this->getValueString($key) . ' ' . $this->getColor('operator', '=>') . ' ';
 						}
