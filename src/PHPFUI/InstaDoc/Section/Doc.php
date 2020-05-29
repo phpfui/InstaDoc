@@ -58,9 +58,12 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$method = 'is' . $attribute;
 
-			if ($this->reflection->{$method}())
+			if (method_exists($this->reflection, $method))
 				{
-				$row->add($this->section($attribute));
+				if ($this->reflection->{$method}())
+					{
+					$row->add($this->section($attribute));
+					}
 				}
 			}
 
