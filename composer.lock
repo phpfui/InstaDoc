@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "686f904b3c2ab2554e8e3dc8005e22c6",
+    "content-hash": "9572cc877d1e15338537f3fedef20795",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -173,16 +173,16 @@
         },
         {
             "name": "froala/wysiwyg-editor",
-            "version": "v2.9.5",
+            "version": "v2.9.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/froala/wysiwyg-editor.git",
-                "reference": "e9d09c486c927d2646064b82e26307e8fee75700"
+                "reference": "5759b5e76c350eed27d72859052ea43411049054"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/froala/wysiwyg-editor/zipball/e9d09c486c927d2646064b82e26307e8fee75700",
-                "reference": "e9d09c486c927d2646064b82e26307e8fee75700",
+                "url": "https://api.github.com/repos/froala/wysiwyg-editor/zipball/5759b5e76c350eed27d72859052ea43411049054",
+                "reference": "5759b5e76c350eed27d72859052ea43411049054",
                 "shasum": ""
             },
             "type": "component",
@@ -213,7 +213,7 @@
                 "text",
                 "wysiwyg"
             ],
-            "time": "2019-04-12T09:45:52+00:00"
+            "time": "2020-04-30T06:54:52+00:00"
         },
         {
             "name": "gitonomy/gitlib",
@@ -372,41 +372,38 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.4",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c"
+                "reference": "cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/da3fd972d6bafd628114f7e7e036f45944b62e9c",
-                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e",
+                "reference": "cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
-                "phpdocumentor/reflection-common": "^1.0.0 || ^2.0.0",
-                "phpdocumentor/type-resolver": "~0.4 || ^1.0.0",
-                "webmozart/assert": "^1.0"
+                "ext-filter": "^7.1",
+                "php": "^7.2",
+                "phpdocumentor/reflection-common": "^2.0",
+                "phpdocumentor/type-resolver": "^1.0",
+                "webmozart/assert": "^1"
             },
             "require-dev": {
-                "doctrine/instantiator": "^1.0.5",
-                "mockery/mockery": "^1.0",
-                "phpdocumentor/type-resolver": "0.4.*",
-                "phpunit/phpunit": "^6.4"
+                "doctrine/instantiator": "^1",
+                "mockery/mockery": "^1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.x-dev"
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "phpDocumentor\\Reflection\\": [
-                        "src/"
-                    ]
+                    "phpDocumentor\\Reflection\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -417,10 +414,14 @@
                 {
                     "name": "Mike van Riel",
                     "email": "me@mikevanriel.com"
+                },
+                {
+                    "name": "Jaap van Otterdijk",
+                    "email": "account@ijaap.nl"
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2019-12-28T18:55:12+00:00"
+            "time": "2020-02-22T12:28:44+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -470,22 +471,22 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.41",
+            "version": "V6.0.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "0e238ac9cd90fec13341aa7ae86f365e5956cfcf"
+                "reference": "d6a6e5564a508fd1815950f1eaa2f7862cf7fc4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/0e238ac9cd90fec13341aa7ae86f365e5956cfcf",
-                "reference": "0e238ac9cd90fec13341aa7ae86f365e5956cfcf",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/d6a6e5564a508fd1815950f1eaa2f7862cf7fc4b",
+                "reference": "d6a6e5564a508fd1815950f1eaa2f7862cf7fc4b",
                 "shasum": ""
             },
             "require": {
                 "components/jquery": "^3.3",
                 "fortawesome/font-awesome": "^5.2",
-                "froala/wysiwyg-editor": "2.9.5",
+                "froala/wysiwyg-editor": "^2.9",
                 "igorescobar/jquery-mask-plugin": "^1.14",
                 "php": ">=7.1",
                 "zurb/foundation": "^6.6"
@@ -524,7 +525,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-05-22T18:01:54+00:00"
+            "time": "2020-05-29T02:28:53+00:00"
         },
         {
             "name": "scrivo/highlight.php",
@@ -880,16 +881,16 @@
     "packages-dev": [
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.5.3",
+            "version": "6.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "aab4ebd862aa7d04f01a4b51849d657db56d882e"
+                "reference": "a4a1b6930528a8f7ee03518e6442ec7a44155d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/aab4ebd862aa7d04f01a4b51849d657db56d882e",
-                "reference": "aab4ebd862aa7d04f01a4b51849d657db56d882e",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a4a1b6930528a8f7ee03518e6442ec7a44155d9d",
+                "reference": "a4a1b6930528a8f7ee03518e6442ec7a44155d9d",
                 "shasum": ""
             },
             "require": {
@@ -897,7 +898,7 @@
                 "guzzlehttp/promises": "^1.0",
                 "guzzlehttp/psr7": "^1.6.1",
                 "php": ">=5.5",
-                "symfony/polyfill-intl-idn": "^1.11"
+                "symfony/polyfill-intl-idn": "1.17.0"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -943,7 +944,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2020-04-18T10:38:46+00:00"
+            "time": "2020-05-25T19:35:05+00:00"
         },
         {
             "name": "guzzlehttp/promises",

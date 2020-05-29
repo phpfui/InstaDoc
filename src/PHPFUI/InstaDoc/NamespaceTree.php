@@ -313,6 +313,7 @@ class NamespaceTree
 		{
 		$currentMenu = new \PHPFUI\Menu();
 
+		// Get all the child menus for the current tree so they appear first as sub menus
 		foreach ($tree->children as $child)
 			{
 			$namespace = $child->getNamespace();
@@ -330,6 +331,7 @@ class NamespaceTree
 			}
 		$namespace = $tree->getNamespace();
 
+		// Get all the normal menu items after the child submenus
 		foreach ($tree->classes as $class => $path)
 			{
 			$parts = explode('\\', $class);

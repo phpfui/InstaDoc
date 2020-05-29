@@ -47,7 +47,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			foreach ($tags as $tag)
 				{
 				$name = $tag->getName();
-				$description = trim($tag->getDescription());
+				$description = method_exists($tag, 'getDescription') ? trim($tag->getDescription()) : '';
 				$body = '';
 				// punt on useless tags
 				if (in_array($name, ['method', 'param', 'inheritdoc']))
@@ -213,7 +213,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		foreach ($docBlock->getTags() as $tag)
 			{
 			$name = $tag->getName();
-			$description = trim($tag->getDescription());
+			$description = method_exists($tag, 'getDescription') ? trim($tag->getDescription()) : '';
 
 			if ('param' == $name && $description)
 				{
