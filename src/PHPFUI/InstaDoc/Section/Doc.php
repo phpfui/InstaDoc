@@ -49,6 +49,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			'Interface',
 			'Internal',
 			'Iterable',
+			'Promoted',
 			'Trait',
 			];
 
