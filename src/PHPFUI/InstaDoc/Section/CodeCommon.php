@@ -115,28 +115,48 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected function getClassName(string $class, bool $asLink = true) : string
 		{
+		$array = '';
 		if ($asLink && $class)
 			{
-			if ('\\' == $class[0])
+			// could be mixed, break out by |
+			$parts = explode('|', $class);
+			if (count($parts) > 1)
 				{
-				$class = substr($class, 1);
+				$returnValue = [];
+				foreach ($parts as $part)
+					{
+					$returnValue[] = $this->getClassName($part, true);
+					}
+				return implode('|', $returnValue);
 				}
-			// if fully qualified, we are done
-			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
+			else
 				{
-				return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false);
-				}
+				if ('\\' == $class[0])
+					{
+					$class = substr($class, 1);
+					}
+				if (strpos($class, '[]') !== false)
+					{
+					$array = '[]';
+					$class = str_replace($array, '', $class);
+					}
+				// if fully qualified, we are done
+				if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
+					{
+					return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false) . $array;
+					}
 
-			// try name in current namespace tree
-			$namespacedClass = $this->reflection->getNamespaceName() . '\\' . $class;
+				// try name in current namespace tree
+				$namespacedClass = $this->reflection->getNamespaceName() . '\\' . $class;
 
-			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
-				{
-				return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false);
+				if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
+					{
+					return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false) . $array;
+					}
 				}
 			}
 
-		return $this->getColor('type', $class);
+		return $this->getColor('type', $class) . $array;
 		}
 
 	/**
