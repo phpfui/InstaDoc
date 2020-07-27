@@ -65,7 +65,7 @@ class Section
 
 		if (in_array(Controller::FILE_PAGE, $allowedMenus))
 			{
-			$fileItem = new \PHPFUI\MenuItem('File', $this->controller->getPageUrl(Controller::FILE_PAGE));
+			$fileItem = new \PHPFUI\MenuItem('Source', $this->controller->getPageUrl(Controller::FILE_PAGE));
 			$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
 			$menu->addMenuItem($fileItem);
 			}
