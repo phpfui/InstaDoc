@@ -93,7 +93,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		$extends = $this->section('Extends');
 
-		foreach ($parentNames as $name)
+		foreach (array_reverse($parentNames) as $name)
 			{
 			$table->addRow([$extends, $this->getClassName($name)]);
 			$extends = '';
