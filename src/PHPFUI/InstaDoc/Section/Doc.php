@@ -99,6 +99,13 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$extends = '';
 			}
 
+		$children = $this->section('Children');
+		foreach (\PHPFUI\InstaDoc\ChildClasses::getChildClasses($this->class) as $class)
+			{
+			$table->addRow([$children, $this->getClassName($class)]);
+			$children = '';
+			}
+
 		$interfaces = $this->reflection->getInterfaces();
 
 		if ($interfaces)

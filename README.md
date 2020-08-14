@@ -7,7 +7,7 @@ We all document our code with PHP [DocBlocks](https://en.wikipedia.org/wiki/PHPD
 But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, maybe 2). The steps involved:
  * Install PHPFUI\InstaDoc via Composer (30 seconds)
  * Run installation script (30 seconds)
- * Create document page (1 minute, 5 lines of code)
+ * Create document page (1 minute, 6 lines of code)
 
  Two minutes to usable documentation with the following features:
 
@@ -46,11 +46,14 @@ include 'yourAutoLoader.php';
 // pass the directory containing your composer.json file
 $fileManager = new \PHPFUI\InstaDoc\FileManager('../');
 
-// add you App class tree in
+// add your App class tree in
 $fileManager->addNamespace('App', '../App', true);
 
-// load you cached files
+// load your cached files
 $fileManager->load();
+
+// load child classes if you want to display them, if you don't do this step, docs will not show classes that extend the displayed class
+\PHPFUI\InstaDoc\ChildClasses::load();
 
 // get the controller
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
