@@ -32,12 +32,12 @@ class ChildClasses
 						}
 					}
 				}
-			catch (\throwable $e)
+			catch (\Throwable $e)
 				{
 				}
 			}
 
-		return self;
+		return __CLASS__;
 		}
 
 	public static function load(string $file = '../ChildClasses.serial') : bool

@@ -69,7 +69,7 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$this->reflection = new \ReflectionFunction($function);
 			}
-		catch (\throwable $e)
+		catch (\Throwable $e)
 			{
 			$container->add(new \PHPFUI\Header($e->getMessage(), 5));
 

@@ -21,7 +21,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$this->reflection = new \ReflectionClass($this->class);
 			}
-		catch (\throwable $e)
+		catch (\Throwable $e)
 			{
 			// Try to parse as functions
 			$functionView = new \PHPFUI\InstaDoc\Section\Functions($this->controller);
