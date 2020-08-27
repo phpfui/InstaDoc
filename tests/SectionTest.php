@@ -73,7 +73,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 			foreach ([\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, \PHPFUI\InstaDoc\Controller::GIT_PAGE] as $page)
 				{
 				$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::PAGE, $page);
-				$page = $this->controller->display();
+				$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 				$this->assertValidHtml("{$page}");
 				$this->assertNotWarningHtml("{$page}");
 				}
@@ -81,7 +81,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 			// should just display landing page
 			$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::PAGE, '');
 			$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::CLASS_NAME, '');
-			$page = $this->controller->display();
+			$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 			$this->assertValidHtml("{$page}");
 			$this->assertNotWarningHtml("{$page}");
 			}
@@ -91,7 +91,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		{
 		// should just display home page
 		$this->controller->setParameters([]);
-		$page = $this->controller->display();
+		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 		$this->assertValidHtml("{$page}");
 		$this->assertNotWarningHtml("{$page}");
 		}
@@ -99,7 +99,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 	public function testInvalidPage() : void
 		{
 		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
-		$page = $this->controller->display();
+		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 		$this->assertValidHtml("{$page}");
 		$this->assertNotWarningHtml("{$page}");
 		}
@@ -107,7 +107,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 	public function testTestClass() : void
 		{
 		$this->controller->setParameters($this->controller->getClassParts('\\PHPFUI\\InstaDoc\\TestClass'));
-		$page = $this->controller->display();
+		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 		$this->assertValidHtml("{$page}");
 		$this->assertNotWarningHtml("{$page}");
 		}

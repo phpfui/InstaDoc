@@ -18,6 +18,12 @@ class Controller
 	public const PAGE = 'p';
 	public const TAB_SIZE = 't';
 
+	public const VALID_CLASS_PAGES = [
+		Controller::DOC_PAGE,
+		Controller::FILE_PAGE,
+		Controller::GIT_PAGE,
+		];
+
 	// allowed page sections
 	private const SECTIONS = [
 		'Git',
@@ -26,12 +32,6 @@ class Controller
 		'Landing',
 		'Home',
 		'GitDiff',
-		];
-
-	private const VALID_CLASS_PAGES = [
-		Controller::DOC_PAGE,
-		Controller::FILE_PAGE,
-		Controller::GIT_PAGE,
 		];
 
 	private const VALID_PARAMETERS = [
@@ -93,10 +93,14 @@ class Controller
 	 * Display a page according to the parameters passed on the url.
 	 *
 	 * @param array $classPagesToShow limits the allowed pages to display, used for static file generation
+	 * @param ?PageInterface $page to use, default to current controller page, but pass in a new page for multiple page generations on the same controller instance
 	 */
-	public function display(array $classPagesToShow = Controller::VALID_CLASS_PAGES) : string
+	public function display(array $classPagesToShow = Controller::VALID_CLASS_PAGES, ?PageInterface $page = null) : string
 		{
-		$page = $this->getPage();
+		if (! $page)
+			{
+			$page = $this->getControllerPage();
+			}
 		$page->setGenerating($this->generating);
 		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
@@ -165,7 +169,8 @@ class Controller
 		$directoryPath = str_replace('//', '/', $directoryPath);
 
 		// add in the index file
-		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude));
+		// always create a new page
+		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude, $this->getPage()));
 
 		$namespaces = [];
 
@@ -179,7 +184,8 @@ class Controller
 				{
 				$parameters[Controller::PAGE] = $page;
 				$this->setParameters($parameters);
-				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
+				// always create a new page
+				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $this->getPage()));
 				++$count;
 				}
 			}
@@ -189,7 +195,8 @@ class Controller
 		foreach ($namespaces as $namespace => $value)
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
-			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
+			// always create a new page
+			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $this->getPage()));
 			++$count;
 			}
 
@@ -335,6 +342,14 @@ class Controller
 		$page->setHomeUrl($this->homeUrl);
 
 		return $page;
+		}
+
+	/**
+	 * Returns the current page for the controller that will be used to display the documentation.
+	 */
+	public function getControllerPage() : PageInterface
+		{
+		return $this->page;
 		}
 
 	/**

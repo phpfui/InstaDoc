@@ -9,7 +9,7 @@ class ChildClasses
 	  */
 	private static $children = [];
 
-	public static function generate() : self
+	public static function generate() : void
 		{
 		$classes = NamespaceTree::getAllClasses();
 
@@ -36,8 +36,6 @@ class ChildClasses
 				{
 				}
 			}
-
-		return __CLASS__;
 		}
 
 	public static function load(string $file = '../ChildClasses.serial') : bool
@@ -46,7 +44,7 @@ class ChildClasses
 			{
 			self::generate();
 
-			return $this->save($file);
+			return self::save($file);
 			}
 
 		$contents = file_get_contents($file);
