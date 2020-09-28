@@ -11,7 +11,6 @@ class SyntaxTest extends \PHPFUI\PHPUnitSyntaxCoverage\Extensions
 	public function testValidPHPFile() : void
 		{
 		$this->assertValidPHPFile(__DIR__ . '/../install.php', 'install file is bad');
-		$this->assertValidPHPFile(__DIR__ . '/../commonbase.php', 'commonbase file is bad');
 		}
 
 	}
