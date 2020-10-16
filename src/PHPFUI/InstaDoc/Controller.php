@@ -259,6 +259,14 @@ class Controller
 		return $url;
 		}
 
+	/**
+	 * Returns the current page for the controller that will be used to display the documentation.
+	 */
+	public function getControllerPage() : PageInterface
+		{
+		return $this->page;
+		}
+
 	public function getFileManager() : FileManager
 		{
 		return $this->fileManager;
@@ -354,14 +362,6 @@ class Controller
 		$page = new Page($this);
 
 		return $page;
-		}
-
-	/**
-	 * Returns the current page for the controller that will be used to display the documentation.
-	 */
-	public function getControllerPage() : PageInterface
-		{
-		return $this->page;
 		}
 
 	/**

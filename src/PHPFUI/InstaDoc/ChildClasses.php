@@ -19,9 +19,11 @@ class ChildClasses
 				{
 				$reflection = new \ReflectionClass($class);
 				$parent = $reflection->getParentClass();
+
 				if ($parent)
 					{
 					$parentName = $parent->getName();
+
 					if (isset(self::$children[$parentName]))
 						{
 						self::$children[$parentName][] = $reflection->getName();
@@ -36,6 +38,11 @@ class ChildClasses
 				{
 				}
 			}
+		}
+
+	public static function getChildClasses(string $fqn) : array
+		{
+		return self::$children[$fqn] ?? [];
 		}
 
 	public static function load(string $file = '../ChildClasses.serial') : bool
@@ -68,11 +75,6 @@ class ChildClasses
 			}
 
 		return file_put_contents($file, serialize(self::$children)) > 0;
-		}
-
-	public static function getChildClasses(string $fqn) : array
-		{
-		return self::$children[$fqn] ?? [];
 		}
 
 	}
