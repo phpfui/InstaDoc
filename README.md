@@ -25,7 +25,6 @@ But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, mayb
  * Add any local repo directories
  * Remove any Composer project you don't care about
  * 5+ line config compatible with all PHP frameworks, or standalone
- * Completely configurable UI if you don't like the default
  * Uses [Foundation CSS framework](https://get.foundation) for a great experience on mobile
 
 ### Install PHPFUI\InstaDoc

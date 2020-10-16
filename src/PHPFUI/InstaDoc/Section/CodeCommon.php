@@ -233,7 +233,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
 		{
-		foreach ($tags as $tag)
+		foreach ($tags as $index => $tag)
 			{
 			if (0 == strcasecmp($tag->getName(), 'inheritDoc'))
 				{
@@ -254,8 +254,10 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				if ($docBlock)
 					{
-					// We have a doc block, see if it punts an inheritdoc, or actually has the goods
-					return $this->getInheritedDocBlock($docBlock->getTags(), $method);
+					// add in the new tags and check parent
+					array_splice ($tags, $index, 1, $docBlock->getTags());
+
+					return $this->getInheritedDocBlock($tags, $method);
 					}
 
 				// Nothing at this level, but go up one and try the parent method
