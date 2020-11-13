@@ -89,6 +89,12 @@ You may want users to get back into your system easily. Clicking on the top left
 $controller->setHomeUrl('/');
 ```
 
+### Breakup Your Documentation Into Sections
+If you have a lot of source code, you might want to break it into sections, so you will need a separate file to store the index in per section:
+```php
+$fileManager->setBaseFile('SubProject');
+```
+
 ### Generate Static Files
 Just the doc and file pages, no git!
 ```php

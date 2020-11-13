@@ -6,6 +6,8 @@ class FileManager
 	{
 	private $composerJsonPath = '';
 	private $configFile = '..';
+	private $extension = '.serial';
+	private $fileName = '';
 	private $excludedNamespaces = [];
 	private $includedNamespaces = [];
 
@@ -19,6 +21,8 @@ class FileManager
 	public function __construct(string $composerJsonPath = '')
 		{
 		$this->setComposerPath($composerJsonPath);
+		$class = __CLASS__;
+		$this->fileName = substr($class, strrpos($class, '\\') + 1);
 		}
 
 	/**
@@ -37,17 +41,37 @@ class FileManager
 		}
 
 	/**
+	 * Set file extension for saving index file
+	 */
+	public function setExtension(string $extension = '.serial') : self
+		{
+		$this->extension = $extension;
+
+		return $this;
+		}
+
+	/**
+	 * Set base file name for saving index file
+	 */
+	public function setBaseFile(string $fileName) : self
+		{
+		$this->fileName = $fileName;
+
+		return $this;
+		}
+
+	/**
 	 * Delete config files
 	 *
 	 * @return int number of files deleted
 	 */
-	public function delete() : int
+	public function delete(string $fileName = '') : int
 		{
 		$count = 0;
 
-		foreach (glob($this->getSerializedName('.*')) as $filename)
+		foreach (glob($this->getSerializedName($fileName, '.*')) as $file)
 			{
-			unlink($filename);
+			unlink($file);
 			++$count;
 			}
 
@@ -83,11 +107,11 @@ class FileManager
 	 *
 	 * @return true if file exists, false if generated
 	 */
-	public function load() : bool
+	public function load(string $fileName = '') : bool
 		{
 		$returnValue = true;
 
-		if (! \PHPFUI\InstaDoc\NamespaceTree::load($this->getSerializedName()))
+		if (! \PHPFUI\InstaDoc\NamespaceTree::load($this->getSerializedName($fileName)))
 			{
 			$this->rescan();
 			$this->save();
@@ -120,9 +144,9 @@ class FileManager
 	/**
 	 * Save the current configuration
 	 */
-	public function save() : bool
+	public function save(string $fileName = '') : bool
 		{
-		return \PHPFUI\InstaDoc\NamespaceTree::save($this->getSerializedName());
+		return \PHPFUI\InstaDoc\NamespaceTree::save($this->getSerializedName($fileName));
 		}
 
 	public function setComposerPath(string $composerJsonPath) : FileManager
@@ -144,7 +168,7 @@ class FileManager
 		return $this;
 		}
 
-	private function getSerializedName(string $type = '.serial') : string
+	private function getSerializedName(string $fileName = '', string $extension = '') : string
 		{
 		$file = $this->configFile;
 
@@ -155,13 +179,19 @@ class FileManager
 
 		if (is_dir($file))
 			{
-			$class = __CLASS__;
-			$class = substr($class, strrpos($class, '\\') + 1);
+			if (empty($fileName))
+				{
+				$fileName = $this->fileName;
+				}
 
-			$file .= '/' . $class;
+			$file .= '/' . $fileName;
+			}
+		if (empty($extension))
+			{
+			$extension = $this->extension;
 			}
 
-		return $file . $type;
+		return $file . $extension;
 		}
 
 	/**
