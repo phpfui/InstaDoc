@@ -382,7 +382,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					}
 				else
 					{
-					$value = $this->getClassName(get_class($value));
+					$value = $this->getClassName($class);
 					}
 
 				break;

@@ -13,6 +13,7 @@ But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, mayb
 
 ## PHPFUI\InstaDoc Features
  * Always up to date, even with code that is not yet checked in
+ * Send constructor information including parameters and default values to clipboard
  * Child and Parent class hierarchy clearly displayed and accessable
  * Quick access to highlighted PHP source with user selectable highlighting
  * Quick access to the file's git history for the local repo

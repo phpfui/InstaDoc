@@ -98,7 +98,8 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 
 	public function testInvalidPage() : void
 		{
-		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
+		$this->expectException(\ReflectionException::class);
+ 		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
 		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 		$this->assertValidHtml("{$page}");
 		$this->assertNotWarningHtml("{$page}");

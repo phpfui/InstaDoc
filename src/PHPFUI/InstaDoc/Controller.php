@@ -123,7 +123,30 @@ class Controller
 				return $this->getSection('GitDiff')->generate($page, $fullClassName);
 				}
 			$section = new Section($this);
-			$mainColumn->add($section->getBreadCrumbs($fullClassName));
+
+			$div = new \PHPFUI\GridX('div');
+			$div->add($section->getBreadCrumbs($fullClassName));
+
+			$cell = new \PHPFUI\Cell();
+			$div->add(' &nbsp; ');
+			$icon = new \PHPFUI\FAIcon('far', 'clipboard');
+			$parameters = $this->getMethodParameters($fullClassName);
+			$hidden = new \PHPFUI\Input('text', 'clipboard', "new \\{$fullClassName}({$parameters});");
+			$hidden->addClass('hide');
+			$div->add($hidden);
+			$icon->setToolTip('Send Constructor to Clipboard');
+			$div->add($icon);
+			$callout = new \PHPFUI\Callout('success');
+			$callout->add('Copied!');
+			$callout->addClass('small');
+			$callout->addClass('hide');
+			$icon->setAttribute('onclick', 'copyText("' . $hidden->getId() . '","' . $callout->getId() .'")');
+			$js = 'function copyText(id,callout){$("#"+callout).toggleClass("hide");$("#"+id).toggleClass("hide").select();document.execCommand("copy");$("#"+id).toggleClass("hide");setTimeout(function(){$("#"+callout).toggleClass("hide")},2000);}';
+			$page->addJavaScript($js);
+			$page->setDebug(1);
+			$div->add($callout);
+			$mainColumn->add($div);
+
 			$mainColumn->add($section->getMenu($fullClassName, $classPagesToShow));
 
 			if (Controller::DOC_PAGE == $this->getParameter(Controller::PAGE))
@@ -401,6 +424,108 @@ class Controller
 	public function getParameters() : array
 		{
 		return $this->parameters;
+		}
+
+	/**
+	 * Get parameters for the class and method
+	 */
+	public function getMethodParameters(string $className, $methodName = '__construct') : string
+		{
+		$reflection = new \ReflectionClass($className);
+		if (! $reflection->hasMethod($methodName))
+			{
+			return '';
+			}
+		$method = $reflection->getMethod($methodName);
+
+		$info = '';
+		$comma = '';
+		foreach ($method->getParameters() as $parameter)
+			{
+			$info .= $comma;
+			$comma = ', ';
+
+			if ($parameter->hasType())
+				{
+				$type = $parameter->getType();
+				$info .= $type->allowsNull() ? '?' : '';
+				$info .= $type->getName();
+				$info .= ' ';
+				$name = $parameter->getName();
+				$info .= '$' . $name;
+				}
+			if ($parameter->isDefaultValueAvailable())
+				{
+				$value = $parameter->getDefaultValue();
+				$info .= ' = ' . $this->getValueString($value);
+				}
+			}
+
+		return $info;
+		}
+
+	protected function getValueString($value) : string
+		{
+		switch (gettype($value))
+			{
+			case 'array':
+				$index = 0;
+				$text = '[';
+				$comma = '';
+
+				foreach ($value as $key => $part)
+					{
+					$text .= $comma;
+
+					if ($index !== $key)
+						{
+						$text .= $this->getValueString($key) . ' => ';
+						}
+					++$index;
+					$text .= $this->getValueString($part);
+					$comma = ', ';
+					}
+				$text .= ']';
+				$value = $text;
+
+				break;
+
+			case 'string':
+				$value = "'{$value}'";
+
+				break;
+
+			case 'object':
+				$class = get_class($value);
+
+				if ('ReflectionNamedType' == $class)
+					{
+					$value = ($value->allowsNull() ? '?' : '') . $value->getName();
+					}
+				else
+					{
+					$value = $class;
+					}
+
+				break;
+
+			case 'resource':
+				$value = 'resource';
+
+				break;
+
+			case 'boolean':
+				$value = $value ? 'true' : 'false';
+
+				break;
+
+			case 'NULL':
+				$value = 'NULL';
+
+				break;
+			}
+
+		return $value;
 		}
 
 	/**
