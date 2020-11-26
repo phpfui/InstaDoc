@@ -13,7 +13,7 @@ class File extends \PHPFUI\InstaDoc\Section
 
 		if (! file_exists($fullClassPath))
 			{
-			$fullClassPath = $this->controller->getGitFileOffset() . $fullClassPath;
+			$fullClassPath = $this->controller->getGitFileOffset() . '/' . $fullClassPath;
 			}
 		$ts = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2);
 
