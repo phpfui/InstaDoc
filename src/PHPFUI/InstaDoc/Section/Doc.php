@@ -73,11 +73,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$container->add($row);
 			}
 
-		$table = new \PHPFUI\Table();
-		$table->addClass('hover');
-		$table->addClass('unstriped');
-		$table->addClass('stack');
-
 		$parent = $this->reflection->getParentClass();
 
 		$parentNames = [];
@@ -91,38 +86,49 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				}
 			}
 
-		$extends = $this->section('Extends');
+		$accordion = new \PHPFUI\Accordion();
+		$accordion->addAttribute('data-multi-expand', 'true');
+		$accordion->addAttribute('data-allow-all-closed', 'true');
+
+		$table = new \PHPFUI\Table();
+		$table->addClass('hover');
+		$table->addClass('unstriped');
 
 		foreach (array_reverse($parentNames) as $name)
 			{
-			$table->addRow([$extends, $this->getClassName($name)]);
-			$extends = '';
+			$table->addRow([$this->getClassName($name)]);
 			}
+		$accordion->addTab('Extends', $table);
 
-		$children = $this->section('Children');
+
+		$table = new \PHPFUI\Table();
+		$table->addClass('hover');
+		$table->addClass('unstriped');
 
 		foreach (\PHPFUI\InstaDoc\ChildClasses::getChildClasses($this->class) as $class)
 			{
-			$table->addRow([$children, $this->getClassName($class)]);
-			$children = '';
+			$table->addRow([$this->getClassName($class)]);
 			}
+		$accordion->addTab('Children', $table);
 
 		$interfaces = $this->reflection->getInterfaces();
 
 		if ($interfaces)
 			{
 			ksort($interfaces, SORT_FLAG_CASE | SORT_STRING);
-			$section = 'Implements';
+			$table = new \PHPFUI\Table();
+			$table->addClass('hover');
+			$table->addClass('unstriped');
 
 			foreach ($interfaces as $interface)
 				{
 				$class = $interface->getName();
-				$table->addRow([$this->section($section), $this->getClassName($interface->getName())]);
-				$section = '';
+				$table->addRow([$this->getClassName($interface->getName())]);
 				}
+			$accordion->addTab('Implements', $table);
 			}
 
-		$container->add($table);
+		$container->add($accordion);
 
 		$parent = $this->reflection->getParentClass();
 
