@@ -98,7 +98,10 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$table->addRow([$this->getClassName($name)]);
 			}
-		$accordion->addTab('Extends', $table);
+		if (count($table))
+			{
+			$accordion->addTab('Extends', $table);
+			}
 
 
 		$table = new \PHPFUI\Table();
@@ -109,7 +112,10 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$table->addRow([$this->getClassName($class)]);
 			}
-		$accordion->addTab('Children', $table);
+		if (count($table))
+			{
+			$accordion->addTab('Children', $table);
+			}
 
 		$interfaces = $this->reflection->getInterfaces();
 
@@ -125,10 +131,16 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				$class = $interface->getName();
 				$table->addRow([$this->getClassName($interface->getName())]);
 				}
-			$accordion->addTab('Implements', $table);
+			if (count($table))
+				{
+				$accordion->addTab('Implements', $table);
+				}
 			}
 
-		$container->add($accordion);
+		if (count($accordion))
+			{
+			$container->add($accordion);
+			}
 
 		$parent = $this->reflection->getParentClass();
 

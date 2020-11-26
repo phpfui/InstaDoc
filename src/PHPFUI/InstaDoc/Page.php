@@ -2,7 +2,7 @@
 
 namespace PHPFUI\InstaDoc;
 
-class Page extends \PHPFUI\Page implements PageInterface
+class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 	{
 	private $controller;
 	private $generating = '';
