@@ -334,7 +334,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		if ($method->hasReturnType())
 			{
-			$info .= ' : ' . $this->getClassName($method->getReturnType()->getName());
+			$info .= ' : ' . $this->getValueString($method->getReturnType());
 			}
 
 		$info .= $this->getComments($docBlock, $method instanceof \ReflectionMethod ? $method : null);
@@ -379,6 +379,17 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				if ('ReflectionNamedType' == $class)
 					{
 					$value = ($value->allowsNull() ? '?' : '') . $this->getClassName($value->getName());
+					}
+				elseif ('ReflectionUnionType' == $class)
+					{
+					$types = $value->getTypes();
+					$value = $bar = '';
+					foreach ($types as $type)
+						{
+						$value .= $bar;
+						$bar = '|';
+						$value .= $this->getClassName($type->getName());
+						}
 					}
 				else
 					{

@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFUI\InstaDoc;
+namespace PHPFUI\InstaDoc\Tests;
 
 /**
  * A test class with no functionality.
@@ -9,7 +9,7 @@ namespace PHPFUI\InstaDoc;
  *
  * @author bruce (1/3/2020)
  */
-class TestClass
+class Test73
 	{
 	public const CONST_PUBLIC_STRING = 'Default';
 	protected const CONST_PROTECTED_INT = 42;
@@ -21,9 +21,13 @@ class TestClass
 	public $public_float = 3.14;
 	protected $protected_string = 'whatever';
 
-	private $private_array = ['fred', 1, false, 9.9, ['nested', self::CONST_PRIVATE_ARRAY]];
+	private $private_array = ['fred', 1, false, 9.9, ['nested', self::CONST_PRIVATE_ARRAY, ]];
 
-	public function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner']) : array
+	public function __construct(?Test80 $test = null)
+		{
+		}
+
+	public final function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner', ]) : array
 		{
 		return [];
 		}
@@ -70,17 +74,17 @@ class TestClass
 	 *
 	 * @throw //garbage dfsadfsfd
 	 */
-	private function private_function_no_return(string $fred = 'Eythel') : void {}
+	private function private_function_no_return(?string $fred = 'Eythel') : void {}
 
 	/**
 	 * Testing method sorting
 	 */
-	private function theLowerTest() : void {}
+	private static function theLowerTest() : self { return new static(); }
 
 	/**
 	 * Testing method sorting
 	 */
-	private function UpperCaseMethodName() : void {}
+	private function UpperCaseMethodName() : void { }
 
 	/**
 	 * Testing method sorting

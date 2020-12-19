@@ -108,10 +108,17 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 
 	public function testTestClass() : void
 		{
-		$this->controller->setParameters($this->controller->getClassParts('\\PHPFUI\\InstaDoc\\TestClass'));
-		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
-		$this->assertValidHtml("{$page}");
-		$this->assertNotWarningHtml("{$page}");
+		$runningPHPVersion = PHP_MAJOR_VERSION * 10 + PHP_MINOR_VERSION;
+		foreach ([80, 74, 73, 72, 71] as $phpVersion)
+			{
+			if ($runningPHPVersion >= $phpVersion)
+				{
+				$this->controller->setParameters($this->controller->getClassParts('\\PHPFUI\\InstaDoc\\Tests\\Test' . $phpVersion));
+				$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
+				$this->assertValidHtml("{$page}");
+				$this->assertNotWarningHtml("{$page}");
+				}
+			}
 		}
 
 	}

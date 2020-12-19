@@ -15,7 +15,7 @@
 				"php": ">=7.1",
 				"phpfui/phpfui": "^6.0",
 				"scrivo/highlight.php": ">=9.17",
-				"phpdocumentor/reflection-docblock": ">=4.0",
+				"phpdocumentor/reflection-docblock": ">=3.0",
 				"gitonomy/gitlib": "^1.2",
 				"cebe/markdown": "^1.2"
 			},

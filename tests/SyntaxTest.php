@@ -5,6 +5,7 @@ class SyntaxTest extends \PHPFUI\PHPUnitSyntaxCoverage\Extensions
 
 	public function testDirectory() : void
 		{
+		$this->addSkipDirectory('PHPFUI\\InstaDoc\\Tests');
 		$this->assertValidPHPDirectory(__DIR__ . '/../src', 'src directory has an error');
 		}
 
