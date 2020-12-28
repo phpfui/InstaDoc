@@ -7637,22 +7637,6 @@ p {
   border-bottom: 1px solid #000;
 }
 
-button.small, .button.small {
-  padding-top: 0.875rem;
-  padding-right: 1rem;
-  padding-bottom: 0.9375rem;
-  padding-left: 1rem;
-  font-size: 0.8125rem;
-}
-
-button.tiny, .button.tiny {
-  padding-top: 0.625rem;
-  padding-right: 1rem;
-  padding-bottom: 0.6875rem;
-  padding-left: 1rem;
-  font-size: 0.6875rem;
-}
-
 select[size], select[multiple] {
   background-image: none;
 }
