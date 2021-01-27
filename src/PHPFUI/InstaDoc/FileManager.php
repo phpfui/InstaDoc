@@ -5,10 +5,15 @@ namespace PHPFUI\InstaDoc;
 class FileManager
 	{
 	private $composerJsonPath = '';
+
 	private $configFile = '..';
+
 	private $extension = '.serial';
+
 	private $fileName = '';
+
 	private $excludedNamespaces = [];
+
 	private $includedNamespaces = [];
 
 	/**
@@ -186,6 +191,7 @@ class FileManager
 
 			$file .= '/' . $fileName;
 			}
+
 		if (empty($extension))
 			{
 			$extension = $this->extension;
@@ -276,5 +282,4 @@ class FileManager
 				}
 			}
 		}
-
 	}

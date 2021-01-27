@@ -12,13 +12,16 @@ namespace PHPFUI\InstaDoc\Tests;
 class Test71
 	{
 	public const CONST_PUBLIC_STRING = 'Default';
+
 	protected const CONST_PROTECTED_INT = 42;
+
 	private const CONST_PRIVATE_ARRAY = ['.Git', 0, true, 0.2, ];
 
 	/**
 	 * @var float
 	 */
 	public $public_float = 3.14;
+
 	protected $protected_string = 'whatever';
 
 	private $private_array = ['fred', 1, false, 9.9, ['nested', self::CONST_PRIVATE_ARRAY, ]];
@@ -27,7 +30,7 @@ class Test71
 		{
 		}
 
-	public final function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner', ]) : array
+	final public function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner', ]) : array
 		{
 		return [];
 		}
@@ -90,5 +93,4 @@ class Test71
 	 * Testing method sorting
 	 */
 	private function upperTest() : void {}
-
 	}

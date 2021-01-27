@@ -4,7 +4,6 @@ namespace PHPFUI\InstaDoc\Section;
 
 class GitDiff extends \PHPFUI\InstaDoc\Section
 	{
-
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassName) : \PHPFUI\Container
 		{
 		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
@@ -62,7 +61,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			\Gitonomy\Git\Diff\FileChange::LINE_ADD => 'git-added',
 			\Gitonomy\Git\Diff\FileChange::LINE_CONTEXT => 'git-unchanged',
 			\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-removed',
-			];
+		];
 
 		if ($file)
 			{
@@ -92,5 +91,4 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 
 		return $container;
 		}
-
 	}

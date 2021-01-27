@@ -5,6 +5,7 @@ namespace PHPFUI\InstaDoc;
 class NamespaceTree
 	{
 	private static $activeClass;
+
 	private static $activeNamespace;
 
 	/**
@@ -16,6 +17,7 @@ class NamespaceTree
 	 * @var array indexed by fully qualified class name containing the file name
 	 */
 	private $classes = [];
+
 	private static $controller;
 
 	/**
@@ -37,6 +39,7 @@ class NamespaceTree
 	 * @var NamespaceTree our parent
 	 */
 	private $parent = null;
+
 	private static $root = null;
 
 	// only we can make us to ensure the tree is good
@@ -359,5 +362,4 @@ class NamespaceTree
 
 		return self::$root;
 		}
-
 	}

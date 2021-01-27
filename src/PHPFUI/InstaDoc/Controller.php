@@ -4,25 +4,34 @@ namespace PHPFUI\InstaDoc;
 
 class Controller
 	{
-
 	// parameters
 	public const CLASS_NAME = 'c';
+
 	public const CSS_FILE = 'CSS';
+
 	public const DOC_PAGE = 'd';
+
 	public const FILE_PAGE = 'f';
+
 	public const GIT_LIMIT = 'gl';
+
 	public const GIT_ONPAGE = 'gp';
+
 	public const GIT_PAGE = 'g';
+
 	public const GIT_SHA1 = 'gs';
+
 	public const NAMESPACE = 'n';
+
 	public const PAGE = 'p';
+
 	public const TAB_SIZE = 't';
 
 	public const VALID_CLASS_PAGES = [
 		Controller::DOC_PAGE,
 		Controller::FILE_PAGE,
 		Controller::GIT_PAGE,
-		];
+	];
 
 	// allowed page sections
 	private const SECTIONS = [
@@ -32,7 +41,7 @@ class Controller
 		'Landing',
 		'Home',
 		'GitDiff',
-		];
+	];
 
 	private const VALID_PARAMETERS = [
 		Controller::NAMESPACE => '',
@@ -43,25 +52,35 @@ class Controller
 		Controller::GIT_LIMIT => '',
 		Controller::GIT_ONPAGE => '',
 		Controller::GIT_SHA1 => '',
-		];
+	];
 
 	// valid static page parameters
 	private const VALID_STATIC_PARTS = [
 		Controller::NAMESPACE,
 		Controller::CLASS_NAME,
 		Controller::PAGE,
-		];
+	];
 
 	private $accessTabs = ['Public', 'Protected', 'Private', 'Static'];
+
 	private $fileManager;
+
 	private $generating = '';
+
 	private $gitFileOffset = '';
+
 	private $gitRoot = '';
+
 	private $homePageMarkdown = [];
+
 	private $homeUrl = '#';
+
 	private $menu = null;
+
 	private $page;
+
 	private $parameters = [];
+
 	private $siteTitle = 'PHPFUI/InstaDoc';
 
 	public function __construct(FileManager $fileManager)
@@ -140,7 +159,7 @@ class Controller
 			$callout->add('Copied!');
 			$callout->addClass('small');
 			$callout->addClass('hide');
-			$icon->setAttribute('onclick', 'copyText("' . $hidden->getId() . '","' . $callout->getId() .'")');
+			$icon->setAttribute('onclick', 'copyText("' . $hidden->getId() . '","' . $callout->getId() . '")');
 			$js = 'function copyText(id,callout){$("#"+callout).toggleClass("hide");$("#"+id).toggleClass("hide").select();document.execCommand("copy");$("#"+id).toggleClass("hide");setTimeout(function(){$("#"+callout).toggleClass("hide")},2000);}';
 			$page->addJavaScript($js);
 			$page->setDebug(1);
@@ -267,7 +286,7 @@ class Controller
 		$parameters = [
 			Controller::NAMESPACE => $namespace,
 			Controller::CLASS_NAME => $class,
-			];
+		];
 
 		return $parameters;
 		}
@@ -432,6 +451,7 @@ class Controller
 	public function getMethodParameters(string $className, $methodName = '__construct') : string
 		{
 		$reflection = new \ReflectionClass($className);
+
 		if (! $reflection->hasMethod($methodName))
 			{
 			return '';
@@ -440,6 +460,7 @@ class Controller
 
 		$info = '';
 		$comma = '';
+
 		foreach ($method->getParameters() as $parameter)
 			{
 			$info .= $comma;
@@ -454,6 +475,7 @@ class Controller
 				$name = $parameter->getName();
 				$info .= '$' . $name;
 				}
+
 			if ($parameter->isDefaultValueAvailable())
 				{
 				$value = $parameter->getDefaultValue();
@@ -462,70 +484,6 @@ class Controller
 			}
 
 		return $info;
-		}
-
-	protected function getValueString($value) : string
-		{
-		switch (gettype($value))
-			{
-			case 'array':
-				$index = 0;
-				$text = '[';
-				$comma = '';
-
-				foreach ($value as $key => $part)
-					{
-					$text .= $comma;
-
-					if ($index !== $key)
-						{
-						$text .= $this->getValueString($key) . ' => ';
-						}
-					++$index;
-					$text .= $this->getValueString($part);
-					$comma = ', ';
-					}
-				$text .= ']';
-				$value = $text;
-
-				break;
-
-			case 'string':
-				$value = "'{$value}'";
-
-				break;
-
-			case 'object':
-				$class = get_class($value);
-
-				if ('ReflectionNamedType' == $class)
-					{
-					$value = ($value->allowsNull() ? '?' : '') . $value->getName();
-					}
-				else
-					{
-					$value = $class;
-					}
-
-				break;
-
-			case 'resource':
-				$value = 'resource';
-
-				break;
-
-			case 'boolean':
-				$value = $value ? 'true' : 'false';
-
-				break;
-
-			case 'NULL':
-				$value = 'NULL';
-
-				break;
-			}
-
-		return $value;
 		}
 
 	/**
@@ -667,4 +625,67 @@ class Controller
 		return $this;
 		}
 
+	protected function getValueString($value) : string
+		{
+		switch (gettype($value))
+			{
+			case 'array':
+				$index = 0;
+				$text = '[';
+				$comma = '';
+
+				foreach ($value as $key => $part)
+					{
+					$text .= $comma;
+
+					if ($index !== $key)
+						{
+						$text .= $this->getValueString($key) . ' => ';
+						}
+					++$index;
+					$text .= $this->getValueString($part);
+					$comma = ', ';
+					}
+				$text .= ']';
+				$value = $text;
+
+				break;
+
+			case 'string':
+				$value = "'{$value}'";
+
+				break;
+
+			case 'object':
+				$class = get_class($value);
+
+				if ('ReflectionNamedType' == $class)
+					{
+					$value = ($value->allowsNull() ? '?' : '') . $value->getName();
+					}
+				else
+					{
+					$value = $class;
+					}
+
+				break;
+
+			case 'resource':
+				$value = 'resource';
+
+				break;
+
+			case 'boolean':
+				$value = $value ? 'true' : 'false';
+
+				break;
+
+			case 'NULL':
+				$value = 'NULL';
+
+				break;
+			}
+
+		return $value;
+		}
 	}

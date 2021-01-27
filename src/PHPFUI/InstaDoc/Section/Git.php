@@ -4,7 +4,6 @@ namespace PHPFUI\InstaDoc\Section;
 
 class Git extends \PHPFUI\InstaDoc\Section
 	{
-
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
@@ -107,5 +106,4 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		return $reveal;
 		}
-
 	}

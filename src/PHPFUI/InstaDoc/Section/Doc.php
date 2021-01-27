@@ -51,7 +51,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			'Iterable',
 			'Promoted',
 			'Trait',
-			];
+		];
 
 		$row = new \PHPFUI\GridX();
 
@@ -98,6 +98,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$table->addRow([$this->getClassName($name)]);
 			}
+
 		if (count($table))
 			{
 			$accordion->addTab('Extends', $table);
@@ -112,6 +113,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$table->addRow([$this->getClassName($class)]);
 			}
+
 		if (count($table))
 			{
 			$accordion->addTab('Children', $table);
@@ -131,6 +133,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				$class = $interface->getName();
 				$table->addRow([$this->getClassName($interface->getName())]);
 				}
+
 			if (count($table))
 				{
 				$accordion->addTab('Implements', $table);
@@ -332,7 +335,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
-
 	protected function getName($method, string $name, bool $fullyQualify = false) : string
 		{
 		$parent = $this->getNameScope($method, $fullyQualify);
@@ -412,5 +414,4 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		usort($objects, [$this, 'objectCompare']);
 		}
-
 	}
