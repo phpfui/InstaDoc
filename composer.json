@@ -17,7 +17,8 @@
 				"scrivo/highlight.php": ">=9.17",
 				"phpdocumentor/reflection-docblock": ">=3.0",
 				"gitonomy/gitlib": "^1.2",
-				"cebe/markdown": "^1.2"
+				"cebe/markdown": "^1.2",
+				"roave/you-are-using-it-wrong": "^1.8"
 			},
 		"autoload": {
 				"psr-0": {"PHPFUI\\InstaDoc\\": "src/"}
@@ -25,7 +26,7 @@
 		"require-dev": {
 				"phpunit/phpunit": ">=7.0",
 				"phpfui/html-unit-tester": "^1.0",
-				"roave/security-advisories": "dev-master",
+				"roave/security-advisories": "dev-latest",
 				"phpfui/phpunit-syntax-coverage": "^1.0"
 		}
 }
