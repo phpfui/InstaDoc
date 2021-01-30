@@ -104,7 +104,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$accordion->addTab('Extends', $table);
 			}
 
-
 		$table = new \PHPFUI\Table();
 		$table->addClass('hover');
 		$table->addClass('unstriped');
@@ -130,13 +129,32 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			foreach ($interfaces as $interface)
 				{
-				$class = $interface->getName();
 				$table->addRow([$this->getClassName($interface->getName())]);
 				}
 
 			if (count($table))
 				{
 				$accordion->addTab('Implements', $table);
+				}
+			}
+
+		$traits = $this->getTraits($this->reflection);
+
+		if ($traits)
+			{
+			ksort($traits, SORT_FLAG_CASE | SORT_STRING);
+			$table = new \PHPFUI\Table();
+			$table->addClass('hover');
+			$table->addClass('unstriped');
+
+			foreach ($traits as $trait)
+				{
+				$table->addRow([$this->getClassName($trait->getName())]);
+				}
+
+			if (count($table))
+				{
+				$accordion->addTab('Traits', $table);
 				}
 			}
 
@@ -413,5 +431,22 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 	protected function objectSort(array &$objects) : void
 		{
 		usort($objects, [$this, 'objectCompare']);
+		}
+
+	/**
+	 * return traits for the entire inheritance tree, not just the current class
+	 */
+	private function getTraits(\ReflectionClass $reflection) : array
+		{
+		$traits = [];
+
+		$parent = $reflection->getParentClass();
+
+		if ($parent)
+			{
+			$traits = $this->getTraits($parent);
+			}
+
+		return array_merge($traits, $reflection->getTraits());
 		}
 	}
