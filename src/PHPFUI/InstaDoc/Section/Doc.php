@@ -59,7 +59,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$method = 'is' . $attribute;
 
-			if (method_exists($this->reflection, $method))
+			if (\method_exists($this->reflection, $method))
 				{
 				if ($this->reflection->{$method}())
 					{
@@ -94,12 +94,12 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		$table->addClass('hover');
 		$table->addClass('unstriped');
 
-		foreach (array_reverse($parentNames) as $name)
+		foreach (\array_reverse($parentNames) as $name)
 			{
 			$table->addRow([$this->getClassName($name)]);
 			}
 
-		if (count($table))
+		if (\count($table))
 			{
 			$accordion->addTab('Extends', $table);
 			}
@@ -113,7 +113,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$table->addRow([$this->getClassName($class)]);
 			}
 
-		if (count($table))
+		if (\count($table))
 			{
 			$accordion->addTab('Children', $table);
 			}
@@ -122,7 +122,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($interfaces)
 			{
-			ksort($interfaces, SORT_FLAG_CASE | SORT_STRING);
+			\ksort($interfaces, SORT_FLAG_CASE | SORT_STRING);
 			$table = new \PHPFUI\Table();
 			$table->addClass('hover');
 			$table->addClass('unstriped');
@@ -132,7 +132,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				$table->addRow([$this->getClassName($interface->getName())]);
 				}
 
-			if (count($table))
+			if (\count($table))
 				{
 				$accordion->addTab('Implements', $table);
 				}
@@ -142,7 +142,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($traits)
 			{
-			ksort($traits, SORT_FLAG_CASE | SORT_STRING);
+			\ksort($traits, SORT_FLAG_CASE | SORT_STRING);
 			$table = new \PHPFUI\Table();
 			$table->addClass('hover');
 			$table->addClass('unstriped');
@@ -152,13 +152,13 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				$table->addRow([$this->getClassName($trait->getName())]);
 				}
 
-			if (count($table))
+			if (\count($table))
 				{
 				$accordion->addTab('Traits', $table);
 				}
 			}
 
-		if (count($accordion))
+		if (\count($accordion))
 			{
 			$container->add($accordion);
 			}
@@ -167,7 +167,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($parentNames)
 			{
-			$parts = array_merge(['All', 'self'], $parentNames);
+			$parts = \array_merge(['All', 'self'], $parentNames);
 
 			$filterMenu = new \PHPFUI\Menu();
 
@@ -191,7 +191,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 					}
 				$filterMenu->addMenuItem($menuItem);
 				}
-			array_shift($parts);
+			\array_shift($parts);
 			$allSelector = '';
 			$comma = '';
 
@@ -214,7 +214,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$table = $this->getContent('is' . $section);
 
-			if (count($table))
+			if (\count($table))
 				{
 				$tabs->addTab($section, $table, $first);
 				$first = false;
@@ -262,14 +262,14 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($constants)
 			{
-			ksort($constants, SORT_FLAG_CASE | SORT_STRING);
+			\ksort($constants, SORT_FLAG_CASE | SORT_STRING);
 			$section = 'Constants';
 
 			foreach ($constants as $name => $value)
 				{
 				$constant = new \ReflectionClassConstant($this->class, $name);
 
-				if (method_exists($constant, $accessType) && $constant->{$accessType}())
+				if (\method_exists($constant, $accessType) && $constant->{$accessType}())
 					{
 					if ($section)
 						{
@@ -292,7 +292,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			foreach ($properties as $property)
 				{
-				if (method_exists($property, $accessType) && $property->{$accessType}())
+				if (\method_exists($property, $accessType) && $property->{$accessType}())
 					{
 					if ($section)
 						{
@@ -315,7 +315,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			foreach ($methods as $method)
 				{
-				if (method_exists($method, $accessType) && $method->{$accessType}())
+				if (\method_exists($method, $accessType) && $method->{$accessType}())
 					{
 					if ($section)
 						{
@@ -339,7 +339,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		foreach ($types as $type)
 			{
-			$isType = 'is' . ucfirst($type);
+			$isType = 'is' . \ucfirst($type);
 
 			if ($method->{$isType}())
 				{
@@ -388,7 +388,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$info .= $this->getColor('keyword', 'static') . ' ';
 			}
-		$type = method_exists($property, 'getType') ? $property->getType() : '';
+		$type = \method_exists($property, 'getType') ? $property->getType() : '';
 
 		if ($type)
 			{
@@ -415,7 +415,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		$class = $this->getNameScope($method);
 
-		if (strlen($class))
+		if (\strlen($class))
 			{
 			return $this->getHtmlClass($class) . ' hide';
 			}
@@ -425,12 +425,12 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 	protected function objectCompare($lhs, $rhs) : int
 		{
-		return strcasecmp($lhs->name, $rhs->name);
+		return \strcasecmp($lhs->name, $rhs->name);
 		}
 
 	protected function objectSort(array &$objects) : void
 		{
-		usort($objects, [$this, 'objectCompare']);
+		\usort($objects, [$this, 'objectCompare']);
 		}
 
 	/**
@@ -447,6 +447,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$traits = $this->getTraits($parent);
 			}
 
-		return array_merge($traits, $reflection->getTraits());
+		return \array_merge($traits, $reflection->getTraits());
 		}
 	}

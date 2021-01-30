@@ -24,12 +24,12 @@ class Home extends \PHPFUI\InstaDoc\Section
 
 		foreach (\PHPFUI\InstaDoc\NamespaceTree::getAllMDFiles() as $file)
 			{
-			if (stripos($file, 'readme.md'))
+			if (\stripos($file, 'readme.md'))
 				{
-				$file = str_replace('\\', '/', $file);
-				$parts = explode('/', str_replace('.', '', $file));
-				array_pop($parts);
-				$accordion->addTab(implode('\\', $parts) . ' Readme', $parsedown->fileText($file));
+				$file = \str_replace('\\', '/', $file);
+				$parts = \explode('/', \str_replace('.', '', $file));
+				\array_pop($parts);
+				$accordion->addTab(\implode('\\', $parts) . ' Readme', $parsedown->fileText($file));
 				}
 			}
 		$container->add($accordion);

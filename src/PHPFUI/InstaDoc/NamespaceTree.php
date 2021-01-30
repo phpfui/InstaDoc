@@ -10,7 +10,7 @@ class NamespaceTree
 
 	/**
 	 * @var array indexed by namespace part containing a NamespaceTree
-	  */
+	 */
 	private $children = [];
 
 	/**
@@ -53,36 +53,36 @@ class NamespaceTree
 			{
 			return;
 			}
-		$namespaceLength = strlen($namespace);
+		$namespaceLength = \strlen($namespace);
 
 		if ($namespaceLength && '\\' == $namespace[$namespaceLength - 1])
 			{
-			$namespace = substr($namespace, 0, $namespaceLength - 1);
+			$namespace = \substr($namespace, 0, $namespaceLength - 1);
 			}
 
 		$node = self::findNamespace($namespace);
 		$node->localGit = $localGit;
 
-    $iterator = new \DirectoryIterator($directory);
+	$iterator = new \DirectoryIterator($directory);
 
-    foreach ($iterator as $fileinfo)
+	foreach ($iterator as $fileinfo)
 			{
 			$filename = $fileinfo->getFilename();
-			$filenameLength = strlen($filename);
+			$filenameLength = \strlen($filename);
 
-      if ($fileinfo->isDir() && false === strpos($filename, '.'))
+	  if ($fileinfo->isDir() && false === \strpos($filename, '.'))
 				{
 				self::addNamespace($namespace . '\\' . $filename, $directory . '/' . $filename, $localGit);
-        }
-			elseif (strpos($filename, '.php') == $filenameLength - 4)
+		}
+			elseif (\strpos($filename, '.php') == $filenameLength - 4)
 				{
-				$class = substr($filename, 0, $filenameLength - 4);
+				$class = \substr($filename, 0, $filenameLength - 4);
 				$class = $namespace . '\\' . $class;
 				$file = $directory . '/' . $filename;
-				$file = str_replace('//', '/', $file);
+				$file = \str_replace('//', '/', $file);
 				$node->classes[$class] = $file;
 				}
-			elseif (strpos($filename, '.md') == $filenameLength - 3)
+			elseif (\strpos($filename, '.md') == $filenameLength - 3)
 				{
 				$node->md[$directory . '/' . $filename] = true;
 				}
@@ -99,12 +99,12 @@ class NamespaceTree
 		{
 		$node = self::getRoot();
 
-		if (! strlen($namespace))
+		if (! \strlen($namespace))
 			{
 			return $node;
 			}
 
-		$parts = explode('\\', $namespace);
+		$parts = \explode('\\', $namespace);
 
 		foreach ($parts as $part)
 			{
@@ -135,7 +135,7 @@ class NamespaceTree
 
 		foreach ($tree->children as $child)
 			{
-			$classes = array_merge($classes, self::getAllClasses($child));
+			$classes = \array_merge($classes, self::getAllClasses($child));
 			}
 
 		$namespace = $tree->getNamespace();
@@ -158,7 +158,7 @@ class NamespaceTree
 
 		foreach ($tree->children as $child)
 			{
-			$files = array_merge($files, self::getAllMDFiles($child));
+			$files = \array_merge($files, self::getAllMDFiles($child));
 			}
 
 		return $files;
@@ -185,7 +185,7 @@ class NamespaceTree
 
 	public function getMDFiles() : array
 		{
-		return array_keys($this->md);
+		return \array_keys($this->md);
 		}
 
 	/**
@@ -209,8 +209,8 @@ class NamespaceTree
 	public static function hasClass(string $namespacedClass) : bool
 		{
 		$node = self::getRoot();
-		$parts = explode('\\', $namespacedClass);
-		$class = array_pop($parts);
+		$parts = \explode('\\', $namespacedClass);
+		$class = \array_pop($parts);
 
 		foreach ($parts as $part)
 			{
@@ -227,13 +227,13 @@ class NamespaceTree
 
 	public static function load(string $file) : bool
 		{
-		if (! file_exists($file))
+		if (! \file_exists($file))
 			{
 			return false;
 			}
 
-		$contents = file_get_contents($file);
-		$temp = unserialize($contents);
+		$contents = \file_get_contents($file);
+		$temp = \unserialize($contents);
 
 		if (! $temp)
 			{
@@ -257,11 +257,11 @@ class NamespaceTree
 			{
 			$child->getMenuTree($child, $menu);
 			}
-    }
+	}
 
 	public static function save(string $file) : bool
 		{
-		return file_put_contents($file, serialize(self::$root)) > 0;
+		return \file_put_contents($file, \serialize(self::$root)) > 0;
 		}
 
 	/**
@@ -277,7 +277,7 @@ class NamespaceTree
 	 */
 	public static function setActiveNamespace(string $activeNamespace) : void
 		{
-		if (strlen($activeNamespace) && '\\' != $activeNamespace[0])
+		if (\strlen($activeNamespace) && '\\' != $activeNamespace[0])
 			{
 			$activeNamespace = '\\' . $activeNamespace;
 			}
@@ -297,14 +297,14 @@ class NamespaceTree
 	/**
 	 * Sorts the child namespaces and classes
 	 */
-	public static function sort(NamespaceTree $tree = null) : void
+	public static function sort(?NamespaceTree $tree = null) : void
 		{
 		if (! $tree)
 			{
 			$tree = self::getRoot();
 			}
-		ksort($tree->classes, SORT_FLAG_CASE | SORT_STRING);
-		ksort($tree->children,  SORT_FLAG_CASE | SORT_STRING);
+		\ksort($tree->classes, SORT_FLAG_CASE | SORT_STRING);
+		\ksort($tree->children, SORT_FLAG_CASE | SORT_STRING);
 
 		foreach ($tree->children as &$child)
 			{
@@ -321,7 +321,7 @@ class NamespaceTree
 			{
 			$namespace = $child->getNamespace();
 
-			if (count(self::getAllClasses($child)))
+			if (\count(self::getAllClasses($child)))
 				{
 				$menuItem = new \PHPFUI\MenuItem('\\' . $child->namespace);
 
@@ -337,8 +337,8 @@ class NamespaceTree
 		// Get all the normal menu items after the child submenus
 		foreach ($tree->classes as $class => $path)
 			{
-			$parts = explode('\\', $class);
-			$baseClass = array_pop($parts);
+			$parts = \explode('\\', $class);
+			$baseClass = \array_pop($parts);
 			$menuItem = new \PHPFUI\MenuItem($baseClass, self::$controller->getClassUrl($class));
 
 			if ($baseClass == self::$activeClass && $namespace == self::$activeNamespace)

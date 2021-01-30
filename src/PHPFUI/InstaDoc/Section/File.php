@@ -8,16 +8,16 @@ class File extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
-		$fullClassPath = str_replace('\\', '/', $fullClassPath);
+		$fullClassPath = \str_replace('\\', '/', $fullClassPath);
 
-		if (! file_exists($fullClassPath))
+		if (! \file_exists($fullClassPath))
 			{
 			$fullClassPath = $this->controller->getGitFileOffset() . '/' . $fullClassPath;
 			}
 		$ts = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2);
 
 		$page->addCSS("code{tab-size:{$ts};-moz-tab-size:{$ts}}");
-		$php = @file_get_contents($fullClassPath);
+		$php = @\file_get_contents($fullClassPath);
 		$pre = new \PHPFUI\HTML5Element('pre');
 
 		$css = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CSS_FILE, 'qtcreator_dark');
@@ -37,7 +37,7 @@ class File extends \PHPFUI\InstaDoc\Section
 			}
 		else
 			{
-			$pre->add(highlight_string($php, true));
+			$pre->add(\highlight_string($php, true));
 			}
 		$container->add($pre);
 

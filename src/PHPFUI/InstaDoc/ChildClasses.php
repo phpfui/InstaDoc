@@ -9,7 +9,7 @@ class ChildClasses
 	{
 	/**
 	 * @var array indexed by fqn of class containing array of fqn of children
-	  */
+	 */
 	private static $children = [];
 
 	/**
@@ -59,15 +59,15 @@ class ChildClasses
 	 */
 	public static function load(string $file = '../ChildClasses.serial') : bool
 		{
-		if (! file_exists($file))
+		if (! \file_exists($file))
 			{
 			self::generate();
 
 			return self::save($file);
 			}
 
-		$contents = file_get_contents($file);
-		$temp = unserialize($contents);
+		$contents = \file_get_contents($file);
+		$temp = \unserialize($contents);
 
 		if (! $temp)
 			{
@@ -86,9 +86,9 @@ class ChildClasses
 		{
 		foreach (self::$children as &$childClasses)
 			{
-			sort($childClasses);
+			\sort($childClasses);
 			}
 
-		return file_put_contents($file, serialize(self::$children)) > 0;
+		return \file_put_contents($file, \serialize(self::$children)) > 0;
 		}
 	}

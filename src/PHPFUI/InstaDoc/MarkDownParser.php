@@ -16,7 +16,7 @@ class MarkDownParser
 
 	public function fileText(string $filename) : string
 		{
-		$markdown = @file_get_contents($filename);
+		$markdown = @\file_get_contents($filename);
 
 		return $this->parser->parse($markdown);
 		}

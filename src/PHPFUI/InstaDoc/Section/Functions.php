@@ -13,42 +13,42 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		$container = new \PHPFUI\Container();
 
-		if (! file_exists($fullClassPath))
+		if (! \file_exists($fullClassPath))
 			{
 			return $container;
 			}
 		// parse out the function names
-		$file = file_get_contents($fullClassPath);
-		$file = str_replace("\n", ' ', $file);
+		$file = \file_get_contents($fullClassPath);
+		$file = \str_replace("\n", ' ', $file);
 		$index = 0;
 		$needle = 'function ';
 
 		$functions = [];
 
-		while ($index = strpos($file, $needle, $index))
+		while ($index = \strpos($file, $needle, $index))
 			{
 			// find next function
-			$index += strlen($needle);
-			$end = strpos($file, '(', $index);
-			$name = trim(substr($file, $index, $end - $index));
+			$index += \strlen($needle);
+			$end = \strpos($file, '(', $index);
+			$name = \trim(\substr($file, $index, $end - $index));
 
-			if (false === strpos($name, ' '))
+			if (false === \strpos($name, ' '))
 				{
-				$functions[] = trim(substr($file, $index, $end - $index));
+				$functions[] = \trim(\substr($file, $index, $end - $index));
 				}
 			}
 
-		sort($functions);
+		\sort($functions);
 
 		$namespace = '';
 		$needle = 'namespace ';
-		$index = strpos($file, $needle);
+		$index = \strpos($file, $needle);
 
 		if ($index)
 			{
-			$index += strlen($needle);
-			$end = strpos($file, ';', $index);
-			$namespace = trim(substr($file, $index, $end - $index));
+			$index += \strlen($needle);
+			$end = \strpos($file, ';', $index);
+			$namespace = \trim(\substr($file, $index, $end - $index));
 			}
 
 		foreach ($functions as $function)

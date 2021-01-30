@@ -14,7 +14,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
 		$files = $node->getMDFiles();
 
-		if (count($files))
+		if (\count($files))
 			{
 			$accordion = new \PHPFUI\Accordion();
 			$accordion->addAttribute('data-allow-all-closed', 'true');
@@ -22,11 +22,11 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 			foreach ($files as $file)
 				{
-				$parts = explode('/', str_replace('\\', '/', $file));
-				$section = array_pop($parts);
-				$section = str_replace('_', ' ', strtolower($section));
-				$section = str_replace('.md', '', $section);
-				$accordion->addTab(ucwords($section), $parsedown->fileText($file));
+				$parts = \explode('/', \str_replace('\\', '/', $file));
+				$section = \array_pop($parts);
+				$section = \str_replace('_', ' ', \strtolower($section));
+				$section = \str_replace('.md', '', $section);
+				$accordion->addTab(\ucwords($section), $parsedown->fileText($file));
 				}
 			$container->add($accordion);
 			}

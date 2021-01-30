@@ -13,9 +13,9 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		$offset = $this->controller->getGitFileOffset();
 
-		if ($offset && 0 === strpos($fullClassPath, $offset))
+		if ($offset && 0 === \strpos($fullClassPath, $offset))
 			{
-			$fullClassPath = substr($fullClassPath, strlen($offset));
+			$fullClassPath = \substr($fullClassPath, \strlen($offset));
 			}
 
 		try
@@ -25,13 +25,13 @@ class Git extends \PHPFUI\InstaDoc\Section
 			}
 		catch (\Exception $e)
 			{
-			$container->add(new \PHPFUI\SubHeader($this->controller->getGitRoot() . ' is not a valid git repo in ' . getcwd()));
+			$container->add(new \PHPFUI\SubHeader($this->controller->getGitRoot() . ' is not a valid git repo in ' . \getcwd()));
 			$container->add($e->getMessage());
 
 			return $container;
 			}
 
-		$branch = substr($result, strpos($result, '[') + 1, strpos($result, ']') - 1);
+		$branch = \substr($result, \strpos($result, '[') + 1, \strpos($result, ']') - 1);
 
 		if (! $branch)
 			{
@@ -47,7 +47,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 			}
 		catch (\Exception $e)
 			{
-			$container->add(new \PHPFUI\SubHeader('Git error from directory ' . getcwd()));
+			$container->add(new \PHPFUI\SubHeader('Git error from directory ' . \getcwd()));
 			$container->add($e->getMessage());
 
 			return $container;
@@ -60,12 +60,12 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		$table = new \PHPFUI\Table();
 		$table->setHeaders(['Title', 'Name', 'Date', 'Diff']);
-		$localTZ = new \DateTimeZone(date_default_timezone_get());
+		$localTZ = new \DateTimeZone(\date_default_timezone_get());
 		$parameters = $this->controller->getParameters();
 
 		$commits = $log->getCommits();
 
-		if (! count($commits))
+		if (! \count($commits))
 			{
 			$container->add(new \PHPFUI\SubHeader('No commits found'));
 			}

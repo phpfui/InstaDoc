@@ -27,7 +27,7 @@ class FileManager
 		{
 		$this->setComposerPath($composerJsonPath);
 		$class = __CLASS__;
-		$this->fileName = substr($class, strrpos($class, '\\') + 1);
+		$this->fileName = \substr($class, \strrpos($class, '\\') + 1);
 		}
 
 	/**
@@ -74,9 +74,9 @@ class FileManager
 		{
 		$count = 0;
 
-		foreach (glob($this->getSerializedName($fileName, '.*')) as $file)
+		foreach (\glob($this->getSerializedName($fileName, '.*')) as $file)
 			{
-			unlink($file);
+			\unlink($file);
 			++$count;
 			}
 
@@ -156,7 +156,7 @@ class FileManager
 
 	public function setComposerPath(string $composerJsonPath) : FileManager
 		{
-		$this->composerJsonPath = str_replace('\\', '/', $composerJsonPath);
+		$this->composerJsonPath = \str_replace('\\', '/', $composerJsonPath);
 
 		return $this;
 		}
@@ -182,7 +182,7 @@ class FileManager
 			$file = '.';
 			}
 
-		if (is_dir($file))
+		if (\is_dir($file))
 			{
 			if (empty($fileName))
 				{
@@ -212,8 +212,8 @@ class FileManager
 			}
 
 		$composerJsonPath = $this->composerJsonPath . 'composer.lock';
-		$composerJsonPath = str_replace('//', '/', $composerJsonPath);
-		$json = json_decode(@file_get_contents($composerJsonPath), true);
+		$composerJsonPath = \str_replace('//', '/', $composerJsonPath);
+		$json = \json_decode(@\file_get_contents($composerJsonPath), true);
 
 		if (! $json)
 			{
@@ -230,14 +230,14 @@ class FileManager
 			foreach ($autoLoadTypes as $type)
 				{
 				$path = $packagePath . '/';
-				$path = str_replace('\\', '/', $path);
-				$path = str_replace('//', '/', $path);
+				$path = \str_replace('\\', '/', $path);
+				$path = \str_replace('//', '/', $path);
 
 				foreach ($autoload[$type] ?? [] as $namespace => $sourceDir)
 					{
 					if ('psr-4' == $type)
 						{
-						if (is_array($sourceDir))
+						if (\is_array($sourceDir))
 							{
 							foreach ($sourceDir as $dir)
 								{
@@ -251,14 +251,14 @@ class FileManager
 						}
 					elseif ('psr-0' == $type)
 						{
-						if (is_array($sourceDir))
+						if (\is_array($sourceDir))
 							{
 							foreach ($sourceDir as $dir)
 								{
 								if ($dir)
 									{
 									$dir .= $namespace;
-									$dir = str_replace('\\', '/', $dir);
+									$dir = \str_replace('\\', '/', $dir);
 									}
 								NamespaceTree::addNamespace($namespace, $path . $dir);
 								}
@@ -273,8 +273,8 @@ class FileManager
 								{
 								$sourceDir = $namespace;
 								}
-							$sourceDir = str_replace('\\', '/', $sourceDir);
-							$sourceDir = str_replace('//', '/', $sourceDir);
+							$sourceDir = \str_replace('\\', '/', $sourceDir);
+							$sourceDir = \str_replace('//', '/', $sourceDir);
 							NamespaceTree::addNamespace($namespace, $path . $sourceDir);
 							}
 						}

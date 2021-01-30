@@ -17,8 +17,7 @@ class Test74
 
 	private const CONST_PRIVATE_ARRAY = ['.Git', 0, true, 0.2, ];
 
-	/**
-	 */
+
 	public float $public_float = 3.14;
 
 	protected string $protected_string = 'whatever';

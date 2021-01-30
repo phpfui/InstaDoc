@@ -54,10 +54,10 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			foreach ($tags as $tag)
 				{
 				$name = $tag->getName();
-				$description = method_exists($tag, 'getDescription') ? trim($tag->getDescription()) : '';
+				$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription()) : '';
 				$body = '';
 				// punt on useless tags
-				if (in_array($name, ['method', 'param', 'inheritdoc']))
+				if (\in_array($name, ['method', 'param', 'inheritdoc']))
 					{
 					continue;
 					}
@@ -71,27 +71,27 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						}
 					}
 
-				if (method_exists($tag, 'getAuthorName'))
+				if (\method_exists($tag, 'getAuthorName'))
 					{
 					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
 					}
 
-				if (method_exists($tag, 'getReference'))
+				if (\method_exists($tag, 'getReference'))
 					{
 					$body .= $tag->getReference();
 					}
 
-				if (method_exists($tag, 'getVersion'))
+				if (\method_exists($tag, 'getVersion'))
 					{
 					$body .= $tag->getVersion();
 					}
 
-				if (method_exists($tag, 'getLink'))
+				if (\method_exists($tag, 'getLink'))
 					{
 					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
 					}
 
-				if (method_exists($tag, 'getType'))
+				if (\method_exists($tag, 'getType'))
 					{
 					$type = $tag->getType();
 
@@ -101,7 +101,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						}
 					}
 
-				if (method_exists($tag, 'getVariableName'))
+				if (\method_exists($tag, 'getVariableName'))
 					{
 					$varname = $tag->getVariableName();
 
@@ -127,9 +127,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		if ($asLink && $class)
 			{
 			// could be mixed, break out by |
-			$parts = explode('|', $class);
+			$parts = \explode('|', $class);
 
-			if (count($parts) > 1)
+			if (\count($parts) > 1)
 				{
 				$returnValue = [];
 
@@ -138,19 +138,19 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					$returnValue[] = $this->getClassName($part, true);
 					}
 
-				return implode('|', $returnValue);
+				return \implode('|', $returnValue);
 				}
-			else
-				{
+
+
 				if ('\\' == $class[0])
 					{
-					$class = substr($class, 1);
+					$class = \substr($class, 1);
 					}
 
-				if (false !== strpos($class, '[]'))
+				if (false !== \strpos($class, '[]'))
 					{
 					$array = '[]';
-					$class = str_replace($array, '', $class);
+					$class = \str_replace($array, '', $class);
 					}
 				// if fully qualified, we are done
 				if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
@@ -165,7 +165,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false) . $array;
 					}
-				}
+
 			}
 
 		return $this->getColor('type', $class) . $array;
@@ -230,14 +230,14 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	 */
 	protected function getHtmlClass(string $class) : string
 		{
-		return str_replace('\\', '-', $class);
+		return \str_replace('\\', '-', $class);
 		}
 
 	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
 		{
 		foreach ($tags as $index => $tag)
 			{
-			if (0 == strcasecmp($tag->getName(), 'inheritDoc'))
+			if (0 == \strcasecmp($tag->getName(), 'inheritDoc'))
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
@@ -257,7 +257,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				if ($docBlock)
 					{
 					// add in the new tags and check parent
-					array_splice ($tags, $index, 1, $docBlock->getTags());
+					\array_splice($tags, $index, 1, $docBlock->getTags());
 
 					return $this->getInheritedDocBlock($tags, $method);
 					}
@@ -282,7 +282,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		foreach ($docBlock->getTags() as $tag)
 			{
 			$name = $tag->getName();
-			$description = method_exists($tag, 'getDescription') ? trim($tag->getDescription()) : '';
+			$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription()) : '';
 
 			if ('param' == $name && $description)
 				{
@@ -346,7 +346,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected function getValueString($value) : string
 		{
-		switch (gettype($value))
+		switch (\gettype($value))
 			{
 			case 'array':
 				$index = 0;
@@ -376,7 +376,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			case 'object':
-				$class = get_class($value);
+				$class = \get_class($value);
 
 				if ('ReflectionNamedType' == $class)
 					{

@@ -10,7 +10,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$sha1 = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_SHA1);
-		$tabSize = str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2));
+		$tabSize = \str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2));
 
 		try
 			{
@@ -33,12 +33,12 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			$container->add($callout);
 			}
 
-		$localTZ = new \DateTimeZone(date_default_timezone_get());
+		$localTZ = new \DateTimeZone(\date_default_timezone_get());
 		$date = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
 
 		$container->add(new \PHPFUI\MultiColumn($commit->getCommitterName(), $date));
 
-		$targetFile = str_replace('\\', '/', $fullClassName) . '.php';
+		$targetFile = \str_replace('\\', '/', $fullClassName) . '.php';
 		$file = 0;
 		$files = $commit->getDiff()->getFiles();
 
@@ -78,7 +78,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 					[$type, $code] = $line;
 					$span = new \PHPFUI\HTML5Element('span');
 					$span->addClass($classes[$type]);
-					$span->add(\PHPFUI\TextHelper::htmlentities(str_replace("\t", $tabSize, $code)));
+					$span->add(\PHPFUI\TextHelper::htmlentities(\str_replace("\t", $tabSize, $code)));
 					$codeBlock->add($span . "\n");
 					}
 				}

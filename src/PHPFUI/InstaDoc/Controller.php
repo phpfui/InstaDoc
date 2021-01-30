@@ -201,16 +201,16 @@ class Controller
 	 */
 	public function generate(string $directoryPath, array $pagesToInclude = [Controller::DOC_PAGE], string $extension = '.html') : array
 		{
-		if (! file_exists($directoryPath))
+		if (! \file_exists($directoryPath))
 			{
 			throw new \Exception("The directory {$directoryPath} does not exist");
 			}
 		$count = 1;
-		$start = microtime(true);
+		$start = \microtime(true);
 		$this->generating = $extension;
 		$directoryPath .= '/';
 
-		$directoryPath = str_replace('//', '/', $directoryPath);
+		$directoryPath = \str_replace('//', '/', $directoryPath);
 
 		// add in the index file
 		// always create a new page
@@ -218,7 +218,7 @@ class Controller
 		$page->setPageName($this->siteTitle);
 		$page->setHomeUrl($this->homeUrl);
 
-		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude, $page));
+		\file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude, $page));
 
 		$namespaces = [];
 
@@ -237,7 +237,7 @@ class Controller
 				$page->setPageName($this->siteTitle);
 				$page->setHomeUrl($this->homeUrl);
 
-				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $page));
+				\file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $page));
 				++$count;
 				}
 			}
@@ -252,12 +252,12 @@ class Controller
 			$page->setPageName($this->siteTitle);
 			$page->setHomeUrl($this->homeUrl);
 
-			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $page));
+			\file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $page));
 			++$count;
 			}
 
 		$this->generating = '';
-		$milliseconds = microtime(true) - $start;
+		$milliseconds = \microtime(true) - $start;
 
 		return ['count' => $count, 'seconds' => $milliseconds];
 		}
@@ -272,13 +272,13 @@ class Controller
 	 */
 	public function getClassParts(string $namespacedClass) : array
 		{
-		$parts = explode('\\', $namespacedClass);
+		$parts = \explode('\\', $namespacedClass);
 		$namespace = '';
 		$backSlash = '';
 
-		while (count($parts) > 1)
+		while (\count($parts) > 1)
 			{
-			$namespace .= $backSlash . array_shift($parts);
+			$namespace .= $backSlash . \array_shift($parts);
 			$backSlash = '\\';
 			}
 		$class = $parts[0];
@@ -335,7 +335,7 @@ class Controller
 	 */
 	public function getHomePageMarkdown() : array
 		{
-		return array_keys($this->homePageMarkdown);
+		return \array_keys($this->homePageMarkdown);
 		}
 
 	/**
@@ -386,9 +386,9 @@ class Controller
 	 */
 	public function getNamespaceURL(string $namespace) : string
 		{
-		while (strlen($namespace) && '\\' == $namespace[0])
+		while (\strlen($namespace) && '\\' == $namespace[0])
 			{
-			$namespace = substr($namespace, 1);
+			$namespace = \substr($namespace, 1);
 			}
 
 		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE, Controller::NAMESPACE => $namespace] + $this->getParameters());
@@ -413,9 +413,9 @@ class Controller
 		{
 		$parameters = $this->getParameters();
 
-		if (! in_array($page, Controller::VALID_CLASS_PAGES))
+		if (! \in_array($page, Controller::VALID_CLASS_PAGES))
 			{
-			throw new \Exception("Page {$page} is not in " . implode(', ', Controller::VALID_CLASS_PAGES));
+			throw new \Exception("Page {$page} is not in " . \implode(', ', Controller::VALID_CLASS_PAGES));
 			}
 
 		$parameters[Controller::PAGE] = $page;
@@ -431,7 +431,7 @@ class Controller
 		{
 		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
 			{
-			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
+			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . \implode(',', Controller::VALID_PARAMETERS));
 			}
 
 		return $this->parameters[$parameter] ?? $default ?? '';
@@ -491,9 +491,9 @@ class Controller
 	 */
 	public function getSection(string $sectionName) : Section
 		{
-		if (! in_array($sectionName, Controller::SECTIONS))
+		if (! \in_array($sectionName, Controller::SECTIONS))
 			{
-			throw new \Exception("{$sectionName} is not one of " . implode(', ', Controller::SECTIONS));
+			throw new \Exception("{$sectionName} is not one of " . \implode(', ', Controller::SECTIONS));
 			}
 
 		$class = 'PHPFUI\\InstaDoc\\Section\\' . $sectionName;
@@ -509,7 +509,7 @@ class Controller
 		// nuke blank parameters
 		foreach ($parameters as $key => $value)
 			{
-			if (! strlen($value))
+			if (! \strlen($value))
 				{
 				unset($parameters[$key]);
 				}
@@ -517,9 +517,9 @@ class Controller
 
 		if (! $this->generating)
 			{
-			$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
+			$url = $this->page->getBaseUrl() . '?' . \http_build_query($parameters);
 
-			return str_replace('\\', '%5C', $url);
+			return \str_replace('\\', '%5C', $url);
 			}
 
 		$parts = [];
@@ -528,15 +528,15 @@ class Controller
 			{
 			if (isset($parameters[$part]))
 				{
-				$parts[] = str_replace('\\', '_', $parameters[$part]);
+				$parts[] = \str_replace('\\', '_', $parameters[$part]);
 				}
 			}
 
-		$url = implode('_', $parts) . $this->generating;
+		$url = \implode('_', $parts) . $this->generating;
 
 		while ('_' == $url[0])
 			{
-			$url = substr($url, 1);
+			$url = \substr($url, 1);
 			}
 
 		return $url;
@@ -600,7 +600,7 @@ class Controller
 		{
 		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
 			{
-			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
+			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . \implode(',', Controller::VALID_PARAMETERS));
 			}
 		$this->parameters[$parameter] = $value;
 
@@ -616,7 +616,7 @@ class Controller
 
 		foreach (Controller::VALID_PARAMETERS as $key => $value)
 			{
-			if (isset($parameters[$key]) && strlen($parameters[$key]))
+			if (isset($parameters[$key]) && \strlen($parameters[$key]))
 				{
 				$this->parameters[$key] = $parameters[$key];
 				}
@@ -627,7 +627,7 @@ class Controller
 
 	protected function getValueString($value) : string
 		{
-		switch (gettype($value))
+		switch (\gettype($value))
 			{
 			case 'array':
 				$index = 0;
@@ -657,7 +657,7 @@ class Controller
 				break;
 
 			case 'object':
-				$class = get_class($value);
+				$class = \get_class($value);
 
 				if ('ReflectionNamedType' == $class)
 					{

@@ -26,7 +26,7 @@ class Section
 		$breadCrumbs = new \PHPFUI\BreadCrumbs();
 		$append = $namespace = '';
 
-		foreach (explode('\\', $object) as $part)
+		foreach (\explode('\\', $object) as $part)
 			{
 			$namespace = $namespace . $append . $part;
 			$breadCrumbs->addCrumb($part, $this->controller->getLandingPageUrl($namespace));
@@ -38,9 +38,9 @@ class Section
 
 	public function getClassBase(string $fullClassName) : string
 		{
-		$parts = explode('\\', $fullClassName);
+		$parts = \explode('\\', $fullClassName);
 
-		return array_pop($parts);
+		return \array_pop($parts);
 		}
 
 	public function getMenu(string $className, array $allowedMenus) : ?\PHPFUI\Menu
@@ -55,21 +55,21 @@ class Section
 			$this->controller->setParameter($key, $value);
 			}
 
-		if (in_array(Controller::DOC_PAGE, $allowedMenus))
+		if (\in_array(Controller::DOC_PAGE, $allowedMenus))
 			{
 			$docItem = new \PHPFUI\MenuItem('Docs', $this->controller->getPageUrl(Controller::DOC_PAGE));
 			$docItem->setActive(Controller::DOC_PAGE == $currentPage);
 			$menu->addMenuItem($docItem);
 			}
 
-		if (in_array(Controller::FILE_PAGE, $allowedMenus))
+		if (\in_array(Controller::FILE_PAGE, $allowedMenus))
 			{
 			$fileItem = new \PHPFUI\MenuItem('Source', $this->controller->getPageUrl(Controller::FILE_PAGE));
 			$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
 			$menu->addMenuItem($fileItem);
 			}
 
-		if (in_array(Controller::GIT_PAGE, $allowedMenus))
+		if (\in_array(Controller::GIT_PAGE, $allowedMenus))
 			{
 			$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
 
@@ -82,7 +82,7 @@ class Section
 			}
 
 		// only show the menu if more than one
-		if (count($menu) > 1)
+		if (\count($menu) > 1)
 			{
 			return $menu;
 			}
@@ -92,9 +92,9 @@ class Section
 
 	public function getNamespaceFromClass(string $class) : string
 		{
-		$parts = explode('\\', $class);
-		array_pop($parts);
+		$parts = \explode('\\', $class);
+		\array_pop($parts);
 
-		return implode('\\', $parts);
+		return \implode('\\', $parts);
 		}
 	}

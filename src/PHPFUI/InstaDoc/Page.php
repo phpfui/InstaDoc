@@ -90,7 +90,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 
 		$footer->addLeft($menu);
 
-		$year = date('Y');
+		$year = \date('Y');
 		$footer->addRight("&copy; {$year} Bruce Wells");
 
 		$this->add($footer);
@@ -159,7 +159,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 
 		foreach (NamespaceTree::getAllClasses() as $class)
 			{
-			$search->addOption(str_replace('\\', '\\\\', $class), $this->controller->getClassUrl($class));
+			$search->addOption(\str_replace('\\', '\\\\', $class), $this->controller->getClassUrl($class));
 			}
 
 		$id = $search->getHiddenField()->getId();
