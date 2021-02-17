@@ -329,7 +329,7 @@ class NamespaceTree
 					{
 					$menuItem->setActive();
 					}
-				$currentMenu->addSubMenu($menuItem, $this->getMenuTree($child, $currentMenu));
+				$this->getMenuTree($child, $currentMenu);
 				}
 			}
 		$namespace = $tree->getNamespace();
