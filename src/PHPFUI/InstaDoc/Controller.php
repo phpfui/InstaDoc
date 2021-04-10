@@ -472,9 +472,9 @@ class Controller
 				$info .= $type->allowsNull() ? '?' : '';
 				$info .= $type->getName();
 				$info .= ' ';
-				$name = $parameter->getName();
-				$info .= '$' . $name;
 				}
+			$name = $parameter->getName();
+			$info .= '$' . $name;
 
 			if ($parameter->isDefaultValueAvailable())
 				{
