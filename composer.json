@@ -27,6 +27,7 @@
 				"phpfui/html-unit-tester": ">=1.0",
 				"roave/security-advisories": "dev-latest",
 				"phpfui/phpunit-syntax-coverage": ">=1.0",
-				"friendsofphp/php-cs-fixer": "^2.18"
+				"friendsofphp/php-cs-fixer": "^2.18",
+				"vimeo/psalm": "^4.7"
 		}
 }

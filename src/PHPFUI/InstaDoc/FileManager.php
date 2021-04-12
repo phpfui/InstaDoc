@@ -88,7 +88,7 @@ class FileManager
 	 */
 	public function excludeNamespace(string $namespace) : FileManager
 		{
-		return $this->excludedNamespaces([$namespace]);
+		return $this->excludeNamespaces([$namespace]);
 		}
 
 	/**
