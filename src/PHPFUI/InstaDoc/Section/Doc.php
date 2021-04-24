@@ -260,7 +260,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		$constants = $this->reflection->getConstants();
 
-		if ($constants)
+		if ($constants && 'isStatic' != $accessType)
 			{
 			\ksort($constants, SORT_FLAG_CASE | SORT_STRING);
 			$section = 'Constants';
@@ -269,7 +269,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				{
 				$constant = new \ReflectionClassConstant($this->class, $name);
 
-				if (\method_exists($constant, $accessType) && $constant->{$accessType}())
+				if ($constant->{$accessType}())
 					{
 					if ($section)
 						{
@@ -292,7 +292,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			foreach ($properties as $property)
 				{
-				if (\method_exists($property, $accessType) && $property->{$accessType}())
+				if ($property->{$accessType}())
 					{
 					if ($section)
 						{
@@ -315,7 +315,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			foreach ($methods as $method)
 				{
-				if (\method_exists($method, $accessType) && $method->{$accessType}())
+				if ($method->{$accessType}())
 					{
 					if ($section)
 						{
