@@ -20,6 +20,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$this->controller = $controller;
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
+		$this->addStyleSheet('css/markdown.css');
 		}
 
 	public function addBody($item) : PageInterface
@@ -131,7 +132,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 			$fieldSet->add(new \PHPFUI\Input\Hidden($name, $value));
 			}
 
-		$cssSelector = new CSSSelector($this, $this->controller->getParameter(Controller::CSS_FILE, 'qtcreator_dark'));
+		$cssSelector = new CSSSelector($this, $this->controller->getParameter(Controller::CSS_FILE, 'PHPFUI'));
 		$cssSelector->setLabel('Code Formating Style');
 		$cssSelector->setToolTip('Sets the style sheet for PHP code');
 		$fieldSet->add($cssSelector);

@@ -8,7 +8,7 @@ class Home extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
-		$parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
+		$parsedown = new \PHPFUI\InstaDoc\MarkDownParser($page);
 
 		$hr = '';
 

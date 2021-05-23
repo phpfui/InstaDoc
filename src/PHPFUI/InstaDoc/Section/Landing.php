@@ -10,7 +10,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 		$container->add($this->getBreadCrumbs($namespace));
 
-		$parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
+		$parsedown = new \PHPFUI\InstaDoc\MarkDownParser($page);
 		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
 		$files = $node->getMDFiles();
 

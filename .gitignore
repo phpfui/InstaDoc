@@ -7,5 +7,15 @@ vendor/
 *.bat
 phpunit.xml
 composer.lock
+src/PHPFUI/Input
+src/PHPFUI/HTMLUnitTester
+src/PHPFUI/MySQLSlowQuery
+src/PHPFUI/PayPal
+src/PHPFUI/PHPUnitSyntaxCoverage
+src/PHPFUI/Traits
+src/PHPFUI/Interfaces
+src/PHPFUI/V6
+
+
 
 

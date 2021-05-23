@@ -20,7 +20,7 @@ class File extends \PHPFUI\InstaDoc\Section
 		$php = @\file_get_contents($fullClassPath);
 		$pre = new \PHPFUI\HTML5Element('pre');
 
-		$css = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CSS_FILE, 'qtcreator_dark');
+		$css = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CSS_FILE, 'PHPFUI');
 
 		if ('PHP' != $css)
 			{
