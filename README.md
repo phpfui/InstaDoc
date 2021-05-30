@@ -29,13 +29,14 @@ But with PHPFUI\InstaDoc, you can document your site in about a minute (OK, mayb
  * Uses [Foundation CSS framework](https://get.foundation) for a great experience on mobile
 
 ### Install PHPFUI\InstaDoc (requires PHP >= 7.3)
+```
 composer require phpfui/InstaDoc
-
+```
 ### Run Installation Script
 Once installed, you need to run an installation script to copy static files to your public directory.  From your project root, run the following:
-
-**php vendor/phpfui/instadoc/install.php yourPublicDirectory/subDirectory**
-
+```
+php vendor/phpfui/instadoc/install.php yourPublicDirectory/subDirectory
+```
 Example: **php vendor/phpfui/instadoc/install.php public/PHPFUI** will add all needed files to public/PHPFUI, which will avoid any conflicts with your current files.  You can specify any directory by using \PHPFUI\Page::setResourcePath, but PHPFUI is recomended to keep things simple.
 
 ### Create Document Page
