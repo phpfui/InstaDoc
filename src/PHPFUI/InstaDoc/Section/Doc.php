@@ -31,6 +31,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			}
 
 		$comments = $this->reflection->getDocComment();
+		$comments = \str_replace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		if ($comments)
 			{

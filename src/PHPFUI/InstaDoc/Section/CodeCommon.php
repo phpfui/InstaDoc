@@ -29,7 +29,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		$container = new \PHPFUI\Container();
 
-		$container->add($this->parsedown->text($docBlock->getSummary()));
+		$container->add($this->parsedown->text($this->getInheritedSummary($docBlock, $reflectionMethod)));
 		$desc = $docBlock->getDescription();
 
 		if ($desc)
@@ -57,15 +57,25 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription()) : '';
 				$body = '';
 				// punt on useless tags
-				if (\in_array($name, ['method', 'param', 'inheritdoc']))
+				if (\in_array($name, ['method', 'inheritdoc']))
 					{
 					continue;
 					}
 
-				if ('var' == $name)
+				if (\method_exists($tag, 'getType'))
+					{
+					$type = $tag->getType();
+					}
+				else
+					{
+					$type = '';
+					}
+
+
+				if ('var' == $name || 'param' == $name)
 					{
 					// useless if no description or type
-					if (! $description && ! $tag->getType())
+					if (! $description && ! $type)
 						{
 						continue;
 						}
@@ -91,14 +101,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
 					}
 
-				if (\method_exists($tag, 'getType'))
+				if ($type)
 					{
-					$type = $tag->getType();
-
-					if ($type)
-						{
-						$body .= $this->getClassName($type) . ' ';
-						}
+					$body .= $this->getClassName($type) . ' ';
 					}
 
 				if (\method_exists($tag, 'getVariableName'))
@@ -115,6 +120,10 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				}
 
 			$container->add($ul);
+			}
+		else
+			{
+			$container->add('no tags<br>');
 			}
 
 		return $container;
@@ -207,6 +216,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	protected function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
 		{
 		$comments = $method->getDocComment();
+		$comments = \str_replace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		if (! $comments)
 			{
@@ -233,6 +243,44 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return \str_replace('\\', '-', $class);
 		}
 
+	protected function getInheritedSummary(\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
+		{
+		$summary = $docBlock->getSummary();
+		if (! $reflectionMethod)
+			{
+			return $summary;
+			}
+
+		$tags = $docBlock->getTags();
+		foreach ($tags as $index => $tag)
+			{
+			if (0 == \strcasecmp($tag->getName(), 'inheritDoc'))
+				{
+				$reflectionClass = $reflectionMethod->getDeclaringClass();
+				$parent = $reflectionClass->getParentClass();
+
+				while ($parent)
+					{
+					$method = $parent->getMethod($reflectionMethod->name);
+					if ($method)
+						{
+						$docBlock = $this->getDocBlock($method);
+
+						if ($docBlock)
+							{
+							return $summary . "\n" . $this->getInheritedSummary($docBlock, $method);
+							}
+						}
+					$parent = $parent->getParentClass();
+					}
+
+				break;
+				}
+			}
+
+		return $summary;
+		}
+
 	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
 		{
 		foreach ($tags as $index => $tag)
@@ -242,28 +290,25 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
 
-				if (! $parent)
+				while ($parent)
 					{
-					return [];	// no parent, at top of tree, and no tags, go figure
-					}
-				$method = $parent->getMethod($reflectionMethod->name);
+					$method = $parent->getMethod($reflectionMethod->name);
+					if ($method)
+						{
+						$docBlock = $this->getDocBlock($method);
 
-				if (! $method)
-					{
-					return [];	// no method here, kinda strange
-					}
-				$docBlock = $this->getDocBlock($method);
+						if ($docBlock)
+							{
+							// add in the new tags and check parent
+							\array_splice($tags, $index, 1, $docBlock->getTags());
 
-				if ($docBlock)
-					{
-					// add in the new tags and check parent
-					\array_splice($tags, $index, 1, $docBlock->getTags());
-
-					return $this->getInheritedDocBlock($tags, $method);
+							return $this->getInheritedDocBlock($tags, $method);
+							}
+						}
+					$parent = $parent->getParentClass();
 					}
 
-				// Nothing at this level, but go up one and try the parent method
-				return $this->getInheritedDocBlock($tags, $method);
+				break;
 				}
 			}
 
