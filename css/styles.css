@@ -489,7 +489,7 @@ select {
   padding-right: 1.5rem;
   transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
 }
-@media screen and (min-width: 0\0 ) {
+@media screen and (min-width: 0 ) {
   select {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIpJREFUeNrEkckNgDAMBBfRkEt0ObRBBdsGXUDgmQfK4XhH2m8czQAAy27R3tsw4Qfe2x8uOO6oYLb6GlOor3GF+swURAOmUJ+RwtEJs9WvTGEYxBXqI1MQAZhCfUQKRzDMVj+TwrAIV6jvSUEkYAr1LSkcyTBb/V+KYfX7xAeusq3sLDtGH3kEGACPWIflNZfhRQAAAABJRU5ErkJggg==");
   }
@@ -899,7 +899,6 @@ ul.no-bullet, ol.no-bullet {
   * {
     background: transparent !important;
     color: black !important;
-    color-adjust: economy;
     box-shadow: none !important;
     text-shadow: none !important;
   }
@@ -7655,7 +7654,6 @@ input::placeholder {
 
 .draggable {
   cursor: pointer;
-  cursor: hand;
 }
 
 .ToFromList {

@@ -121,10 +121,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			$container->add($ul);
 			}
-		else
-			{
-			$container->add('no tags<br>');
-			}
 
 		return $container;
 		}
