@@ -69,9 +69,20 @@ That is it. You are done!
 ### Adding New Classes
 PHPFUI\InstaDoc saves the classes to display in PHP serialized files.  Delete those files (.serial extension) when you want to display new classes. PHPFUI\InstaDoc will regenerate automatically if the files are missing.
 
+### Add Child Classes to the Docs
+```php
+\PHPFUI\InstaDoc\ChildClasses::load('../ChildClasses.serial');
+```
+
+### Add a Global Namespace Class
+The git repo path defaults to the composer directory, but you can change the path by calling:
+```php
+$fileManager->addGlobalNameSpaceClass(__DIR__ . '/global/FPDF.php');
+```
+
 ### Removing a Namespace
 ```php
-\PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('cebe\markdown\tests');
+$fileManager->excludeNamespace('Carbon');
 ```
 
 ### Add git Repository Page

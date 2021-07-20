@@ -32,17 +32,32 @@ class FileManager
 
 	/**
 	 * You can add a Namespace directly.  Specify the namespace (no
-	 * leading \) and the directory containing the class files.
-	 * This is realitive to the current script directory.  You can
-	 * also pass an option localGit flag indicating this directory
-	 * is in the project git repo.  This will allow you to see the
-	 * git history on the file.
+	 * leading backslash) and the directory containing the class
+	 * files. This is realitive to the current script directory.
+	 * You can also pass an option localGit flag indicating this
+	 * directory is in the project git repo.  This will allow you to
+	 * see the git history on the file.
 	 */
 	public function addNamespace(string $namespace, string $directory, bool $localGit = false) : FileManager
 		{
 		$this->includedNamespaces[] = [$namespace, $directory, $localGit];
 
 		return $this;
+		}
+
+	/**
+	 * The classes in the global namespace are handled slightly
+	 * differently, as this should be the exception rather than the
+	 * rule.
+	 *
+	 * @param string $filename Pass in the full file path
+	 * @param bool $localGit the git flag is attached to the global
+	 *  					 namespace, not the individual file and will use
+	 *  					 the setting of the last file added.
+	 */
+	public function addGlobalNameSpaceClass(string $filename, bool $localGit = false) : void
+		{
+		NamespaceTree::addGlobalNameSpaceClass($filename, $localGit);
 		}
 
 	/**
@@ -66,7 +81,8 @@ class FileManager
 		}
 
 	/**
-	 * Delete config files
+	 * Delete config files.  This should be done when new classes
+	 * have been added to the project.
 	 *
 	 * @return int number of files deleted
 	 */

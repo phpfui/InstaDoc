@@ -47,12 +47,22 @@ class NamespaceTree
 		{
 		}
 
+	public static function addGlobalNameSpaceClass(string $filename, bool $localGit = false) : void
+		{
+		$filenameLength = \strlen($filename);
+		if (\strpos($filename, '.php') == $filenameLength - 4)
+			{
+			$root = self::getRoot();
+			$file = \str_replace('/', '\\', \str_replace('.php', '', $filename));
+			$parts = \explode('\\', $file);
+			$class = \array_pop($parts);
+			$root->classes[$class] = $filename;
+			$root->localGit = $localGit;
+			}
+		}
+
 	public static function addNamespace(string $namespace, string $directory, bool $localGit = false) : void
 		{
-		if (! $namespace)
-			{
-			return;
-			}
 		$namespaceLength = \strlen($namespace);
 
 		if ($namespaceLength && '\\' == $namespace[$namespaceLength - 1])
@@ -63,17 +73,17 @@ class NamespaceTree
 		$node = self::findNamespace($namespace);
 		$node->localGit = $localGit;
 
-	$iterator = new \DirectoryIterator($directory);
+		$iterator = new \DirectoryIterator($directory);
 
-	foreach ($iterator as $fileinfo)
+		foreach ($iterator as $fileinfo)
 			{
 			$filename = $fileinfo->getFilename();
 			$filenameLength = \strlen($filename);
 
-	  if ($fileinfo->isDir() && false === \strpos($filename, '.'))
+			if ($fileinfo->isDir() && false === \strpos($filename, '.'))
 				{
 				self::addNamespace($namespace . '\\' . $filename, $directory . '/' . $filename, $localGit);
-		}
+				}
 			elseif (\strpos($filename, '.php') == $filenameLength - 4)
 				{
 				$class = \substr($filename, 0, $filenameLength - 4);
@@ -252,6 +262,27 @@ class NamespaceTree
   public static function populateMenu(\PHPFUI\Menu $menu) : void
 		{
 		self::sort(self::getRoot());
+
+		// add no namespace stuff first
+		if (self::$root->classes)
+			{
+			$namespace = '\\';
+			$rootMenu = new \PHPFUI\Menu();
+			foreach (self::$root->classes as $class => $path)
+				{
+				$activeClass = self::$activeClass;
+				$activeNamespace = self::$activeNamespace;
+
+				$menuItem = new \PHPFUI\MenuItem($class, self::$controller->getClassUrl($class));
+				if ($class == self::$activeClass)
+					{
+					$menuItem->setActive();
+					}
+				$rootMenu->addMenuItem($menuItem);
+				}
+			$menuItem = new \PHPFUI\MenuItem($namespace);
+			$menu->addSubMenu($menuItem, $rootMenu);
+			}
 
 		foreach (self::$root->children as $child)
 			{

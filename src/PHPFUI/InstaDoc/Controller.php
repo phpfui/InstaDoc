@@ -130,9 +130,15 @@ class Controller
 			{
 			$mainColumn->add($this->getSection('Landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
 			}
-		elseif ($this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
+		elseif ($this->getParameter(Controller::CLASS_NAME))
 			{
-			$fullClassName = $this->getParameter(Controller::NAMESPACE) . '\\' . $this->getParameter(Controller::CLASS_NAME);
+			$nameSpace = $this->getParameter(Controller::NAMESPACE);
+			if ($nameSpace)
+				{
+				$nameSpace .= '\\';
+				}
+
+			$fullClassName = $nameSpace . $this->getParameter(Controller::CLASS_NAME);
 			$tree = NamespaceTree::findNamespace($this->getParameter(Controller::NAMESPACE));
 			$files = $tree->getClassFilenames();
 			$fullClassPath = $files[$fullClassName] ?? '';
