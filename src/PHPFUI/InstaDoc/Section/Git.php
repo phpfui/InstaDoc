@@ -21,7 +21,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		try
 			{
 			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
-			$result = $repo->run('show-branch');
+			$branch = \trim($repo->run('rev-parse', ['--abbrev-ref', 'HEAD']));
 			}
 		catch (\Exception $e)
 			{
@@ -30,8 +30,6 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 			return $container;
 			}
-
-		$branch = \substr($result, \strpos($result, '[') + 1, \strpos($result, ']') - 1);
 
 		if (! $branch)
 			{
