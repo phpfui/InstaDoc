@@ -11,9 +11,10 @@
  */
 class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 	{
-
 	private $sections = [];
+
 	private $fileManager;
+
 	private $controller;
 
 	/**
@@ -31,13 +32,13 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 			{
 			if (! $fileInfo->isDir())
 				{
-				$path = str_replace('/', '\\', str_replace('.php', '', $filename));
-				$parts = explode('\\', $path);
-				while (count($parts) && array_shift($parts) != 'src')
+				$path = \str_replace('/', '\\', \str_replace('.php', '', $filename));
+				$parts = \explode('\\', $path);
+				while (\count($parts) && 'src' != \array_shift($parts))
 					{
 					// leave part on floor, not needed
 					}
-				$this->sections[] = implode('\\', $parts);
+				$this->sections[] = \implode('\\', $parts);
 				}
 			}
 
@@ -99,11 +100,9 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 
 	public function testInvalidPage() : void
 		{
-		$this->expectException(\ReflectionException::class);
- 		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
+		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
 		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 		$this->assertValidHtml("{$page}");
-		$this->assertNotWarningHtml("{$page}");
 		}
 
 	public function testTestClass() : void
@@ -120,6 +119,4 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 				}
 			}
 		}
-
 	}
-
