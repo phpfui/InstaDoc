@@ -456,7 +456,14 @@ class Controller
 	 */
 	public function getMethodParameters(string $className, $methodName = '__construct') : string
 		{
-		$reflection = new \ReflectionClass($className);
+		try
+			{
+			$reflection = new \ReflectionClass($className);
+			}
+		catch (\Exception $e)
+			{
+			return '';
+			}
 
 		if (! $reflection->hasMethod($methodName))
 			{
