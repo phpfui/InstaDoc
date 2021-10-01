@@ -38,7 +38,6 @@ class MarkDownParser
 		$codeBlocks = $dom->find('.language-PHP');
 		foreach ($codeBlocks as $block)
 			{
-			$this->page->addStyleSheet('highlighter/styles/PHPFUI.css');
 			$child = $block->firstChild();
 			$highlighted = $hl->highlight('php', $child->text());
 			$block->setAttribute('class', 'hljs ' . $highlighted->language);

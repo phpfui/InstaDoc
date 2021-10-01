@@ -21,6 +21,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
 		$this->addStyleSheet('css/markdown.css');
+		$this->addStyleSheet('highlighter/styles/PHPFUI.css');
 		}
 
 	public function addBody($item) : PageInterface
