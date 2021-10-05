@@ -107,7 +107,7 @@ hr {
 .markdown-body pre {
   font-family: monospace;
   font-size: 1em;
-	border-left: 2px solid Orange;
+	border-left: 3px solid Orange;
 }
 
 .markdown-body hr {
@@ -829,7 +829,7 @@ hr {
   font-size: 85%;
   line-height: 1.45;
 	color: Black;
-  background-color: white;
+  background-color: #FFFAA0;
 }
 
 pre.hljs.php,
