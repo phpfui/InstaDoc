@@ -90,4 +90,10 @@ class Test80
 	 * Testing method sorting
 	 */
 	private function upperTest() : void {}
+
+	#[\ReturnTypeWillChange]
+	public function count()
+		{
+		return 0;
+		}
 	}

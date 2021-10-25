@@ -159,6 +159,25 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				}
 			}
 
+		$reflectionAttributes = $this->getAttributes($this->reflection);
+
+		if ($reflectionAttributes)
+			{
+			$table = new \PHPFUI\Table();
+			$table->addClass('hover');
+			$table->addClass('unstriped');
+
+			foreach ($reflectionAttributes as $attribute)
+				{
+				$table->addRow([$this->formatAttribute($attribute)]);
+				}
+
+			if (\count($table))
+				{
+				$accordion->addTab('Attributes', $table);
+				}
+			}
+
 		if (\count($accordion))
 			{
 			$container->add($accordion);
@@ -245,6 +264,11 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
 		{
+		/**
+		 * @todo get attributes everywhere
+		 * $attributes = $this->getAttributes($constant);
+		 */
+
 		$docBlock = $this->getDocBlock($constant);
 		$info = $this->getAccess($constant) . ' ' . $this->getColor('constant', $this->getColor('constant', $this->getName($constant, $name, true))) . ' = ' . $this->getValueString($value);
 		$info .= $this->getComments($docBlock);
@@ -269,6 +293,11 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			foreach ($constants as $name => $value)
 				{
 				$constant = new \ReflectionClassConstant($this->class, $name);
+
+				/**
+				 * @todo get attributes everywhere
+				 * $attributes = $this->getAttributes($constant);
+				 */
 
 				if ($constant->{$accessType}())
 					{

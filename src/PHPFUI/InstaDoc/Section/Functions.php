@@ -83,6 +83,11 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 			'Variadic',
 		];
 
+		/**
+		 * @todo get attributes everywhere
+		 * $attributes = $this->getAttributes($this->reflection);
+		 */
+
 		$gridX = null;
 
 		foreach ($properties as $type)
