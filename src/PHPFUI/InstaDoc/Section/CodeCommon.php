@@ -223,7 +223,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		 */
 
 		$comments = $method->getDocComment();
-		$comments = \str_replace('{@inheritdoc}', '@inheritdoc', $comments);
+		$comments = \str_ireplace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		if (! $comments)
 			{
@@ -261,14 +261,21 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$tags = $docBlock->getTags();
 		foreach ($tags as $index => $tag)
 			{
-			if (0 == \strcasecmp($tag->getName(), 'inheritDoc'))
+			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
 
 				while ($parent)
 					{
-					$method = $parent->getMethod($reflectionMethod->name);
+					try
+						{
+						$method = $parent->getMethod($reflectionMethod->name);
+						}
+					catch (\Throwable $e)
+						{
+						$method = null;
+						}
 					if ($method)
 						{
 						$docBlock = $this->getDocBlock($method);
@@ -292,14 +299,21 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		{
 		foreach ($tags as $index => $tag)
 			{
-			if (0 == \strcasecmp($tag->getName(), 'inheritDoc'))
+			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
 
 				while ($parent)
 					{
-					$method = $parent->getMethod($reflectionMethod->name);
+					try
+						{
+						$method = $parent->getMethod($reflectionMethod->name);
+						}
+					catch (\Throwable $e)
+						{
+						$method = null;
+						}
 					if ($method)
 						{
 						$docBlock = $this->getDocBlock($method);
