@@ -1,4 +1,4 @@
-# PHPFUI\InstaDoc Library [![Build Status](https://api.travis-ci.com/phpfui/InstaDoc.png?branch=master)](https://api.travis-ci.com/phpfui/InstaDoc) [![Latest Packagist release](https://img.shields.io/packagist/v/phpfui/InstaDoc.svg)](https://packagist.org/packages/phpfui/InstaDoc)
+# PHPFUI\InstaDoc Library [![Tests](https://github.com/phpfui/InstaDoc/actions/workflows/tests.yml/badge.svg)](https://github.com/phpfui/InstaDoc/actions?query=workflow%3Atests) [![Latest Packagist release](https://img.shields.io/packagist/v/phpfui/InstaDoc.svg)](https://packagist.org/packages/phpfui/InstaDoc)
 
 ## A quick and easy way to add documentation to your PHP project
 
