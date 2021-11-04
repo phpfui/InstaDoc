@@ -21,7 +21,7 @@
 				"paquettg/php-html-parser": "^3.1"
 			},
 		"autoload": {
-				"psr-0": {"PHPFUI\\InstaDoc\\": "src/"}
+				"psr-4": {"PHPFUI\\InstaDoc\\": "src/PHPFUI/InstaDoc/"}
 		},
 		"require-dev": {
 				"phpunit/phpunit": "<10.0",
