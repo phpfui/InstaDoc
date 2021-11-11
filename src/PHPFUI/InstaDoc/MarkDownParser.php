@@ -32,19 +32,18 @@ class MarkDownParser
 		$div = new \PHPFUI\HTML5Element('div');
 		$div->addClass('markdown-body');
 		$html = $this->parser->parse($markdown);
-		$dom = new \PHPHtmlParser\Dom();
-		$dom->setOptions((new \PHPHtmlParser\Options())->setPreserveLineBreaks(true));
-		$dom->loadStr($html);
+		$dom = new \voku\helper\HtmlDomParser($html);
 		$codeBlocks = $dom->find('.language-PHP');
+
 		foreach ($codeBlocks as $block)
 			{
 			$child = $block->firstChild();
 			$highlighted = $hl->highlight('php', $child->text());
 			$block->setAttribute('class', 'hljs ' . $highlighted->language);
-			$block->getParent()->setAttribute('class', 'hljs ' . $highlighted->language);
-			$child->setText(\htmlspecialchars_decode($highlighted->value));
+			$block->parentNode()->setAttribute('class', 'hljs ' . $highlighted->language);
+			$child->plainText = \htmlspecialchars_decode($highlighted->value);
 			}
-		$div->add($dom);
+		$div->add("{$dom}");
 
 		return $div;
 		}
