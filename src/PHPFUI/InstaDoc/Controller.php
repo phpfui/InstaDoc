@@ -133,6 +133,7 @@ class Controller
 		elseif ($this->getParameter(Controller::CLASS_NAME))
 			{
 			$nameSpace = $this->getParameter(Controller::NAMESPACE);
+
 			if ($nameSpace)
 				{
 				$nameSpace .= '\\';

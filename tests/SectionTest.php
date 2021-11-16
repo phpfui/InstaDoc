@@ -34,6 +34,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 				{
 				$path = \str_replace('/', '\\', \str_replace('.php', '', $filename));
 				$parts = \explode('\\', $path);
+
 				while (\count($parts) && 'src' != \array_shift($parts))
 					{
 					// leave part on floor, not needed
@@ -108,6 +109,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 	public function testTestClass() : void
 		{
 		$runningPHPVersion = PHP_MAJOR_VERSION * 10 + PHP_MINOR_VERSION;
+
 		foreach ([80, 74, 73, 72, 71] as $phpVersion)
 			{
 			if ($runningPHPVersion >= $phpVersion)

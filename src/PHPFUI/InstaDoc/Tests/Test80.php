@@ -32,6 +32,12 @@ class Test80
 		return [];
 		}
 
+	#[\ReturnTypeWillChange]
+	public function count()
+		{
+		return 0;
+		}
+
 	/**
 	 * This function does nothing. But it has a very long
 	 * meaningless description that just seems to go on and on and
@@ -90,10 +96,4 @@ class Test80
 	 * Testing method sorting
 	 */
 	private function upperTest() : void {}
-
-	#[\ReturnTypeWillChange]
-	public function count()
-		{
-		return 0;
-		}
 	}

@@ -268,7 +268,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		 * @todo get attributes everywhere
 		 * $attributes = $this->getAttributes($constant);
 		 */
-
 		$docBlock = $this->getDocBlock($constant);
 		$info = $this->getAccess($constant) . ' ' . $this->getColor('constant', $this->getColor('constant', $this->getName($constant, $name, true))) . ' = ' . $this->getValueString($value);
 		$info .= $this->getComments($docBlock);
@@ -298,7 +297,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 				 * @todo get attributes everywhere
 				 * $attributes = $this->getAttributes($constant);
 				 */
-
 				if ($constant->{$accessType}())
 					{
 					if ($section)
