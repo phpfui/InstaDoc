@@ -446,6 +446,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			case 'string':
+				$value = \htmlspecialchars($value);
 				$value = $this->getColor('string', "'{$value}'");
 
 				break;
