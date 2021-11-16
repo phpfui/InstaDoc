@@ -43,7 +43,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 			foreach ($children as $child)
 				{
 				$namespace = $child->getNamespace();
-				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getNamespaceURL($namespace), $namespace, false)));
+				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getNamespaceURL($namespace), \str_replace('\\', '<wbr>\\', $namespace), false)));
 				}
 			}
 
@@ -55,7 +55,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 			foreach ($node->getClassFilenames() as $class => $fullPath)
 				{
-				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false)));
+				$ul->add(new \PHPFUI\DescriptionDetail(new \PHPFUI\Link($this->controller->getClassUrl($class), \str_replace('\\', '<wbr>\\', $class), false)));
 				}
 			}
 

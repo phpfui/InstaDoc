@@ -120,6 +120,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				}
 
 			$attributes = $this->getAttributes($reflectionMethod);
+
 			foreach ($attributes as $attribute)
 				{
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', 'attribute') . ' ' . $this->formatAttribute($attribute)));
@@ -166,7 +167,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				// if fully qualified, we are done
 				if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
 					{
-					return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false) . $array;
+					return new \PHPFUI\Link($this->controller->getClassUrl($class), \str_replace('\\', '<wbr>\\', $class), false) . $array;
 					}
 
 				// try name in current namespace tree
@@ -174,7 +175,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
 					{
-					return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false) . $array;
+					return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), \str_replace('\\', '<wbr>\\', $namespacedClass), false) . $array;
 					}
 
 			}
@@ -221,7 +222,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		 * @todo get attributes everywhere
 		 * $attributes = $this->getAttributes($method);
 		 */
-
 		$comments = $method->getDocComment();
 		$comments = \str_ireplace('{@inheritdoc}', '@inheritdoc', $comments);
 
@@ -253,12 +253,14 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	protected function getInheritedSummary(\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
 		{
 		$summary = $docBlock->getSummary();
+
 		if (! $reflectionMethod)
 			{
 			return $summary;
 			}
 
 		$tags = $docBlock->getTags();
+
 		foreach ($tags as $index => $tag)
 			{
 			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
@@ -276,6 +278,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						{
 						$method = null;
 						}
+
 					if ($method)
 						{
 						$docBlock = $this->getDocBlock($method);
@@ -314,6 +317,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						{
 						$method = null;
 						}
+
 					if ($method)
 						{
 						$docBlock = $this->getDocBlock($method);
@@ -391,7 +395,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			 * @todo add attributes for parameters
 			 * $attributes = $this->getAttributes($parameter);
 			 */
-
 			if (isset($parameterComments[$name]))
 				{
 				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
@@ -513,7 +516,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected function getAttributes($reflection) : array
 		{
-		if ($reflection && method_exists($reflection, 'getAttributes'))
+		if ($reflection && \method_exists($reflection, 'getAttributes'))
 			{
 			return $reflection->getAttributes();
 			}
@@ -521,33 +524,21 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return [];
 		}
 
-	private function getAttributeName(string $name, bool $asValue = false) : string
-		{
-		$link = $this->getClassName($name);
-		if (strpos($link, 'href='))
-			{
-			$name = $link;
-			}
-		elseif ($asValue)
-			{
-			$name = $this->getValueString($name);
-			}
-
-		return $name;
-		}
-
 	protected function formatAttribute(\ReflectionAttribute $attribute) : string
 		{
 		$parameters = '';
 		$arguments = $attribute->getArguments();
+
 		if ($arguments)
 			{
 			$parameters = ' (';
 			$comma = '';
+
 			foreach ($arguments as $name => $argument)
 				{
-				$name = is_int($name) ? '' : $this->getAttributeName($name) . ': ';
-				if (is_string($argument))
+				$name = \is_int($name) ? '' : $this->getAttributeName($name) . ': ';
+
+				if (\is_string($argument))
 					{
 					$link = $this->getAttributeName($argument, true);
 					}
@@ -592,9 +583,24 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			{
 			$targeting = ' ' . implode(' | ', $targets);
 			}
-		*/
+		 */
 
 		return $this->getClassName($attribute->getName()) . $parameters . $targeting;
 		}
 
+	private function getAttributeName(string $name, bool $asValue = false) : string
+		{
+		$link = $this->getClassName($name);
+
+		if (\strpos($link, 'href='))
+			{
+			$name = $link;
+			}
+		elseif ($asValue)
+			{
+			$name = $this->getValueString($name);
+			}
+
+		return $name;
+		}
 	}

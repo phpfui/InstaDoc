@@ -50,6 +50,7 @@ class NamespaceTree
 	public static function addGlobalNameSpaceClass(string $filename, bool $localGit = false) : void
 		{
 		$filenameLength = \strlen($filename);
+
 		if (\strpos($filename, '.php') == $filenameLength - 4)
 			{
 			$root = self::getRoot();
@@ -268,12 +269,14 @@ class NamespaceTree
 			{
 			$namespace = '\\';
 			$rootMenu = new \PHPFUI\Menu();
+
 			foreach (self::$root->classes as $class => $path)
 				{
 				$activeClass = self::$activeClass;
 				$activeNamespace = self::$activeNamespace;
 
-				$menuItem = new \PHPFUI\MenuItem($class, self::$controller->getClassUrl($class));
+				$menuItem = new \PHPFUI\MenuItem(\str_replace('\\', '<wbr>\\', $class), self::$controller->getClassUrl($class));
+
 				if ($class == self::$activeClass)
 					{
 					$menuItem->setActive();
@@ -370,7 +373,8 @@ class NamespaceTree
 			{
 			$parts = \explode('\\', $class);
 			$baseClass = \array_pop($parts);
-			$menuItem = new \PHPFUI\MenuItem($baseClass, self::$controller->getClassUrl($class));
+
+			$menuItem = new \PHPFUI\MenuItem(\str_replace('\\', '<wbr>\\', $baseClass), self::$controller->getClassUrl($class));
 
 			if ($baseClass == self::$activeClass && $namespace == self::$activeNamespace)
 				{
