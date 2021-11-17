@@ -2,7 +2,7 @@
 		"name": "phpfui/instadoc",
 		"description": "Instant and always up to date documentation for PHP projects",
 		"minimum-stability": "stable",
-		"keywords": ["documentation", "phpdoc", "block", "doc", "docblock", "foundation"],
+		"keywords": ["documentation", "phpdoc", "block", "doc", "docblock", "foundation", "generator", "document"],
 		"homepage": "https://github.com/phpfui/InstaDoc",
 		"license": "MIT",
 		"authors": [
