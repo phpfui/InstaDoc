@@ -4,17 +4,17 @@ namespace PHPFUI\InstaDoc;
 
 class FileManager
 	{
-	private $composerJsonPath = '';
+	private string $composerJsonPath = '';
 
-	private $configFile = '..';
+	private string $configFile = '..';
 
-	private $extension = '.serial';
+	private string $extension = '.serial';
 
-	private $fileName = '';
+	private string $fileName = '';
 
-	private $excludedNamespaces = [];
+	private array $excludedNamespaces = [];
 
-	private $includedNamespaces = [];
+	private array $includedNamespaces = [];
 
 	/**
 	 * Make a FileManager.  Pass a composer JSON path to use

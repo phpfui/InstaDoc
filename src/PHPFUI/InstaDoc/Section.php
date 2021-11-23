@@ -9,9 +9,9 @@ namespace PHPFUI\InstaDoc;
  */
 class Section
 	{
-	protected $controller;
+	protected \PHPFUI\InstaDoc\Controller $controller;
 
-	public function __construct(Controller $controller)
+	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
 		$this->controller = $controller;
 		}

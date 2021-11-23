@@ -4,7 +4,7 @@ namespace PHPFUI\InstaDoc\Section;
 
 class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 	{
-	private $class;
+	private string $class;
 
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
@@ -456,7 +456,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return \strcasecmp($lhs->name, $rhs->name);
 		}
 
-	protected function objectSort(array &$objects) : void
+	protected function objectSort(array & $objects) : void
 		{
 		\usort($objects, [$this, 'objectCompare']);
 		}

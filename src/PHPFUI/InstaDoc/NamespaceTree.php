@@ -11,29 +11,29 @@ class NamespaceTree
 	/**
 	 * @var array indexed by namespace part containing a NamespaceTree
 	 */
-	private $children = [];
+	private array $children = [];
 
 	/**
 	 * @var array indexed by fully qualified class name containing the file name
 	 */
-	private $classes = [];
+	private array $classes = [];
 
 	private static $controller;
 
 	/**
 	 * @var bool true if this namespace is in the local git repo
 	 */
-	private $localGit = false;
+	private bool $localGit = false;
 
 	/**
 	 * @var array of unique markdown files indexed by file name
 	 */
-	private $md = [];
+	private array $md = [];
 
 	/**
 	 * @var string of the namespace part
 	 */
-	private $namespace = '';
+	private string $namespace = '';
 
 	/**
 	 * @var NamespaceTree our parent

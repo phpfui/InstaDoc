@@ -4,9 +4,9 @@ namespace PHPFUI\InstaDoc;
 
 class MarkDownParser
 	{
-	private $parser;
+	private \cebe\markdown\GithubMarkdown $parser;
 
-	private $page;
+	private \PHPFUI\Interfaces\Page $page;
 
 	public function __construct(\PHPFUI\Interfaces\Page $page)
 		{

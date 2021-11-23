@@ -4,9 +4,9 @@ namespace PHPFUI\InstaDoc\Section;
 
 class CodeCommon extends \PHPFUI\InstaDoc\Section
 	{
-	protected $factory;
+	protected \phpDocumentor\Reflection\DocBlockFactory $factory;
 
-	protected $parsedown;
+	protected \PHPFUI\InstaDoc\MarkDownParser $parsedown;
 
 	protected $reflection;
 
@@ -54,7 +54,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			foreach ($tags as $tag)
 				{
 				$name = $tag->getName();
-				$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription()) : '';
+				$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription() ?? '') : '';
 				$body = '';
 				// punt on useless tags
 				if (\in_array($name, ['method', 'inheritdoc']))
@@ -352,7 +352,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		foreach ($docBlock->getTags() as $tag)
 			{
 			$name = $tag->getName();
-			$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription()) : '';
+			$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription() ?? '') : '';
 
 			if ('param' == $name && $description)
 				{

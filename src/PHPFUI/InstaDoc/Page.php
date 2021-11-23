@@ -4,17 +4,17 @@ namespace PHPFUI\InstaDoc;
 
 class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 	{
-	private $controller;
+	private \PHPFUI\InstaDoc\Controller $controller;
 
-	private $generating = '';
+	private string $generating = '';
 
-	private $homeUrl = '#';
+	private string $homeUrl = '#';
 
-	private $mainColumn;
+	private \PHPFUI\Cell $mainColumn;
 
-	private $menu;
+	private \PHPFUI\Menu $menu;
 
-	public function __construct(Controller $controller)
+	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct();
 		$this->controller = $controller;

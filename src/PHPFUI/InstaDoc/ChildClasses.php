@@ -10,7 +10,7 @@ class ChildClasses
 	/**
 	 * @var array indexed by fqn of class containing array of fqn of children
 	 */
-	private static $children = [];
+	private static array $children = [];
 
 	/**
 	 * Generate child class information from all classes in NamespaceTree

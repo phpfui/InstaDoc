@@ -61,29 +61,29 @@ class Controller
 		Controller::PAGE,
 	];
 
-	private $accessTabs = ['Public', 'Protected', 'Private', 'Static'];
+	private array $accessTabs = ['Public', 'Protected', 'Private', 'Static'];
 
-	private $fileManager;
+	private \PHPFUI\InstaDoc\FileManager $fileManager;
 
-	private $generating = '';
+	private string $generating = '';
 
-	private $gitFileOffset = '';
+	private string $gitFileOffset = '';
 
-	private $gitRoot = '';
+	private string $gitRoot = '';
 
-	private $homePageMarkdown = [];
+	private array $homePageMarkdown = [];
 
-	private $homeUrl = '#';
+	private string $homeUrl = '#';
 
-	private $menu = null;
+	private ?\PHPFUI\AccordionMenu $menu = null;
 
-	private $page;
+	private \PHPFUI\InstaDoc\PageInterface $page;
 
-	private $parameters = [];
+	private array $parameters = [];
 
-	private $siteTitle = 'PHPFUI/InstaDoc';
+	private string $siteTitle = 'PHPFUI/InstaDoc';
 
-	public function __construct(FileManager $fileManager)
+	public function __construct(\PHPFUI\InstaDoc\FileManager $fileManager)
 		{
 		$this->fileManager = $fileManager;
 		$this->gitRoot = $fileManager->getComposerPath();
@@ -406,7 +406,7 @@ class Controller
 	/**
 	 * Gets a blank page and sets the page title. Override to change the generated page layout.
 	 */
-	public function getPage() : PageInterface
+	public function getPage() : \PHPFUI\InstaDoc\PageInterface
 		{
 		$page = new Page($this);
 
