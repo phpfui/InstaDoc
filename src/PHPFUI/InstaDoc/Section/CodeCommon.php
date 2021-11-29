@@ -14,7 +14,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		{
 		parent::__construct($controller);
 		$this->factory = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
-		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser($controller->getPage());
+		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
 		}
 
 	/**
