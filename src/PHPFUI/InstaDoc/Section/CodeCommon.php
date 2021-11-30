@@ -10,11 +10,175 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected $reflection;
 
-	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
+	public function __construct(\PHPFUI\InstaDoc\Controller $controller, string $fullClassPath = '')
 		{
 		parent::__construct($controller);
 		$this->factory = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
+
+		if ($fullClassPath)
+			{
+			try
+				{
+				$this->reflection = new \ReflectionClass($fullClassPath);
+
+				try
+					{
+					$this->reflection->isInstantiable();
+					}
+				catch (\Throwable $e)
+					{
+					$this->reflection = new \ReflectionEnum($fullClassPath);
+					}
+				}
+			catch (\Throwable $e)
+				{
+				}
+			}
+		}
+
+	/**
+	 * @param \ReflectionFunction | \ReflectionMethod $method
+	 */
+	public function getMethodParameters($method, array $parameterComments = []) : string
+		{
+		$info = $comma = '';
+
+		foreach ($method->getParameters() as $parameter)
+			{
+			$info .= $comma;
+			$comma = ', ';
+
+			if ($parameter->hasType())
+				{
+				$type = $parameter->getType();
+				$info .= $this->getColor('type', $this->getValueString($type));
+				}
+			$info .= ' ';
+
+			$name = $parameter->getName();
+			$tip = '$' . $name;
+
+			/**
+			 * @todo add attributes for parameters
+			 * $attributes = $this->getAttributes($parameter);
+			 */
+			if (isset($parameterComments[$name]))
+				{
+				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
+				}
+			$info .= $this->getColor('variable', $tip);
+
+			if ($parameter->isDefaultValueAvailable())
+				{
+				$value = $parameter->getDefaultValue();
+				$info .= ' = ' . $this->getValueString($value);
+
+				if ($parameter->isDefaultValueConstant())
+					{
+					if (\is_object($value))
+						{
+						$value = \get_class($value);
+						}
+					$extra = $parameter->getDefaultValueConstantName();
+					$info .= \str_replace($value, '', $extra);
+					}
+				}
+			}
+
+		return $info;
+		}
+
+	public function getValueString($value) : string
+		{
+		switch (\gettype($value))
+			{
+			case 'array':
+				$index = 0;
+				$text = $this->getColor('operator', '[');
+				$comma = '';
+
+				foreach ($value as $key => $part)
+					{
+					$text .= $comma;
+
+					if ($index !== $key)
+						{
+						$text .= $this->getValueString($key) . ' ' . $this->getColor('operator', '=>') . ' ';
+						}
+					++$index;
+					$text .= $this->getValueString($part);
+					$comma = ', ';
+					}
+				$text .= $this->getColor('operator', ']');
+				$value = $text;
+
+				break;
+
+			case 'string':
+				$value = \htmlspecialchars($value);
+				$value = $this->getColor('string', "'{$value}'");
+
+				break;
+
+			case 'object':
+				$class = \get_class($value);
+
+				if ('ReflectionNamedType' == $class)
+					{
+					$value = ($value->allowsNull() ? '?' : '') . $this->getClassName($value->getName());
+					}
+				elseif ('ReflectionUnionType' == $class)
+					{
+					$types = $value->getTypes();
+					$value = $bar = '';
+
+					foreach ($types as $type)
+						{
+						$value .= $bar;
+						$bar = '|';
+						$value .= $this->getClassName($type->getName());
+						}
+					}
+				elseif ('ReflectionIntersectionType' == $class)
+					{
+					$types = $value->getTypes();
+					$value = $bar = '';
+
+					foreach ($types as $type)
+						{
+						$value .= $bar;
+						$bar = '&';
+						$value .= $this->getClassName($type->getName());
+						}
+					}
+				else
+					{
+					$value = $this->getClassName($class);
+					}
+
+				break;
+
+			case 'resource':
+				$value = $this->getColor('keyword', 'resource');
+
+				break;
+
+			case 'boolean':
+				$value = $this->getColor('keyword', $value ? 'true' : 'false');
+
+				break;
+
+			case 'NULL':
+				$value = $this->getColor('keyword', 'NULL');
+
+				break;
+
+			default:
+				$value = $this->getColor('number', $value);
+			}
+
+		return $value;
 		}
 
 	/**
@@ -367,47 +531,11 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	/**
 	 * @param \ReflectionFunction | \ReflectionMethod $method
 	 */
-	protected function getParameters($method) : string
+	protected function getMethodParametersBlock($method) : string
 		{
-		$info = '(';
-		$comma = '';
-
 		$docBlock = $this->getDocBlock($method);
-
 		$parameterComments = $this->getParameterComments($docBlock);
-
-		foreach ($method->getParameters() as $parameter)
-			{
-			$info .= $comma;
-			$comma = ', ';
-
-			if ($parameter->hasType())
-				{
-				$type = $parameter->getType();
-				$info .= $this->getColor('type', $this->getValueString($type));
-				}
-			$info .= ' ';
-
-			$name = $parameter->getName();
-			$tip = '$' . $name;
-
-			/**
-			 * @todo add attributes for parameters
-			 * $attributes = $this->getAttributes($parameter);
-			 */
-			if (isset($parameterComments[$name]))
-				{
-				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
-				}
-			$info .= $this->getColor('variable', $tip);
-
-			if ($parameter->isDefaultValueAvailable())
-				{
-				$value = $parameter->getDefaultValue();
-				$info .= ' = ' . $this->getValueString($value);
-				}
-			}
-		$info .= ')';
+		$info = '(' . $this->getMethodParameters($method, $parameterComments) . ')';
 
 		if ($method->hasReturnType())
 			{
@@ -417,86 +545,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$info .= $this->getComments($docBlock, $method instanceof \ReflectionMethod ? $method : null);
 
 		return $info;
-		}
-
-	protected function getValueString($value) : string
-		{
-		switch (\gettype($value))
-			{
-			case 'array':
-				$index = 0;
-				$text = $this->getColor('operator', '[');
-				$comma = '';
-
-				foreach ($value as $key => $part)
-					{
-					$text .= $comma;
-
-					if ($index !== $key)
-						{
-						$text .= $this->getValueString($key) . ' ' . $this->getColor('operator', '=>') . ' ';
-						}
-					++$index;
-					$text .= $this->getValueString($part);
-					$comma = ', ';
-					}
-				$text .= $this->getColor('operator', ']');
-				$value = $text;
-
-				break;
-
-			case 'string':
-				$value = \htmlspecialchars($value);
-				$value = $this->getColor('string', "'{$value}'");
-
-				break;
-
-			case 'object':
-				$class = \get_class($value);
-
-				if ('ReflectionNamedType' == $class)
-					{
-					$value = ($value->allowsNull() ? '?' : '') . $this->getClassName($value->getName());
-					}
-				elseif ('ReflectionUnionType' == $class)
-					{
-					$types = $value->getTypes();
-					$value = $bar = '';
-
-					foreach ($types as $type)
-						{
-						$value .= $bar;
-						$bar = '|';
-						$value .= $this->getClassName($type->getName());
-						}
-					}
-				else
-					{
-					$value = $this->getClassName($class);
-					}
-
-				break;
-
-			case 'resource':
-				$value = $this->getColor('keyword', 'resource');
-
-				break;
-
-			case 'boolean':
-				$value = $this->getColor('keyword', $value ? 'true' : 'false');
-
-				break;
-
-			case 'NULL':
-				$value = $this->getColor('keyword', 'NULL');
-
-				break;
-
-			default:
-				$value = $this->getColor('number', $value);
-			}
-
-		return $value;
 		}
 
 	protected function section(string $name) : string

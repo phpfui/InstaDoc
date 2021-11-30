@@ -110,7 +110,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		{
 		$runningPHPVersion = PHP_MAJOR_VERSION * 10 + PHP_MINOR_VERSION;
 
-		foreach ([80, 74, 73, 72, 71] as $phpVersion)
+		foreach ([81, 80, 74, 73, 72, 71] as $phpVersion)
 			{
 			if ($runningPHPVersion >= $phpVersion)
 				{

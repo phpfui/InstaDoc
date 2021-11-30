@@ -156,7 +156,8 @@ class Controller
 			$cell = new \PHPFUI\Cell();
 			$div->add(' &nbsp; ');
 			$icon = new \PHPFUI\FAIcon('far', 'clipboard');
-			$parameters = $this->getMethodParameters($fullClassName);
+			$parameters = $this->getConstructorParameters($fullClassName);
+			$parameters = \str_replace("\n", '', $parameters);
 			$hidden = new \PHPFUI\Input('text', 'clipboard', "new \\{$fullClassName}({$parameters});");
 			$hidden->addClass('hide');
 			$div->add($hidden);
@@ -455,7 +456,7 @@ class Controller
 	/**
 	 * Get parameters for the class and method
 	 */
-	public function getMethodParameters(string $className, $methodName = '__construct') : string
+	public function getConstructorParameters(string $className) : string
 		{
 		try
 			{
@@ -466,43 +467,24 @@ class Controller
 			return '';
 			}
 
+		$methodName = '__construct';
+
 		if (! $reflection->hasMethod($methodName))
 			{
 			return '';
 			}
+
 		$method = $reflection->getMethod($methodName);
+		$section = new \PHPFUI\InstaDoc\Section\CodeCommon($this, $className);
+		$parameters = $section->getMethodParameters($method);
+		$html2Text = new \Html2Text\Html2Text($parameters, ['do_links' => 'none']);
 
-		$info = '';
-		$comma = '';
-
-		foreach ($method->getParameters() as $parameter)
-			{
-			$info .= $comma;
-			$comma = ', ';
-
-			if ($parameter->hasType())
-				{
-				$type = $parameter->getType();
-				$info .= $type->allowsNull() ? '?' : '';
-				$info .= $type->getName();
-				$info .= ' ';
-				}
-			$name = $parameter->getName();
-			$info .= '$' . $name;
-
-			if ($parameter->isDefaultValueAvailable())
-				{
-				$value = $parameter->getDefaultValue();
-				$info .= ' = ' . $this->getValueString($value);
-				}
-			}
-
-		return $info;
+		return $html2Text->getText();
 		}
 
-	/**
-	 * Get a section for display. Override to change layout
-	 */
+/**
+ * Get a section for display. Override to change layout
+ */
 	public function getSection(string $sectionName) : Section
 		{
 		if (! \in_array($sectionName, Controller::SECTIONS))
@@ -637,69 +619,5 @@ class Controller
 			}
 
 		return $this;
-		}
-
-	protected function getValueString($value) : string
-		{
-		switch (\gettype($value))
-			{
-			case 'array':
-				$index = 0;
-				$text = '[';
-				$comma = '';
-
-				foreach ($value as $key => $part)
-					{
-					$text .= $comma;
-
-					if ($index !== $key)
-						{
-						$text .= $this->getValueString($key) . ' => ';
-						}
-					++$index;
-					$text .= $this->getValueString($part);
-					$comma = ', ';
-					}
-				$text .= ']';
-				$value = $text;
-
-				break;
-
-			case 'string':
-				$value = "'{$value}'";
-
-				break;
-
-			case 'object':
-				$class = \get_class($value);
-
-				if ('ReflectionNamedType' == $class)
-					{
-					$value = ($value->allowsNull() ? '?' : '') . $value->getName();
-					}
-				else
-					{
-					$value = $class;
-					}
-
-				break;
-
-			case 'resource':
-				$value = 'resource';
-
-				break;
-
-			case 'boolean':
-				$value = $value ? 'true' : 'false';
-
-				break;
-
-			case 'NULL':
-				$value = 'NULL';
-
-				break;
-			}
-
-		return $value;
 		}
 	}

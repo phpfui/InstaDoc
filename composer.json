@@ -18,7 +18,8 @@
 				"phpdocumentor/reflection-docblock": "^5.0",
 				"gitonomy/gitlib": "^1.2",
 				"cebe/markdown": "^1.2",
-				"voku/simple_html_dom": "^4.7"
+				"voku/simple_html_dom": "^4.7",
+				"html2text/html2text": "^4.3"
 			},
 		"autoload": {
 				"psr-4": {"PHPFUI\\InstaDoc\\": "src/PHPFUI/InstaDoc/"}

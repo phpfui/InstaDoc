@@ -20,6 +20,15 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		try
 			{
 			$this->reflection = new \ReflectionClass($this->class);
+
+			try
+				{
+				$this->reflection->isInstantiable();
+				}
+			catch (\Throwable $e)
+				{
+				$this->reflection = new \ReflectionEnum($this->class);
+				}
 			}
 		catch (\Throwable $e)
 			{
@@ -252,14 +261,23 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		if ($constant->isPrivate())
 			{
-			return $this->getColor('keyword', 'private');
+			$type = $this->getColor('keyword', 'private');
 			}
 		elseif ($constant->isProtected())
 			{
-			return $this->getColor('keyword', 'protected');
+			$type = $this->getColor('keyword', 'protected');
+			}
+		else
+			{
+			$type = $this->getColor('keyword', 'public');
 			}
 
-		return $this->getColor('keyword', 'public');
+		if (\method_exists($constant, 'isReadOnly') && $constant->isReadOnly())
+			{
+			$type .= $this->getColor('keyword', 'readonly');
+			}
+
+		return $type;
 		}
 
 	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
@@ -376,7 +394,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			}
 
 		$info .= $this->getName($method, $this->getColor('name', $method->name));
-		$info .= $this->getParameters($method);
+		$info .= $this->getMethodParametersBlock($method);
 
 		return $info;
 		}
@@ -387,7 +405,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($parent)
 			{
-			$link = $this->getClassName($parent, ! $fullyQualify);
+			$link = $this->getClassName($parent, $fullyQualify);
 			$name = $link . '::' . $name;
 			}
 
@@ -420,7 +438,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($type)
 			{
-			$info .= $this->getColor('type', $type->getName()) . ' ';
+			$info .= $this->getColor('type', $this->getClassName($type->getName())) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
 

@@ -120,7 +120,7 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$container->add('\\');
 			}
 		$container->add($this->getColor('name', $this->reflection->getShortName()));
-		$container->add($this->getParameters($this->reflection));
+		$container->add($this->getMethodParametersBlock($this->reflection));
 
 		return $container;
 		}
