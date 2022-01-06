@@ -12,21 +12,21 @@ But with PHPFUI/InstaDoc, you can document your site in about a minute (OK, mayb
  Two minutes to usable documentation with the following features:
 
 ## PHPFUI/InstaDoc Features
- * Always up to date, even with code that is not yet checked in
- * Send constructor information including parameters and default values to clipboard
- * Child and Parent class hierarchy clearly displayed and accessable
- * Quick access to highlighted PHP source with user selectable highlighting
- * Quick access to the file's git history for the local repo
- * Full support for @inheritDoc tag so child method docs are displayed correctly
- * Documents all projects loaded via Composer automatically
- * Tabbed documentation so you are not looking at irrelevant methods
+ * Always up to date, even with code that is not yet checked in.
+ * Send constructor information including parameters and default values to clipboard.
+ * Child and Parent class hierarchy clearly displayed and accessable.
+ * Quick access to highlighted PHP source with user selectable highlighting.
+ * Quick access to the file's git history for the local repo.
+ * Full support for @inheritDoc tag so child method docs are displayed correctly.
+ * Documents all projects loaded via Composer automatically.
+ * Tabbed documentation so you are not looking at irrelevant methods.
  * Alphabetized everything, no more searching unalphabetized pages!
- * Support for markdown and custom markdown pages
- * Ability to generate static html files for high volume sites
- * Add any local repo directories
- * Remove any Composer project you don't care about
- * 5+ line config compatible with all PHP frameworks, or standalone
- * Uses [Foundation CSS framework](https://get.foundation) for a great experience on mobile
+ * Support for markdown and custom markdown pages.
+ * Ability to generate static html files for high volume sites.
+ * Add any local repo directories.
+ * Remove any Composer project you don't care about.
+ * 5+ line config compatible with all PHP frameworks, or standalone.
+ * Uses [Foundation CSS framework](https://get.foundation) for a great experience on mobile.
 
 ### Install PHPFUI/InstaDoc (requires PHP >= 7.4)
 ```
