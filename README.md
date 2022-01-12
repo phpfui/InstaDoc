@@ -114,6 +114,6 @@ Just the doc and file pages, no git!
 $controller->generate('static/file/path', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, ]));
 ```
 
-### Example and Full Documentation
+### Examples and Full Class Documentation
 
-[PHPFUI/InstaDoc](http://www.phpfui.com)
+[PHPFUI/InstaDoc](http://phpfui.com/?n=PHPFUI%5CInstaDoc)
