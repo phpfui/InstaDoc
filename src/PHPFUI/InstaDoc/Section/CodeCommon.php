@@ -427,7 +427,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		foreach ($tags as $index => $tag)
 			{
-			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
+			$pos = \stripos($tag->getName(), 'inheritdoc');
+
+			if (false !== $pos && 0 >= $pos)
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
