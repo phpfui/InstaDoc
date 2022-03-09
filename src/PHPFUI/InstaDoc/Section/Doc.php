@@ -474,7 +474,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return \strcasecmp($lhs->name, $rhs->name);
 		}
 
-	protected function objectSort(array & $objects) : void
+	protected function objectSort(array &$objects) : void
 		{
 		\usort($objects, [$this, 'objectCompare']);
 		}
