@@ -21,6 +21,11 @@ class MarkDownParser
 		return $this->text($markdown);
 		}
 
+	public function html(string $markdown) : string
+		{
+		return $this->parser->parseParagraph($markdown);
+		}
+
 	public function text(string $markdown) : string
 		{
 		$position = 0;

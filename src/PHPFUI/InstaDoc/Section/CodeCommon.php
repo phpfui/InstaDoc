@@ -66,6 +66,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			if (isset($parameterComments[$name]))
 				{
 				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
+				$tip->addAttribute('data-allow-html', true);
 				}
 			$info .= $this->getColor('variable', $tip);
 
@@ -235,7 +236,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					$type = '';
 					}
 
-
 				if ('var' == $name || 'param' == $name)
 					{
 					// useless if no description or type
@@ -279,7 +279,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						$body .= $this->getColor('variable', '$' . $varname) . ' ';
 						}
 					}
-				$body .= $description;
+				$body .= $this->parsedown->html($description);
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
@@ -523,7 +523,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			if ('param' == $name && $description)
 				{
 				$var = $tag->getVariableName();
-				$comments[$var] = $description;
+				$comments[$var] = $this->parsedown->html($description);
 				}
 			}
 
