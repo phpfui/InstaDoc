@@ -41,10 +41,10 @@ jobs:
         run: wget https://github.com/validator/validator/releases/download/20.6.30/vnu.jar_20.6.30.zip
 
       - name: Unzip jar file
-        run: unzip vnu.jar_20.6.30.zip dist/vnu.jar -D .
+        run: unzip vnu.jar_20.6.30.zip
 
       - name: Run Nu Html Checker (v.Nu)
-        run: java -cp -jar ./vnu.jar -Xss1024k -Dnu.validator.servlet.bind-address=127.0.0.1 nu.validator.servlet.Main 8888
+        run: java -cp -jar ./dist/vnu.jar -Xss1024k -Dnu.validator.servlet.bind-address=127.0.0.1 nu.validator.servlet.Main 8888
 
       - name: Install dependencies
         run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
