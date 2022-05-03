@@ -11,7 +11,7 @@ if (! $phpfuiInstaller->run($argv))
 
 $vendor = [];
 $vendor['scrivo'] = [
-	'highlight.php/styles' => 'highlighter',
+	'highlight.php/src/Highlight/styles' => 'highlighter',
 	];
 
 $vendor['phpfui'] = [
