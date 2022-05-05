@@ -41,7 +41,7 @@ jobs:
         run: wget https://github.com/validator/validator/releases/download/latest/vnu.jar
 
       - name: Run Nu Html Checker (v.Nu)
-        run: java -cp ./dist/vnu.jar -Xss1024k nu.validator.servlet.Main 8888 &
+        run: java -cp vnu.jar -Xss1024k -Dnu.validator.servlet.bind-address=127.0.0.1 nu.validator.servlet.Main 8888 &
 
       - name: Install dependencies
         run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
