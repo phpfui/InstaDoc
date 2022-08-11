@@ -2,7 +2,7 @@
 
 namespace PHPFUI\InstaDoc;
 
-interface PageInterface
+interface PageInterface extends \PHPFUI\Interfaces\Page
 	{
 	public function __construct(Controller $controller);
 
@@ -15,4 +15,6 @@ interface PageInterface
 	public function setGenerating(string $generating) : PageInterface;
 
 	public function setHomeUrl(string $url) : PageInterface;
+
+	public static function setDebug(int $level = 0) : void;
 	}

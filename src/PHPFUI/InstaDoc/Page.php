@@ -12,8 +12,6 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 
 	private \PHPFUI\Cell $mainColumn;
 
-	private \PHPFUI\Menu $menu;
-
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct();
@@ -33,8 +31,6 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 
 	public function create(\PHPFUI\Menu $menu) : void
 		{
-		$this->menu = $menu;
-
 		$link = new \PHPFUI\Link($this->homeUrl, $this->getPageName(), false);
 
 		$titleBar = new \PHPFUI\TitleBar($link);

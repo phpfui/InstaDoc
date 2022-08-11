@@ -126,20 +126,19 @@ class FileManager
 	/**
 	 * Load the namespace index.
 	 *
-	 * @return true if file exists, false if generated
+	 * @return bool true if file exists, false if generated
 	 */
 	public function load(string $fileName = '') : bool
 		{
-		$returnValue = true;
-
 		if (! \PHPFUI\InstaDoc\NamespaceTree::load($this->getSerializedName($fileName)))
 			{
 			$this->rescan();
 			$this->save();
-			$returnValue = false;
+
+			return false;
 			}
 
-		return $returnValue;
+		return true;
 		}
 
 	/**

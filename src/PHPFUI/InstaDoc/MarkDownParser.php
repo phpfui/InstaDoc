@@ -43,7 +43,7 @@ class MarkDownParser
 			$highlighted = $hl->highlight('php', $child->text());
 			$block->setAttribute('class', 'hljs ' . $highlighted->language);
 			$block->parentNode()->setAttribute('class', 'hljs ' . $highlighted->language);
-			$child->plainText = \htmlspecialchars_decode($highlighted->value);
+			$child->plaintext = \htmlspecialchars_decode($highlighted->value);
 			}
 		$div->add("{$dom}");
 

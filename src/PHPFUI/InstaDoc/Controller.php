@@ -75,7 +75,7 @@ class Controller
 
 	private string $homeUrl = '#';
 
-	private ?\PHPFUI\AccordionMenu $menu = null;
+	private ?\PHPFUI\Menu $menu = null;
 
 	private \PHPFUI\InstaDoc\PageInterface $page;
 
@@ -150,7 +150,7 @@ class Controller
 				}
 			$section = new Section($this);
 
-			$div = new \PHPFUI\GridX('div');
+			$div = new \PHPFUI\GridX();
 			$div->add($section->getBreadCrumbs($fullClassName));
 
 			$cell = new \PHPFUI\Cell();
@@ -541,6 +541,8 @@ class Controller
 	public function setAccessTabs(array $tabs) : Controller
 		{
 		$this->accessTabs = $tabs;
+
+		return $this;
 		}
 
 	/**

@@ -8,7 +8,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
-		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
+		$gitPage = (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
 
 		$offset = $this->controller->getGitFileOffset();
@@ -51,6 +51,8 @@ class Git extends \PHPFUI\InstaDoc\Section
 			return $container;
 			}
 
+		$count = (int)$count;
+		$limit = (int)$limit;
 		$lastPage = (int)(($count - 1) / $limit) + 1;
 
 		$log->setOffset($gitPage * $limit);

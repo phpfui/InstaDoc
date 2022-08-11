@@ -1,0 +1,8 @@
+parameters:
+	level: 4
+	errorFormat: raw
+	editorUrl: '%%file%% %%line%% %%column%%: %%error%%'
+	paths:
+		- src
+	excludePaths:
+		- src/PHPFUI/InstaDoc/Tests/*

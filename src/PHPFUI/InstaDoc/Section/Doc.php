@@ -11,7 +11,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		parent::__construct($controller);
 		}
 
-	public function generate(\PHPFUI\Instadoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
+	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
 
