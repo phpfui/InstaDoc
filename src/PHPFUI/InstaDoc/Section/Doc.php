@@ -23,6 +23,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			try
 				{
+				/** @phpstan-ignore-next-line */
 				$this->reflection->isInstantiable();
 				}
 			catch (\Throwable $e)
@@ -193,6 +194,8 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			}
 
 		$parent = $this->reflection->getParentClass();
+
+		$allMenuItem = null;
 
 		if ($parentNames)
 			{
@@ -438,6 +441,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($type)
 			{
+			/** @phpstan-ignore-next-line */
 			$info .= $this->getColor('type', $this->getClassName($type->getName())) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));

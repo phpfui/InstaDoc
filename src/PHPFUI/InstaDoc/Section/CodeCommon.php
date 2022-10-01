@@ -24,6 +24,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				try
 					{
+					/** @phpstan-ignore-next-line */
 					$this->reflection->isInstantiable();
 					}
 				catch (\Throwable $e)
@@ -66,7 +67,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			if (isset($parameterComments[$name]))
 				{
 				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
-				$tip->addAttribute('data-allow-html', true);
+				$tip->addAttribute('data-allow-html');
 				}
 			$info .= $this->getColor('variable', $tip);
 
@@ -176,7 +177,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			default:
-				$value = $this->getColor('number', $value);
+				$value = $this->getColor('number', (string)$value);
 			}
 
 		return $value;
@@ -247,6 +248,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				if (\method_exists($tag, 'getAuthorName'))
 					{
+					/** @phpstan-ignore-next-line */
 					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
 					}
 
@@ -520,6 +522,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			if ('param' == $name && $description)
 				{
+				/** @phpstan-ignore-next-line */
 				$var = $tag->getVariableName();
 				$comments[$var] = $this->parsedown->html($description);
 				}

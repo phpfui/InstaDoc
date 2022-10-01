@@ -14,7 +14,7 @@ class File extends \PHPFUI\InstaDoc\Section
 			{
 			$fullClassPath = $this->controller->getGitFileOffset() . '/' . $fullClassPath;
 			}
-		$ts = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2);
+		$ts = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, '2');
 
 		$page->addCSS("code{tab-size:{$ts};-moz-tab-size:{$ts}}");
 		$php = @\file_get_contents($fullClassPath);

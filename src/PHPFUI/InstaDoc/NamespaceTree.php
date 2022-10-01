@@ -4,9 +4,9 @@ namespace PHPFUI\InstaDoc;
 
 class NamespaceTree
 	{
-	private static $activeClass;
+	private static string $activeClass;
 
-	private static $activeNamespace;
+	private static string $activeNamespace;
 
 	/**
 	 * @var array indexed by namespace part containing a NamespaceTree
@@ -38,9 +38,9 @@ class NamespaceTree
 	/**
 	 * @var NamespaceTree our parent
 	 */
-	private $parent = null;
+	private ?NamespaceTree $parent = null;
 
-	private static $root = null;
+	private static ?NamespaceTree $root = null;
 
 	// only we can make us to ensure the tree is good
 	private function __construct()
@@ -346,6 +346,7 @@ class NamespaceTree
 			}
 		}
 
+	/** @phpstan-ignore-next-line */
 	private function getMenuTree(NamespaceTree $tree, \PHPFUI\Menu $menu) : \PHPFUI\Menu
 		{
 		$currentMenu = new \PHPFUI\Menu();

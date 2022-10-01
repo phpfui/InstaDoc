@@ -10,7 +10,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$sha1 = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_SHA1);
-		$tabSize = \str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2));
+		$tabSize = \str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, '2'));
 
 		try
 			{

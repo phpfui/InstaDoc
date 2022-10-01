@@ -8,8 +8,8 @@ class Git extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
-		$gitPage = (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
-		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
+		$gitPage = (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, '0');
+		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, '20');
 
 		$offset = $this->controller->getGitFileOffset();
 
@@ -40,7 +40,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		try
 			{
-			$log = $repo->getLog($branch, $fullClassPath, 0, 10);
+			$log = $repo->getLog([$branch], [$fullClassPath], 0, 10);
 			$count = $log->count();
 			}
 		catch (\Exception $e)
@@ -85,7 +85,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		$container->add($table);
 
-		$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, $limit);
+		$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, (string)$limit);
 		$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 'PAGE');
 
 		$paginator = new \PHPFUI\Pagination($gitPage, $lastPage, $this->controller->getUrl($this->controller->getParameters()));
@@ -98,6 +98,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 	private function getReveal(\PHPFUI\InstaDoc\PageInterface $page, \PHPFUI\HTML5Element $opener, string $url) : \PHPFUI\Reveal
 		{
+		/** @phpstan-ignore-next-line */
 		$reveal = new \PHPFUI\Reveal($page, $opener);
 		$reveal->addClass('large');
 		$div = new \PHPFUI\HTML5Element('div');
