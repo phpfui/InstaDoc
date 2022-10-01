@@ -43,6 +43,9 @@ class Section
 		return \array_pop($parts);
 		}
 
+	/**
+	 * @param array<string> $allowedMenus
+	 */
 	public function getMenu(string $className, array $allowedMenus) : ?\PHPFUI\Menu
 		{
 		$menu = new \PHPFUI\Menu();

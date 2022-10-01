@@ -12,8 +12,14 @@ class FileManager
 
 	private string $fileName = '';
 
+	/**
+	 * @var array<string>
+	 */
 	private array $excludedNamespaces = [];
 
+	/**
+	 * @var array<array<string>>
+	 */
 	private array $includedNamespaces = [];
 
 	/**
@@ -110,6 +116,8 @@ class FileManager
 	/**
 	 * Sometimes you don't feel like a nut. Pass namespaces in an
 	 * array to remove them from your documentation.
+	 *
+	 * @param array<string> $namespaces
 	 */
 	public function excludeNamespaces(array $namespaces) : FileManager
 		{
@@ -150,7 +158,7 @@ class FileManager
 
 		foreach ($this->includedNamespaces as $parameters)
 			{
-			NamespaceTree::addNameSpace($parameters[0], $parameters[1], $parameters[2]);
+			NamespaceTree::addNameSpace($parameters[0], $parameters[1], (bool)$parameters[2]);
 			}
 
 		foreach ($this->excludedNamespaces as $namespace)

@@ -8,6 +8,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected \PHPFUI\InstaDoc\MarkDownParser $parsedown;
 
+	/**
+	 * @var \ReflectionClass<object> | \ReflectionEnum | \ReflectionFunction
+	 */
 	protected $reflection;
 
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller, string $fullClassPath = '')
@@ -40,6 +43,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	/**
 	 * @param \ReflectionFunction | \ReflectionMethod $method
+	 * @param array<string, string> $parameterComments comments indexed by parameter name
 	 */
 	public function getMethodParameters($method, array $parameterComments = []) : string
 		{
@@ -66,7 +70,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			 */
 			if (isset($parameterComments[$name]))
 				{
-				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
+				$tip = new \PHPFUI\ToolTip($tip, \htmlspecialchars($parameterComments[$name]));
 				$tip->addAttribute('data-allow-html');
 				}
 			$info .= $this->getColor('variable', $tip);
@@ -91,7 +95,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $info;
 		}
 
-	public function getValueString($value) : string
+	public function getValueString(mixed $value) : string
 		{
 		switch (\gettype($value))
 			{
@@ -346,7 +350,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			}
 
-		return $this->getColor('type', $class) . $array;
+		return $this->getColor('type', \htmlspecialchars($class)) . $array;
 		}
 
 	/**
@@ -382,7 +386,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $gridX;
 		}
 
-	protected function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
+	protected function getDocBlock(object $method) : ?\phpDocumentor\Reflection\DocBlock
 		{
 		$comments = $method->getDocComment();
 
@@ -464,6 +468,11 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $summary;
 		}
 
+	/**
+	 * @param array<int, \phpDocumentor\Reflection\DocBlock\Tag> $tags
+	 *
+	 * @return array<int, \phpDocumentor\Reflection\DocBlock\Tag>
+	 */
 	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
 		{
 		foreach ($tags as $index => $tag)
@@ -506,6 +515,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $tags;
 		}
 
+	/**
+	 * @return array<string, string>
+	 */
 	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
 		{
 		$comments = [];
@@ -566,7 +578,10 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $section;
 		}
 
-	protected function getAttributes($reflection) : array
+	/**
+	 * @return array<int, \ReflectionAttribute<object>>
+	 */
+	protected function getAttributes(?object $reflection) : array
 		{
 		if ($reflection && \method_exists($reflection, 'getAttributes'))
 			{
@@ -576,6 +591,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return [];
 		}
 
+	/**
+	 * @param \ReflectionAttribute<object> $attribute
+	 */
 	protected function formatAttribute(\ReflectionAttribute $attribute) : string
 		{
 		$parameters = '';

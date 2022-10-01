@@ -258,7 +258,8 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		}
 
 	/**
-	 * Return the color coded access level (public, private, protected)
+	 * @param \ReflectionProperty | \ReflectionClassConstant $constant
+	 * @return string the color coded access level (public, private, protected)
 	 */
 	protected function getAccess($constant) : string
 		{
@@ -283,7 +284,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $type;
 		}
 
-	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
+	protected function getConstant(\ReflectionClassConstant $constant, string $name, mixed $value) : string
 		{
 		/**
 		 * @todo get attributes everywhere
@@ -402,6 +403,9 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
+	/**
+	 * @param \ReflectionClassConstant | \ReflectionMethod | \ReflectionProperty $method
+	 */
 	protected function getName($method, string $name, bool $fullyQualify = false) : string
 		{
 		$parent = $this->getNameScope($method, $fullyQualify);
@@ -415,7 +419,10 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $name;
 		}
 
-	protected function getNameScope($method, bool $fullyQualify = false) : string
+	/**
+	 * @param \ReflectionProperty | \ReflectionMethod $method
+	 */
+	protected function getNameScope(mixed $method, bool $fullyQualify = false) : string
 		{
 		$parent = $method->getDeclaringClass();
 
@@ -461,6 +468,9 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
+	/**
+	 * @param \ReflectionClassConstant | \ReflectionMethod $method
+	 */
 	protected function getRowClasses($method) : string
 		{
 		$class = $this->getNameScope($method);
@@ -473,18 +483,23 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return 'self';
 		}
 
-	protected function objectCompare($lhs, $rhs) : int
+	protected function objectCompare(object $lhs, object $rhs) : int
 		{
 		return \strcasecmp($lhs->name, $rhs->name);
 		}
 
+	/**
+	 * @param array<object> $objects to sort
+	 */
 	protected function objectSort(array &$objects) : void
 		{
 		\usort($objects, [$this, 'objectCompare']);
 		}
 
 	/**
-	 * return traits for the entire inheritance tree, not just the current class
+	 * @param \ReflectionClass<object> $reflection
+	 *
+	 * @return array<string, \ReflectionClass<object>> array of traits for the entire inheritance tree, not just the current class
 	 */
 	private function getTraits(\ReflectionClass $reflection) : array
 		{

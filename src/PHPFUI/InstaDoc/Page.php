@@ -22,7 +22,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$this->addStyleSheet('highlighter/styles/PHPFUI.css');
 		}
 
-	public function addBody($item) : PageInterface
+	public function addBody(mixed $item) : PageInterface
 		{
 		$this->mainColumn->add($item);
 

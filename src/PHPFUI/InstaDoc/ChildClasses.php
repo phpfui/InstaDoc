@@ -8,7 +8,7 @@ namespace PHPFUI\InstaDoc;
 class ChildClasses
 	{
 	/**
-	 * @var array indexed by fqn of class containing array of fqn of children
+	 * @var array<string, array<string>> indexed by fqn of class containing array of fqn of children
 	 */
 	private static array $children = [];
 
@@ -47,7 +47,7 @@ class ChildClasses
 		}
 
 	/**
-	 * Return the child classes for the passed fully qualified name
+	 * @return array<string> the child classes for the passed fully qualified name
 	 */
 	public static function getChildClasses(string $fqn) : array
 		{

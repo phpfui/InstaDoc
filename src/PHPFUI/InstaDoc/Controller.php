@@ -61,6 +61,9 @@ class Controller
 		Controller::PAGE,
 	];
 
+	/**
+	 * @var array<string> $accessTabs tabs to show access in UI
+	 */
 	private array $accessTabs = ['Public', 'Protected', 'Private', 'Static'];
 
 	private \PHPFUI\InstaDoc\FileManager $fileManager;
@@ -71,6 +74,9 @@ class Controller
 
 	private string $gitRoot = '';
 
+	/**
+	 * @var array<string, bool> markdown file names
+	 */
 	private array $homePageMarkdown = [];
 
 	private string $homeUrl = '#';
@@ -79,6 +85,9 @@ class Controller
 
 	private \PHPFUI\InstaDoc\PageInterface $page;
 
+	/**
+	 * @var array<string, string>
+	 */
 	private array $parameters = [];
 
 	private string $siteTitle = 'PHPFUI/InstaDoc';
@@ -111,7 +120,7 @@ class Controller
 	/**
 	 * Display a page according to the parameters passed on the url.
 	 *
-	 * @param array $classPagesToShow limits the allowed pages to display, used for static file generation
+	 * @param array<string> $classPagesToShow limits the allowed pages to display, used for static file generation
 	 * @param ?PageInterface $page to use, default to current controller page, but pass in a new page for multiple page generations on the same controller instance
 	 */
 	public function display(array $classPagesToShow = Controller::VALID_CLASS_PAGES, ?PageInterface $page = null) : string
@@ -205,7 +214,9 @@ class Controller
 	/**
 	 * Generate static files for high volume sites.  Pass the path to the directory where you want the files to be placed, it must exist.
 	 *
-	 * @return array with generation file count and time
+	 * @param array<string> $pagesToInclude
+	 *
+	 * @return array<string, float|int<1, max>> array with generation file count and time
 	 */
 	public function generate(string $directoryPath, array $pagesToInclude = [Controller::DOC_PAGE], string $extension = '.html') : array
 		{
@@ -270,6 +281,9 @@ class Controller
 		return ['count' => $count, 'seconds' => $milliseconds];
 		}
 
+	/**
+	 * @return array<string> tabs to show access in UI
+	 */
 	public function getAccessTabs() : array
 		{
 		return $this->accessTabs;
@@ -277,6 +291,7 @@ class Controller
 
 	/**
 	 * break up a namespaced class into parts
+	 * @return array<string, string>
 	 */
 	public function getClassParts(string $namespacedClass) : array
 		{
@@ -340,6 +355,8 @@ class Controller
 
 	/**
 	 * Get unique home page markdown files
+	 *
+	 * @return array<string> markdown file names
 	 */
 	public function getHomePageMarkdown() : array
 		{
@@ -447,6 +464,8 @@ class Controller
 
 	/**
 	 * Get all parameters
+	 *
+	 * @return array<string, string>
 	 */
 	public function getParameters() : array
 		{
@@ -482,9 +501,9 @@ class Controller
 		return $html2Text->getText();
 		}
 
-/**
- * Get a section for display. Override to change layout
- */
+	/**
+	 * Get a section for display. Override to change layout
+	 */
 	public function getSection(string $sectionName) : Section
 		{
 		if (! \in_array($sectionName, Controller::SECTIONS))
@@ -499,6 +518,8 @@ class Controller
 
 	/**
 	 * Get a url given parameters.  Remove invalid parameters.
+	 *
+	 * @param array<string, string> $parameters
 	 */
 	public function getUrl(array $parameters) : string
 		{
@@ -538,6 +559,9 @@ class Controller
 		return $url;
 		}
 
+	/**
+	 * @param array<string> $tabs tabs to show access in UI
+	 */
 	public function setAccessTabs(array $tabs) : Controller
 		{
 		$this->accessTabs = $tabs;
@@ -607,6 +631,8 @@ class Controller
 
 	/**
 	 * Set the valid parameters from an array
+	 *
+	 * @param array<string, string> $parameters key value pairs
 	 */
 	public function setParameters(array $parameters) : Controller
 		{

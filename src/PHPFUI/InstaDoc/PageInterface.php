@@ -8,7 +8,7 @@ interface PageInterface extends \PHPFUI\Interfaces\Page
 
 	public function __toString() : string;
 
-	public function addBody($item) : PageInterface;
+	public function addBody(mixed $item) : PageInterface;
 
 	public function create(\PHPFUI\Menu $menu) : void;
 
