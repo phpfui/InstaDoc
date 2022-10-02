@@ -32,7 +32,7 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$end = \strpos($file, '(', $index);
 			$name = \trim(\substr($file, $index, $end - $index));
 
-			if (false === \strpos($name, ' '))
+			if (! \str_contains($name, ' '))
 				{
 				$functions[] = \trim(\substr($file, $index, $end - $index));
 				}

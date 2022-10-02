@@ -23,15 +23,15 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			try
 				{
-				/** @phpstan-ignore-next-line */
+				// @phpstan-ignore-next-line
 				$this->reflection->isInstantiable();
 				}
-			catch (\Throwable $e)
+			catch (\Throwable)
 				{
 				$this->reflection = new \ReflectionEnum($this->class);
 				}
 			}
-		catch (\Throwable $e)
+		catch (\Throwable)
 			{
 			// Try to parse as functions
 			$functionView = new \PHPFUI\InstaDoc\Section\Functions($this->controller);
@@ -258,10 +258,9 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		}
 
 	/**
-	 * @param \ReflectionProperty | \ReflectionClassConstant $constant
 	 * @return string the color coded access level (public, private, protected)
 	 */
-	protected function getAccess($constant) : string
+	protected function getAccess(\ReflectionProperty|\ReflectionClassConstant $constant) : string
 		{
 		if ($constant->isPrivate())
 			{
@@ -403,10 +402,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
-	/**
-	 * @param \ReflectionClassConstant | \ReflectionMethod | \ReflectionProperty $method
-	 */
-	protected function getName($method, string $name, bool $fullyQualify = false) : string
+	protected function getName(\ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty $method, string $name, bool $fullyQualify = false) : string
 		{
 		$parent = $this->getNameScope($method, $fullyQualify);
 
@@ -419,10 +415,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $name;
 		}
 
-	/**
-	 * @param \ReflectionProperty | \ReflectionMethod $method
-	 */
-	protected function getNameScope(mixed $method, bool $fullyQualify = false) : string
+	protected function getNameScope(\ReflectionProperty|\ReflectionMethod|\ReflectionClassConstant $method, bool $fullyQualify = false) : string
 		{
 		$parent = $method->getDeclaringClass();
 
@@ -448,7 +441,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($type)
 			{
-			/** @phpstan-ignore-next-line */
+			// @phpstan-ignore-next-line
 			$info .= $this->getColor('type', $this->getClassName($type->getName())) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
@@ -468,10 +461,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
-	/**
-	 * @param \ReflectionClassConstant | \ReflectionMethod $method
-	 */
-	protected function getRowClasses($method) : string
+	protected function getRowClasses(\ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty $method) : string
 		{
 		$class = $this->getNameScope($method);
 

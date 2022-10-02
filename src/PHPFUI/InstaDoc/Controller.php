@@ -66,8 +66,6 @@ class Controller
 	 */
 	private array $accessTabs = ['Public', 'Protected', 'Private', 'Static'];
 
-	private \PHPFUI\InstaDoc\FileManager $fileManager;
-
 	private string $generating = '';
 
 	private string $gitFileOffset = '';
@@ -92,9 +90,8 @@ class Controller
 
 	private string $siteTitle = 'PHPFUI/InstaDoc';
 
-	public function __construct(\PHPFUI\InstaDoc\FileManager $fileManager)
+	public function __construct(private \PHPFUI\InstaDoc\FileManager $fileManager)
 		{
-		$this->fileManager = $fileManager;
 		$this->gitRoot = $fileManager->getComposerPath();
 		$this->page = $this->getPage();
 		$this->setParameters($this->page->getQueryParameters());
@@ -481,7 +478,7 @@ class Controller
 			{
 			$reflection = new \ReflectionClass($className);
 			}
-		catch (\Exception $e)
+		catch (\Exception)
 			{
 			return '';
 			}

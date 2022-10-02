@@ -13,7 +13,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		$offset = $this->controller->getGitFileOffset();
 
-		if ($offset && 0 === \strpos($fullClassPath, $offset))
+		if ($offset && \str_starts_with($fullClassPath, $offset))
 			{
 			$fullClassPath = \substr($fullClassPath, \strlen($offset));
 			}
@@ -98,7 +98,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 	private function getReveal(\PHPFUI\InstaDoc\PageInterface $page, \PHPFUI\HTML5Element $opener, string $url) : \PHPFUI\Reveal
 		{
-		/** @phpstan-ignore-next-line */
+		// @phpstan-ignore-next-line
 		$reveal = new \PHPFUI\Reveal($page, $opener);
 		$reveal->addClass('large');
 		$div = new \PHPFUI\HTML5Element('div');

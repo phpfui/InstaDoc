@@ -11,7 +11,7 @@
  */
 class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 	{
-	private $sections = [];
+	private array $sections = [];
 
 	private $fileManager;
 

@@ -32,7 +32,7 @@ class FileManager
 	public function __construct(string $composerJsonPath = '')
 		{
 		$this->setComposerPath($composerJsonPath);
-		$class = __CLASS__;
+		$class = self::class;
 		$this->fileName = \substr($class, \strrpos($class, '\\') + 1);
 		}
 
@@ -236,7 +236,7 @@ class FileManager
 
 		$composerJsonPath = $this->composerJsonPath . 'composer.lock';
 		$composerJsonPath = \str_replace('//', '/', $composerJsonPath);
-		$json = \json_decode(@\file_get_contents($composerJsonPath), true);
+		$json = \json_decode(@\file_get_contents($composerJsonPath), true, 512);
 
 		if (! $json)
 			{

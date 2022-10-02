@@ -4,18 +4,15 @@ namespace PHPFUI\InstaDoc;
 
 class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 	{
-	private \PHPFUI\InstaDoc\Controller $controller;
-
 	private string $generating = '';
 
 	private string $homeUrl = '#';
 
 	private \PHPFUI\Cell $mainColumn;
 
-	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
+	public function __construct(private \PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct();
-		$this->controller = $controller;
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
 		$this->addStyleSheet('css/markdown.css');

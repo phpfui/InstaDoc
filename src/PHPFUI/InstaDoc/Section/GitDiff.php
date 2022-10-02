@@ -16,7 +16,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			{
 			$commit = $repo->getCommit($sha1);
 			}
-		catch (\Exception $e)
+		catch (\Exception)
 			{
 			$container->add('Commit not found');
 

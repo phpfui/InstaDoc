@@ -27,25 +27,24 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				try
 					{
-					/** @phpstan-ignore-next-line */
+					// @phpstan-ignore-next-line
 					$this->reflection->isInstantiable();
 					}
-				catch (\Throwable $e)
+				catch (\Throwable)
 					{
 					$this->reflection = new \ReflectionEnum($fullClassPath);
 					}
 				}
-			catch (\Throwable $e)
+			catch (\Throwable)
 				{
 				}
 			}
 		}
 
 	/**
-	 * @param \ReflectionFunction | \ReflectionMethod $method
 	 * @param array<string, string> $parameterComments comments indexed by parameter name
 	 */
-	public function getMethodParameters($method, array $parameterComments = []) : string
+	public function getMethodParameters(\ReflectionFunction|\ReflectionMethod $method, array $parameterComments = []) : string
 		{
 		$info = $comma = '';
 
@@ -84,7 +83,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					if (\is_object($value))
 						{
-						$value = \get_class($value);
+						$value = $value::class;
 						}
 					$extra = $parameter->getDefaultValueConstantName();
 					$info .= \str_replace($value, '', $extra);
@@ -128,7 +127,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			case 'object':
-				$class = \get_class($value);
+				$class = $value::class;
 
 				if ('ReflectionNamedType' == $class)
 					{
@@ -252,7 +251,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				if (\method_exists($tag, 'getAuthorName'))
 					{
-					/** @phpstan-ignore-next-line */
+					// @phpstan-ignore-next-line
 					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
 					}
 
@@ -329,7 +328,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					$class = \substr($class, 1);
 					}
 
-				if (false !== \strpos($class, '[]'))
+				if (\str_contains($class, '[]'))
 					{
 					$array = '[]';
 					$class = \str_replace($array, '', $class);
@@ -402,7 +401,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			{
 			$docBlock = $this->factory->create($comments);
 			}
-		catch (\Exception $e)
+		catch (\Exception)
 			{
 			$docBlock = null;
 			}
@@ -444,7 +443,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						{
 						$method = $parent->getMethod($reflectionMethod->name);
 						}
-					catch (\Throwable $e)
+					catch (\Throwable)
 						{
 						$method = null;
 						}
@@ -488,7 +487,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						{
 						$method = $parent->getMethod($reflectionMethod->name);
 						}
-					catch (\Throwable $e)
+					catch (\Throwable)
 						{
 						$method = null;
 						}
@@ -534,7 +533,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			if ('param' == $name && $description)
 				{
-				/** @phpstan-ignore-next-line */
+				// @phpstan-ignore-next-line
 				$var = $tag->getVariableName();
 				$comments[$var] = $this->parsedown->html($description);
 				}
@@ -543,10 +542,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $comments;
 		}
 
-	/**
-	 * @param \ReflectionFunction | \ReflectionMethod $method
-	 */
-	protected function getMethodParametersBlock($method) : string
+	protected function getMethodParametersBlock(\ReflectionFunction|\ReflectionMethod $method) : string
 		{
 		$docBlock = $this->getDocBlock($method);
 		$parameterComments = $this->getParameterComments($docBlock);

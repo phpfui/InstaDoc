@@ -81,7 +81,7 @@ class NamespaceTree
 			$filename = $fileinfo->getFilename();
 			$filenameLength = \strlen($filename);
 
-			if ($fileinfo->isDir() && false === \strpos($filename, '.'))
+			if ($fileinfo->isDir() && ! \str_contains($filename, '.'))
 				{
 				self::addNamespace($namespace . '\\' . $filename, $directory . '/' . $filename, $localGit);
 				}
