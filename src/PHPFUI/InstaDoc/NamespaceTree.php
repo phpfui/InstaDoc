@@ -74,7 +74,14 @@ class NamespaceTree
 		$node = self::findNamespace($namespace);
 		$node->localGit = $localGit;
 
-		$iterator = new \DirectoryIterator($directory);
+		try
+			{
+			$iterator = new \DirectoryIterator($directory);
+			}
+		catch (\Throwable $e)
+			{
+			$iterator = [];
+			}
 
 		foreach ($iterator as $fileinfo)
 			{
