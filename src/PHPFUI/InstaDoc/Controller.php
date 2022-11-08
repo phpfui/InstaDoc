@@ -487,9 +487,8 @@ class Controller
 		$method = $reflection->getMethod($methodName);
 		$section = new \PHPFUI\InstaDoc\Section\CodeCommon($this, $className);
 		$parameters = $section->getMethodParameters($method);
-		$html2Text = new \Html2Text\Html2Text($parameters, ['do_links' => 'none']);
 
-		return $html2Text->getText();
+		return \Soundasleep\Html2Text::convert($parameters, ['drop_links' => true, 'ignore_errors' => true]);
 		}
 
 	/**
