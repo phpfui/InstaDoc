@@ -23,7 +23,7 @@ class MarkDownParser
 
 	public function html(string $markdown) : string
 		{
-		return $this->parser->parseParagraph($markdown);
+		return $this->parser->parseParagraph(\str_replace(['<p>', '</p>'], '', $markdown));
 		}
 
 	public function text(string $markdown) : string
