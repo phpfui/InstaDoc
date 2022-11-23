@@ -5,7 +5,7 @@ namespace PHPFUI\InstaDoc\Tests;
 /**
  * A test class with no functionality.
  *
- * It is just to test InstaDoc
+ * <b>It is just to test InstaDoc</b>
  *
  * @author bruce (11/27/2021)
  */

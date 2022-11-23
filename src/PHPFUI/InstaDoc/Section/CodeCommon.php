@@ -189,7 +189,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	/**
 	 * Format comments without indentation
 	 * @template T of \ReflectionClass
-	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
 	 */
 	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock, \ReflectionMethod | \ReflectionClass | null $reflection = null) : string
 		{
@@ -285,7 +285,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						$body .= $this->getColor('variable', '$' . $varname) . ' ';
 						}
 					}
-				$body .= $this->parsedown->html($description);
+				$body .= $this->parsedown->html(\str_replace(['<', '>'], ['&lt;', '&gt;'], $description));
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
@@ -420,7 +420,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	/**
 	 * @template T of \ReflectionClass
-	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
 	 */
 	protected function getInheritedText(\phpDocumentor\Reflection\DocBlock $docBlock, \ReflectionMethod | \ReflectionClass | null $reflection = null, string $textType = 'getDescription') : string
 		{
@@ -494,7 +494,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	/**
 	 * @param array<int, \phpDocumentor\Reflection\DocBlock\Tag> $tags
 	 * @template T of \ReflectionClass
-	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
 	 *
 	 * @return array<int, \phpDocumentor\Reflection\DocBlock\Tag>
 	 */
@@ -646,36 +646,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			}
 
 		$targeting = '';
-		/*
-
-		Not sure how useful this is, so commenting out for now.
-
-		$target = $attribute->getTarget();
-		$targets = [];
-		$definedTargets = [
-			"CLASS" => \Attribute::TARGET_CLASS,
-			"FUNCTION" => \Attribute::TARGET_FUNCTION,
-			"METHOD" => \Attribute::TARGET_METHOD,
-			"PROPERTY" => \Attribute::TARGET_PROPERTY,
-			"CLASS_CONSTANT" => \Attribute::TARGET_CLASS_CONSTANT,
-			"PARAMETER" => \Attribute::TARGET_PARAMETER,
-			];
-		foreach ($definedTargets as $name => $value)
-			{
-			if ($target & $value)
-				{
-				$targets[] = '\\Attribute::TARGET_' . $name;
-				}
-			}
-		if ($attribute->isRepeated())
-			{
-			$targets[] = '\\Attribute::IS_REPEATABLE';
-			}
-		if ($targets)
-			{
-			$targeting = ' ' . implode(' | ', $targets);
-			}
-		 */
 
 		return $this->getClassName($attribute->getName()) . $parameters . $targeting;
 		}
