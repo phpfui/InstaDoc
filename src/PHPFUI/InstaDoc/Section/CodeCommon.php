@@ -188,8 +188,10 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	/**
 	 * Format comments without indentation
+	 * @template T of \ReflectionClass
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection
 	 */
-	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
+	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock, \ReflectionMethod | \ReflectionClass | null $reflection = null) : string
 		{
 		if (! $docBlock)
 			{
@@ -197,9 +199,8 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			}
 
 		$container = new \PHPFUI\Container();
-
-		$container->add($this->parsedown->text($this->getInheritedText($docBlock, $reflectionMethod, 'getSummary')));
-		$desc = $this->getInheritedText($docBlock, $reflectionMethod, 'getDescription');
+		$container->add($this->parsedown->text($this->getInheritedText($docBlock, $reflection, 'getSummary')));
+		$desc = $this->getInheritedText($docBlock, $reflection);
 
 		if ($desc)
 			{
@@ -211,9 +212,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		$tags = $docBlock->getTags();
 		// if we are in a method, inheritdoc makes sense, and we should get the correct doc block comments
-		if ($reflectionMethod)
+		if ($reflection instanceof \ReflectionMethod)
 			{
-			$tags = $this->getInheritedDocBlock($tags, $reflectionMethod);
+			$tags = $this->getInheritedDocBlock($tags, $reflection);
 			}
 
 		if ($tags)
@@ -288,7 +289,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
-			$attributes = $this->getAttributes($reflectionMethod);
+			$attributes = $this->getAttributes($reflection);
 
 			foreach ($attributes as $attribute)
 				{
@@ -367,7 +368,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	/**
 	 * Get comments indented
 	 */
-	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
+	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflection = null) : string
 		{
 		if (! $docBlock)
 			{
@@ -379,7 +380,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$cell1->add('&nbsp;');
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
-		$cell11->add($this->formatComments($docBlock, $reflectionMethod));
+		$cell11->add($this->formatComments($docBlock, $reflection));
 		$gridX->add($cell11);
 
 		return $gridX;
@@ -417,11 +418,15 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return \str_replace('\\', '-', $class);
 		}
 
-	protected function getInheritedText(\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null, string $textType = 'getDescription') : string
+	/**
+	 * @template T of \ReflectionClass
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection
+	 */
+	protected function getInheritedText(\phpDocumentor\Reflection\DocBlock $docBlock, \ReflectionMethod | \ReflectionClass | null $reflection = null, string $textType = 'getDescription') : string
 		{
 		$summary = $docBlock->{$textType}();
 
-		if (! $reflectionMethod)
+		if (! $reflection || 'getSummary' == $textType)
 			{
 			return $summary;
 			}
@@ -430,35 +435,54 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		foreach ($tags as $index => $tag)
 			{
-			$pos = \stripos($tag->getName(), 'inheritdoc');
-
-			if (false !== $pos && 0 <= $pos)
+			if (false !== \stripos($tag->getName(), 'inheritdoc'))
 				{
-				$reflectionClass = $reflectionMethod->getDeclaringClass();
-				$parent = $reflectionClass->getParentClass();
-
-				while ($parent)
+				if ($reflection instanceof \ReflectionMethod)
 					{
-					try
-						{
-						$method = $parent->getMethod($reflectionMethod->name);
-						}
-					catch (\Throwable)
-						{
-						$method = null;
-						}
+					$reflectionClass = $reflection->getDeclaringClass();
+					$parent = $reflectionClass->getParentClass();
 
-					if ($method)
+					while ($parent)
 						{
-						$docBlock = $this->getDocBlock($method);
-
-						if ($docBlock)
+						try
 							{
-							return $this->getInheritedText($docBlock, $method, $textType) . $summary;
+							$method = $parent->getMethod($reflection->name);
 							}
+						catch (\Throwable)
+							{
+							$method = null;
+							}
+
+						if ($method)
+							{
+							$docBlock = $this->getDocBlock($method);
+
+							if ($docBlock)
+								{
+								return $this->getInheritedText($docBlock, $method) . $summary;
+								}
+							}
+						$parent = $parent->getParentClass();
 						}
-					$parent = $parent->getParentClass();
+
+					break;
 					}
+
+
+					$parent = $reflection->getParentClass();
+
+					while ($parent)
+						{
+						$comments = $parent->getDocComment();
+
+						if ($comments)
+							{
+							$comments = \str_replace('{@inheritdoc}', '@inheritdoc', $comments);
+							$docblock = $this->factory->create($comments);
+							$summary = $this->formatComments($docblock, $parent) . $summary;
+							}
+						$parent = $parent->getParentClass();
+						}
 
 				break;
 				}
@@ -469,23 +493,25 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	/**
 	 * @param array<int, \phpDocumentor\Reflection\DocBlock\Tag> $tags
+	 * @template T of \ReflectionClass
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection
 	 *
 	 * @return array<int, \phpDocumentor\Reflection\DocBlock\Tag>
 	 */
-	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
+	protected function getInheritedDocBlock(array $tags, \ReflectionMethod | \ReflectionClass | null $reflection) : array
 		{
 		foreach ($tags as $index => $tag)
 			{
-			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
+			if (false !== \stripos($tag->getName(), 'inheritdoc'))
 				{
-				$reflectionClass = $reflectionMethod->getDeclaringClass();
+				$reflectionClass = ($reflection instanceof \ReflectionMethod) ? $reflection->getDeclaringClass() : $reflection;
 				$parent = $reflectionClass->getParentClass();
 
 				while ($parent)
 					{
 					try
 						{
-						$method = $parent->getMethod($reflectionMethod->name);
+						$method = $parent->getMethod($reflection->name);
 						}
 					catch (\Throwable)
 						{

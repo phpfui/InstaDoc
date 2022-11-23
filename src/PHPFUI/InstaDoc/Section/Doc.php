@@ -47,7 +47,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$docblock = $this->factory->create($comments);
 			$callout = new \PHPFUI\Callout('secondary');
-			$callout->add($this->formatComments($docblock));
+			$callout->add($this->formatComments($docblock, $this->reflection));
 			$container->add($callout);
 			}
 

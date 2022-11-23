@@ -167,6 +167,7 @@ class Controller
 			$callout->addClass('small');
 			$parameters = $this->getConstructorParameters($fullClassName);
 			$parameters = \str_replace("\n", '', $parameters);
+			// @phpstan-ignore-next-line hack for now
 			$page->addCopyToClipboard("new \\{$fullClassName}({$parameters});", $icon, $callout);
 			$div->add($callout);
 			$mainColumn->add($div);
