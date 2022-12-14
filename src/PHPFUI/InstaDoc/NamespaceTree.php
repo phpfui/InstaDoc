@@ -78,7 +78,7 @@ class NamespaceTree
 			{
 			$iterator = new \DirectoryIterator($directory);
 			}
-		catch (\Throwable $e)
+		catch (\Throwable)
 			{
 			$iterator = [];
 			}
