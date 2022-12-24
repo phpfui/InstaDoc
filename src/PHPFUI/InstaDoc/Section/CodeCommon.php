@@ -127,40 +127,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			case 'object':
-				$class = $value::class;
-
-				if ('ReflectionNamedType' == $class)
-					{
-					$value = ($value->allowsNull() ? '?' : '') . $this->getClassName($value->getName());
-					}
-				elseif ('ReflectionUnionType' == $class)
-					{
-					$types = $value->getTypes();
-					$value = $bar = '';
-
-					foreach ($types as $type)
-						{
-						$value .= $bar;
-						$bar = '|';
-						$value .= $this->getClassName($type->getName());
-						}
-					}
-				elseif ('ReflectionIntersectionType' == $class)
-					{
-					$types = $value->getTypes();
-					$value = $bar = '';
-
-					foreach ($types as $type)
-						{
-						$value .= $bar;
-						$bar = '&';
-						$value .= $this->getClassName($type->getName());
-						}
-					}
-				else
-					{
-					$value = $this->getClassName($class);
-					}
+				$value = $this->getClassName($value);
 
 				break;
 
@@ -302,9 +269,52 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $container;
 		}
 
-	protected function getClassName(string $class, bool $asLink = true) : string
+	protected function getClassName(string | object $class, bool $asLink = true) : string
 		{
 		$array = '';
+
+		if (! \is_string($class))
+			{
+			$className = $class::class;
+
+			if ('ReflectionNamedType' == $className)
+				{
+				return ($class->allowsNull() ? '?' : '') . $this->getClassName($class->getName());
+				}
+			elseif ('ReflectionUnionType' == $className)
+				{
+				$types = $class->getTypes();
+				$value = $bar = '';
+
+				foreach ($types as $type)
+					{
+					$value .= $bar;
+					$bar = '|';
+					$value .= $this->getClassName($type);
+					}
+
+				return $value;
+				}
+			elseif ('ReflectionIntersectionType' == $className)
+				{
+				$types = $class->getTypes();
+				$value = '(';
+				$bar = '';
+
+				foreach ($types as $type)
+					{
+					$value .= $bar;
+					$bar = '&';
+					$value .= $this->getClassName($type->getName());
+					}
+
+				return $value . ')';
+				}
+
+
+				return $this->getClassName($class::class);
+
+			}
 
 		if ($asLink && $class)
 			{

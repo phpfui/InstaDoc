@@ -35,7 +35,7 @@ class MarkDownParser
 		$div->addClass('markdown-body');
 		$html = $this->parser->parse($markdown);
 		$dom = new \voku\helper\HtmlDomParser($html);
-		$codeBlocks = $dom->find('.language-PHP');
+		$codeBlocks = $dom->find('.language-php');
 
 		foreach ($codeBlocks as $block)
 			{

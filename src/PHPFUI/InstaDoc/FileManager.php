@@ -236,7 +236,7 @@ class FileManager
 
 		$composerJsonPath = $this->composerJsonPath . 'composer.lock';
 		$composerJsonPath = \str_replace('//', '/', $composerJsonPath);
-		$json = \json_decode(@\file_get_contents($composerJsonPath), true, 512, JSON_THROW_ON_ERROR);
+		$json = \json_decode(@\file_get_contents($composerJsonPath), true, 512);
 
 		if (! $json)
 			{

@@ -99,6 +99,16 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		$this->assertNotWarningHtml("{$page}");
 		}
 
+	public function testMarkDown() : void
+		{
+		$parser = new \PHPFUI\InstaDoc\MarkDownParser();
+
+		$html = $parser->fileText(__DIR__ . '/../README.md');
+		$this->assertValidHtml("{$html}");
+		$this->assertNotWarningHtml("{$html}");
+		$this->assertStringNotContainsStringIgnoringCase('simple_html_dom__voku__html_wrapper', $html);
+		}
+
 	public function testInvalidPage() : void
 		{
 		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
@@ -110,7 +120,7 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		{
 		$runningPHPVersion = PHP_MAJOR_VERSION * 10 + PHP_MINOR_VERSION;
 
-		foreach ([81, 80, 74, 73, 72, 71] as $phpVersion)
+		foreach ([82, 81, 80, 74, 73, 72, 71] as $phpVersion)
 			{
 			if ($runningPHPVersion >= $phpVersion)
 				{

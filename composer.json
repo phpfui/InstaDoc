@@ -14,12 +14,12 @@
 		"require": {
 				"php": ">=8.0 <8.3",
 				"phpfui/phpfui": "^6.0",
-				"scrivo/highlight.php": "dev-master",
 				"phpdocumentor/reflection-docblock": "^5.0",
 				"gitonomy/gitlib": "^1.2",
 				"cebe/markdown": "^1.2",
 				"voku/simple_html_dom": "^4.7",
-				"soundasleep/html2text": "^2.0"
+				"soundasleep/html2text": "^2.0",
+				"scrivo/highlight.php": ">=v9.18"
 			},
 		"autoload": {
 				"psr-4": {"PHPFUI\\InstaDoc\\": "src/PHPFUI/InstaDoc/"}
