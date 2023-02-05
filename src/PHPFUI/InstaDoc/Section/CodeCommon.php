@@ -252,7 +252,14 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						$body .= $this->getColor('variable', '$' . $varname) . ' ';
 						}
 					}
-				$body .= $this->parsedown->html(\str_replace(['<', '>'], ['&lt;', '&gt;'], $description));
+				$parts = \explode('$', $description);
+
+				if (\count($parts) > 1)
+					{
+					$parts[0] = \str_replace(['<', '>'], ['&lt;', '&gt;'], $parts[0]);
+					$description = \implode('$', $parts);
+					}
+				$body .= $this->parsedown->html($description);
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
