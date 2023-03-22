@@ -350,7 +350,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 						}
 
 					$table->addNextRowAttribute('class', $this->getRowClasses($property));
-					$table->addRow([$this->getProperty($property)]);
+					$table->addRow([$this->getProperty($property, $this->reflection)]);
 					}
 				}
 			}
@@ -427,7 +427,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return '';
 		}
 
-	protected function getProperty(\ReflectionProperty $property) : string
+	protected function getProperty(\ReflectionProperty $property, \ReflectionClass $class) : string
 		{
 		$property->setAccessible(true);
 		$docBlock = $this->getDocBlock($property);
@@ -448,11 +448,19 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($property->isStatic())
 			{
-			$value = $property->getValue();
-
-			if ($value)
+			if ($property->hasDefaultValue())
 				{
+				$value = $property->getValue();
 				$info .= ' = ' . $this->getValueString($value);
+				}
+			}
+		else
+			{
+			$defaults = $class->getDefaultProperties();
+
+			if (\array_key_exists($property->getName(), $defaults))
+				{
+				$info .= ' = ' . $this->getValueString($defaults[$property->getName()]);
 				}
 			}
 
