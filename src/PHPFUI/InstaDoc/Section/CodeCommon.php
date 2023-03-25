@@ -284,7 +284,11 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			{
 			$className = $class::class;
 
-			if ('ReflectionNamedType' == $className)
+			if ($class instanceof \phpDocumentor\Reflection\Type)
+				{
+				return \htmlspecialchars($class);
+				}
+			elseif ('ReflectionNamedType' == $className)
 				{
 				return ($class->allowsNull() ? '?' : '') . $this->getClassName($class->getName());
 				}
@@ -318,9 +322,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				return $value . ')';
 				}
 
-
 				return $this->getClassName($class::class);
-
 			}
 
 		if ($asLink && $class)
