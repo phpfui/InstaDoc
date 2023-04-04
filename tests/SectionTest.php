@@ -44,10 +44,11 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 			}
 
 		$this->fileManager = new \PHPFUI\InstaDoc\FileManager('./');
+		$this->fileManager->excludeNamespace('cebe');
 		$this->fileManager->addNamespace('PHPFUI', './src', true);
 		$this->fileManager->rescan();
 		$this->controller = new \PHPFUI\InstaDoc\Controller($this->fileManager);
-		$this->controller->setGitFileOffset('/src');
+		$this->controller->setGitFileOffset('src');
 		}
 
 	public function testHaveSections() : void
@@ -76,6 +77,8 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 			foreach ([\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, \PHPFUI\InstaDoc\Controller::GIT_PAGE] as $type)
 				{
 				$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::PAGE, $type);
+				$parts = \explode('\\', $section);
+				$this->controller->setParameter(\PHPFUI\InstaDoc\Controller::CLASS_NAME, \array_pop($parts));
 				$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 				$this->assertValidHtml("{$page}");
 				$this->assertNotWarningHtml("{$page}");

@@ -100,7 +100,7 @@ class NamespaceTree
 				$file = \str_replace('//', '/', $file);
 				$node->classes[$class] = $file;
 				}
-			elseif (\strpos($filename, '.md') == $filenameLength - 3)
+			elseif (\str_ends_with($filename, '.md') || \str_ends_with($filename, '.MD'))
 				{
 				$node->md[$directory . '/' . $filename] = true;
 				}
