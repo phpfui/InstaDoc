@@ -11,11 +11,11 @@
  */
 class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 	{
-	private array $sections = [];
+	private $controller;
 
 	private $fileManager;
 
-	private $controller;
+	private array $sections = [];
 
 	/**
 	 * Get all sections and save for later use
@@ -51,23 +51,6 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		$this->controller->setGitFileOffset('src');
 		}
 
-	public function testHaveSections() : void
-		{
-		$this->assertNotEmpty($this->sections, 'No PHPFUI\InstaDoc\Section classes found');
-		}
-
-	public function testSectionsGenerateValidHTML() : void
-		{
-		$page = new \PHPFUI\InstaDoc\Page($this->controller);
-
-		foreach ($this->sections as $section)
-			{
-			$sectionObject = new $section($this->controller);
-			$container = $sectionObject->generate($page, $section . '.php');
-			$this->assertValidHtml("{$container}");
-			}
-		}
-
 	public function testClassesGenerateValidHTML() : void
 		{
 		foreach ($this->sections as $section)
@@ -93,6 +76,11 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 			}
 		}
 
+	public function testHaveSections() : void
+		{
+		$this->assertNotEmpty($this->sections, 'No PHPFUI\InstaDoc\Section classes found');
+		}
+
 	public function testHomePage() : void
 		{
 		// should just display home page
@@ -100,6 +88,13 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
 		$this->assertValidHtml("{$page}");
 		$this->assertNotWarningHtml("{$page}");
+		}
+
+	public function testInvalidPage() : void
+		{
+		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
+		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
+		$this->assertValidHtml("{$page}");
 		}
 
 	public function testMarkDown() : void
@@ -112,11 +107,16 @@ class SectionTest extends \PHPFUI\HTMLUnitTester\Extensions
 		$this->assertStringNotContainsStringIgnoringCase('simple_html_dom__voku__html_wrapper', $html);
 		}
 
-	public function testInvalidPage() : void
+	public function testSectionsGenerateValidHTML() : void
 		{
-		$this->controller->setParameters($this->controller->getClassParts('\\Fred\\Flintstone\\Bedrock'));
-		$page = $this->controller->display(\PHPFUI\InstaDoc\Controller::VALID_CLASS_PAGES, $this->controller->getPage());
-		$this->assertValidHtml("{$page}");
+		$page = new \PHPFUI\InstaDoc\Page($this->controller);
+
+		foreach ($this->sections as $section)
+			{
+			$sectionObject = new $section($this->controller);
+			$container = $sectionObject->generate($page, $section . '.php');
+			$this->assertValidHtml("{$container}");
+			}
 		}
 
 	public function testTestClass() : void

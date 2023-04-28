@@ -11,9 +11,9 @@ namespace PHPFUI\InstaDoc\Tests;
  */
 enum Status
 	{
+  case Archived;
+
   case Draft;
 
   case Published;
-
-  case Archived;
 	}

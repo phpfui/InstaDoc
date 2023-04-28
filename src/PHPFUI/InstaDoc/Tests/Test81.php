@@ -17,13 +17,13 @@ class Test81
 		{
 		}
 
-	public function takeAndReturnEnum(?Status $enum = null) : Status
-		{
-		return $enum;
-		}
-
 	final public function intersectionTypesFinal(\Iterator & \Countable $collection) : never
 		{
 		exit;
+		}
+
+	public function takeAndReturnEnum(?Status $enum = null) : Status
+		{
+		return $enum;
 		}
 	}

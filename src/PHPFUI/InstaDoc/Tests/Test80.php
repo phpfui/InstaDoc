@@ -27,15 +27,15 @@ class Test80
 		{
 		}
 
-	final public function public_function_returning_and_taking_array(array | bool $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner', ]) : array | bool
-		{
-		return [];
-		}
-
 	#[\ReturnTypeWillChange]
 	public function count()
 		{
 		return 0;
+		}
+
+	final public function public_function_returning_and_taking_array(array | bool $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner', ]) : array | bool
+		{
+		return [];
 		}
 
 	/**

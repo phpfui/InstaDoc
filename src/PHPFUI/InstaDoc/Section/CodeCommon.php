@@ -154,6 +154,43 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		}
 
 	/**
+	 * @param \ReflectionAttribute<object> $attribute
+	 */
+	protected function formatAttribute(\ReflectionAttribute $attribute) : string
+		{
+		$parameters = '';
+		$arguments = $attribute->getArguments();
+
+		if ($arguments)
+			{
+			$parameters = ' (';
+			$comma = '';
+
+			foreach ($arguments as $name => $argument)
+				{
+				$name = \is_int($name) ? '' : $this->getAttributeName($name) . ': ';
+
+				if (\is_string($argument))
+					{
+					$link = $this->getAttributeName($argument, true);
+					}
+				else
+					{
+					$link = $this->getValueString($argument);
+					}
+				$parameters .= "{$comma} {$name}{$link}";
+
+				$comma = ', ';
+				}
+			$parameters .= ')';
+			}
+
+		$targeting = '';
+
+		return $this->getClassName($attribute->getName()) . $parameters . $targeting;
+		}
+
+	/**
 	 * Format comments without indentation
 	 * @template T of \ReflectionClass
 	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
@@ -274,6 +311,19 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			}
 
 		return $container;
+		}
+
+	/**
+	 * @return array<int, \ReflectionAttribute<object>>
+	 */
+	protected function getAttributes(?object $reflection) : array
+		{
+		if ($reflection && \method_exists($reflection, 'getAttributes'))
+			{
+			return $reflection->getAttributes();
+			}
+
+		return [];
 		}
 
 	protected function getClassName(string | object $class, bool $asLink = true) : string
@@ -438,6 +488,55 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		}
 
 	/**
+	 * @param array<int, \phpDocumentor\Reflection\DocBlock\Tag> $tags
+	 * @template T of \ReflectionClass
+	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
+	 *
+	 * @return array<int, \phpDocumentor\Reflection\DocBlock\Tag>
+	 */
+	protected function getInheritedDocBlock(array $tags, \ReflectionMethod | \ReflectionClass | null $reflection) : array
+		{
+		foreach ($tags as $index => $tag)
+			{
+			if (false !== \stripos($tag->getName(), 'inheritdoc'))
+				{
+				$reflectionClass = ($reflection instanceof \ReflectionMethod) ? $reflection->getDeclaringClass() : $reflection;
+				$parent = $reflectionClass->getParentClass();
+
+				while ($parent)
+					{
+					try
+						{
+						$method = $parent->getMethod($reflection->name);
+						}
+					catch (\Throwable)
+						{
+						$method = null;
+						}
+
+					if ($method)
+						{
+						$docBlock = $this->getDocBlock($method);
+
+						if ($docBlock)
+							{
+							// add in the new tags and check parent
+							\array_splice($tags, $index, 1, $docBlock->getTags());
+
+							return $this->getInheritedDocBlock($tags, $method);
+							}
+						}
+					$parent = $parent->getParentClass();
+					}
+
+				break;
+				}
+			}
+
+		return $tags;
+		}
+
+	/**
 	 * @template T of \ReflectionClass
 	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
 	 */
@@ -510,53 +609,20 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $summary;
 		}
 
-	/**
-	 * @param array<int, \phpDocumentor\Reflection\DocBlock\Tag> $tags
-	 * @template T of \ReflectionClass
-	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
-	 *
-	 * @return array<int, \phpDocumentor\Reflection\DocBlock\Tag>
-	 */
-	protected function getInheritedDocBlock(array $tags, \ReflectionMethod | \ReflectionClass | null $reflection) : array
+	protected function getMethodParametersBlock(\ReflectionFunction|\ReflectionMethod $method) : string
 		{
-		foreach ($tags as $index => $tag)
+		$docBlock = $this->getDocBlock($method);
+		$parameterComments = $this->getParameterComments($docBlock);
+		$info = '(' . $this->getMethodParameters($method, $parameterComments) . ')';
+
+		if ($method->hasReturnType())
 			{
-			if (false !== \stripos($tag->getName(), 'inheritdoc'))
-				{
-				$reflectionClass = ($reflection instanceof \ReflectionMethod) ? $reflection->getDeclaringClass() : $reflection;
-				$parent = $reflectionClass->getParentClass();
-
-				while ($parent)
-					{
-					try
-						{
-						$method = $parent->getMethod($reflection->name);
-						}
-					catch (\Throwable)
-						{
-						$method = null;
-						}
-
-					if ($method)
-						{
-						$docBlock = $this->getDocBlock($method);
-
-						if ($docBlock)
-							{
-							// add in the new tags and check parent
-							\array_splice($tags, $index, 1, $docBlock->getTags());
-
-							return $this->getInheritedDocBlock($tags, $method);
-							}
-						}
-					$parent = $parent->getParentClass();
-					}
-
-				break;
-				}
+			$info .= ' : ' . $this->getValueString($method->getReturnType());
 			}
 
-		return $tags;
+		$info .= $this->getComments($docBlock, $method instanceof \ReflectionMethod ? $method : null);
+
+		return $info;
 		}
 
 	/**
@@ -587,22 +653,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $comments;
 		}
 
-	protected function getMethodParametersBlock(\ReflectionFunction|\ReflectionMethod $method) : string
-		{
-		$docBlock = $this->getDocBlock($method);
-		$parameterComments = $this->getParameterComments($docBlock);
-		$info = '(' . $this->getMethodParameters($method, $parameterComments) . ')';
-
-		if ($method->hasReturnType())
-			{
-			$info .= ' : ' . $this->getValueString($method->getReturnType());
-			}
-
-		$info .= $this->getComments($docBlock, $method instanceof \ReflectionMethod ? $method : null);
-
-		return $info;
-		}
-
 	protected function section(string $name) : string
 		{
 		if (! $name)
@@ -617,56 +667,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$section->addClass('primary');
 
 		return $section;
-		}
-
-	/**
-	 * @return array<int, \ReflectionAttribute<object>>
-	 */
-	protected function getAttributes(?object $reflection) : array
-		{
-		if ($reflection && \method_exists($reflection, 'getAttributes'))
-			{
-			return $reflection->getAttributes();
-			}
-
-		return [];
-		}
-
-	/**
-	 * @param \ReflectionAttribute<object> $attribute
-	 */
-	protected function formatAttribute(\ReflectionAttribute $attribute) : string
-		{
-		$parameters = '';
-		$arguments = $attribute->getArguments();
-
-		if ($arguments)
-			{
-			$parameters = ' (';
-			$comma = '';
-
-			foreach ($arguments as $name => $argument)
-				{
-				$name = \is_int($name) ? '' : $this->getAttributeName($name) . ': ';
-
-				if (\is_string($argument))
-					{
-					$link = $this->getAttributeName($argument, true);
-					}
-				else
-					{
-					$link = $this->getValueString($argument);
-					}
-				$parameters .= "{$comma} {$name}{$link}";
-
-				$comma = ', ';
-				}
-			$parameters .= ')';
-			}
-
-		$targeting = '';
-
-		return $this->getClassName($attribute->getName()) . $parameters . $targeting;
 		}
 
 	private function getAttributeName(string $name, bool $asValue = false) : string

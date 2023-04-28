@@ -8,14 +8,14 @@ class FileManager
 
 	private string $configFile = '..';
 
-	private string $extension = '.serial';
-
-	private string $fileName = '';
-
 	/**
 	 * @var array<string>
 	 */
 	private array $excludedNamespaces = [];
+
+	private string $extension = '.serial';
+
+	private string $fileName = '';
 
 	/**
 	 * @var array<array<string>>
@@ -37,21 +37,6 @@ class FileManager
 		}
 
 	/**
-	 * You can add a Namespace directly.  Specify the namespace (no
-	 * leading backslash) and the directory containing the class
-	 * files. This is realitive to the current script directory.
-	 * You can also pass an option localGit flag indicating this
-	 * directory is in the project git repo.  This will allow you to
-	 * see the git history on the file.
-	 */
-	public function addNamespace(string $namespace, string $directory, bool $localGit = false) : FileManager
-		{
-		$this->includedNamespaces[] = [$namespace, $directory, $localGit];
-
-		return $this;
-		}
-
-	/**
 	 * The classes in the global namespace are handled slightly
 	 * differently, as this should be the exception rather than the
 	 * rule.
@@ -67,21 +52,16 @@ class FileManager
 		}
 
 	/**
-	 * Set file extension for saving index file
+	 * You can add a Namespace directly.  Specify the namespace (no
+	 * leading backslash) and the directory containing the class
+	 * files. This is realitive to the current script directory.
+	 * You can also pass an option localGit flag indicating this
+	 * directory is in the project git repo.  This will allow you to
+	 * see the git history on the file.
 	 */
-	public function setExtension(string $extension = '.serial') : self
+	public function addNamespace(string $namespace, string $directory, bool $localGit = false) : FileManager
 		{
-		$this->extension = $extension;
-
-		return $this;
-		}
-
-	/**
-	 * Set base file name for saving index file
-	 */
-	public function setBaseFile(string $fileName) : self
-		{
-		$this->fileName = $fileName;
+		$this->includedNamespaces[] = [$namespace, $directory, $localGit];
 
 		return $this;
 		}
@@ -177,6 +157,16 @@ class FileManager
 		return \PHPFUI\InstaDoc\NamespaceTree::save($this->getSerializedName($fileName));
 		}
 
+	/**
+	 * Set base file name for saving index file
+	 */
+	public function setBaseFile(string $fileName) : self
+		{
+		$this->fileName = $fileName;
+
+		return $this;
+		}
+
 	public function setComposerPath(string $composerJsonPath) : FileManager
 		{
 		$this->composerJsonPath = \str_replace('\\', '/', $composerJsonPath);
@@ -192,6 +182,16 @@ class FileManager
 	public function setConfigName(string $dirOrFilename) : FileManager
 		{
 		$this->configFile = $dirOrFilename;
+
+		return $this;
+		}
+
+	/**
+	 * Set file extension for saving index file
+	 */
+	public function setExtension(string $extension = '.serial') : self
+		{
+		$this->extension = $extension;
 
 		return $this;
 		}

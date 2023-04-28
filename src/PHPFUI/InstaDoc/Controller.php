@@ -314,6 +314,34 @@ class Controller
 		}
 
 	/**
+	 * Get parameters for the class and method
+	 */
+	public function getConstructorParameters(string $className) : string
+		{
+		try
+			{
+			$reflection = new \ReflectionClass($className);
+			}
+		catch (\Exception)
+			{
+			return '';
+			}
+
+		$methodName = '__construct';
+
+		if (! $reflection->hasMethod($methodName))
+			{
+			return '';
+			}
+
+		$method = $reflection->getMethod($methodName);
+		$section = new \PHPFUI\InstaDoc\Section\CodeCommon($this, $className);
+		$parameters = $section->getMethodParameters($method);
+
+		return \Soundasleep\Html2Text::convert($parameters, ['drop_links' => true, 'ignore_errors' => true]);
+		}
+
+	/**
 	 * Returns the current page for the controller that will be used to display the documentation.
 	 */
 	public function getControllerPage() : PageInterface
@@ -459,34 +487,6 @@ class Controller
 	public function getParameters() : array
 		{
 		return $this->parameters;
-		}
-
-	/**
-	 * Get parameters for the class and method
-	 */
-	public function getConstructorParameters(string $className) : string
-		{
-		try
-			{
-			$reflection = new \ReflectionClass($className);
-			}
-		catch (\Exception)
-			{
-			return '';
-			}
-
-		$methodName = '__construct';
-
-		if (! $reflection->hasMethod($methodName))
-			{
-			return '';
-			}
-
-		$method = $reflection->getMethod($methodName);
-		$section = new \PHPFUI\InstaDoc\Section\CodeCommon($this, $className);
-		$parameters = $section->getMethodParameters($method);
-
-		return \Soundasleep\Html2Text::convert($parameters, ['drop_links' => true, 'ignore_errors' => true]);
 		}
 
 	/**
