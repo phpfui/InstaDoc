@@ -17,6 +17,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 		if (\count($files))
 			{
 			$accordion = new \PHPFUI\Accordion();
+			$accordion->addAttribute('data-multi-expand', 'true');
 			$accordion->addAttribute('data-allow-all-closed', 'true');
 			$container->add(new \PHPFUI\SubHeader('Package Documentation'));
 

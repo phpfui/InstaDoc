@@ -19,6 +19,7 @@ class Home extends \PHPFUI\InstaDoc\Section
 			$container->add($parsedown->fileText($file));
 			}
 		$accordion = new \PHPFUI\Accordion();
+		$accordion->addAttribute('data-multi-expand', 'true');
 		$accordion->addAttribute('data-allow-all-closed', 'true');
 		$container->add(new \PHPFUI\SubHeader('Package Documentation'));
 
