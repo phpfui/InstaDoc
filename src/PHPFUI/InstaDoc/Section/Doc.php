@@ -441,7 +441,6 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($type)
 			{
-			// @phpstan-ignore-next-line
 			$info .= $this->getColor('type', $this->getClassName($type)) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
