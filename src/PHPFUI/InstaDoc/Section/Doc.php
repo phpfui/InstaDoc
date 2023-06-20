@@ -427,6 +427,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return '';
 		}
 
+	// @phpstan-ignore-next-line
 	protected function getProperty(\ReflectionProperty $property, \ReflectionClass $class) : string
 		{
 		$property->setAccessible(true);
