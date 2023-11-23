@@ -215,6 +215,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			}
 
 		$tags = $docBlock->getTags();
+
 		// if we are in a method, inheritdoc makes sense, and we should get the correct doc block comments
 		if ($reflection instanceof \ReflectionMethod)
 			{
@@ -230,6 +231,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				$name = $tag->getName();
 				$description = \method_exists($tag, 'getDescription') ? \trim($tag->getDescription() ?? '') : '';
 				$body = '';
+
 				// punt on useless tags
 				if (\in_array($name, ['method', 'inheritdoc']))
 					{
@@ -403,6 +405,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					$array = '[]';
 					$class = \str_replace($array, '', $class);
 					}
+
 				// if fully qualified, we are done
 				if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
 					{
