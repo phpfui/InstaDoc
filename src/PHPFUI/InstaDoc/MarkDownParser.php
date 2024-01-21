@@ -4,14 +4,11 @@ namespace PHPFUI\InstaDoc;
 
 class MarkDownParser
 	{
-	private \cebe\markdown\GithubMarkdown $parser;
+	private \League\CommonMark\GithubFlavoredMarkdownConverter $parser;
 
 	public function __construct()
 		{
-		$this->parser = new \cebe\markdown\GithubMarkdown();
-		$this->parser->html5 = true;
-		$this->parser->keepListStartNumber = true;
-		$this->parser->enableNewlines = true;
+		$this->parser = new \League\CommonMark\GithubFlavoredMarkdownConverter(['html_input' => 'strip', 'allow_unsafe_links' => false, ]);
 		}
 
 	public function fileText(string $filename) : string
@@ -23,17 +20,20 @@ class MarkDownParser
 
 	public function html(string $markdown) : string
 		{
-		return $this->parser->parseParagraph(\str_replace(['<p>', '</p>'], '', $markdown));
+		$markdown = \str_replace('<?php', '', $markdown);
+		$html = $this->parser->convert($markdown);
+
+		return \str_replace(['<p>', '</p>'], '', "{$html}");
 		}
 
 	public function text(string $markdown) : string
 		{
-		$position = 0;
+		$markdown = \str_replace('<?php', '', $markdown);
 		$hl = new \Highlight\Highlighter();
 
 		$div = new \PHPFUI\HTML5Element('div');
 		$div->addClass('markdown-body');
-		$html = $this->parser->parse($markdown);
+		$html = "{$this->parser->convert($markdown)}";
 		$dom = new \voku\helper\HtmlDomParser($html);
 		$codeBlocks = $dom->find('.language-php');
 
@@ -47,6 +47,6 @@ class MarkDownParser
 			}
 		$div->add("{$dom}");
 
-		return $div;
+		return "{$div}";
 		}
 	}
