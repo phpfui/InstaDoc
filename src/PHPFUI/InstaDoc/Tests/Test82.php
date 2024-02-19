@@ -21,24 +21,24 @@ readonly class Test82
 		{
 		}
 
-	public function takeAndReturnEnum(?Status $enum = null) : Status
-		{
-		return $enum;
-		}
-
 	final public function intersectionTypesFinal(\Iterator & \Countable $collection) : never
 		{
 		exit;
 		}
 
-	protected function alwaysTrue() : true
+	public function takeAndReturnEnum(?Status $enum = null) : Status
 		{
-		return true;
+		return $enum;
 		}
 
 	protected function alwaysNull() : null
 		{
 		return null;
+		}
+
+	protected function alwaysTrue() : true
+		{
+		return true;
 		}
 
 	private function alwaysFalse() : false
