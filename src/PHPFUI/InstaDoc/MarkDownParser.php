@@ -20,7 +20,6 @@ class MarkDownParser
 
 	public function html(string $markdown) : string
 		{
-		$markdown = \str_replace('<?php', '', $markdown);
 		$html = $this->parser->convert($markdown);
 
 		return \str_replace(['<p>', '</p>'], '', "{$html}");
@@ -43,7 +42,7 @@ class MarkDownParser
 			$highlighted = $hl->highlight('php', $child->text());
 			$block->setAttribute('class', 'hljs ' . $highlighted->language);
 			$block->parentNode()->setAttribute('class', 'hljs ' . $highlighted->language);
-			$child->plaintext = \htmlspecialchars_decode($highlighted->value);
+			$child->outertext = \htmlspecialchars_decode($highlighted->value);
 			}
 		$div->add("{$dom}");
 
