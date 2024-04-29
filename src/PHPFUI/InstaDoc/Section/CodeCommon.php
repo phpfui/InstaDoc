@@ -127,7 +127,19 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			case 'object':
-				$value = $this->getClassName($value);
+				if (\enum_exists($value::class))
+					{
+					$value = \property_exists($value, 'value') ? $value->value : '';
+
+					if ('string' == \gettype($value))
+						{
+						$value = $this->getColor('string', "'{$value}'");
+						}
+					}
+				else
+					{
+					$value = $this->getClassName($value);
+					}
 
 				break;
 
