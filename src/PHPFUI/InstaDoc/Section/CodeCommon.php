@@ -4,7 +4,7 @@ namespace PHPFUI\InstaDoc\Section;
 
 class CodeCommon extends \PHPFUI\InstaDoc\Section
 	{
-	protected \phpDocumentor\Reflection\DocBlockFactory $factory;
+	protected \phpDocumentor\Reflection\DocBlockFactoryInterface $factory;
 
 	protected \PHPFUI\InstaDoc\MarkDownParser $parsedown;
 
