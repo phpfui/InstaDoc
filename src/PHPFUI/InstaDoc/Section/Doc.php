@@ -444,7 +444,8 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			{
 			$info .= $this->getColor('keyword', 'static') . ' ';
 			}
-		$type = \method_exists($property, 'getType') ? $property->getType() : '';
+
+		$type = $property->getType();
 
 		if ($type)
 			{
