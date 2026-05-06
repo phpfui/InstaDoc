@@ -17,7 +17,7 @@ class MDTest extends \PHPFUI\HTMLUnitTester\Extensions
 
 		$parser = new \PHPFUI\InstaDoc\MarkDownParser();
 
-		$ignoreDirectories = ['devbridge', 'pcre', 'semver', 'xdebug-handler', 'guzzle', 'jquery.AreYouSure', 'phpdoc-parser', 'http-message', 'simple_html_dom', 'foundation'];
+		$ignoreDirectories = ['devbridge', 'pcre', 'semver', 'xdebug-handler', 'guzzle', 'jquery.AreYouSure', 'phpdoc-parser', 'http-message', 'simple_html_dom', 'foundation', 'git-state'];
 
 		foreach ($iterator as $file)
 			{

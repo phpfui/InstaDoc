@@ -13,13 +13,13 @@
 		],
 		"require": {
 				"php": ">=8.0 <8.6",
-				"phpfui/phpfui": "^6.0",
-				"phpdocumentor/reflection-docblock": "^5.0 || ^6.0",
 				"gitonomy/gitlib": "^1.2",
-				"voku/simple_html_dom": "^4.7",
-				"soundasleep/html2text": "^2.0",
+				"league/commonmark": "^2.4",
+				"phpdocumentor/reflection-docblock": "^5.0 || ^6.0",
+				"phpfui/phpfui": "^6.0",
 				"scrivo/highlight.php": ">=v9.18",
-				"league/commonmark": "^2.4"
+				"soundasleep/html2text": "^2.0",
+				"voku/simple_html_dom": "^5.0"
 			},
 		"autoload": {
 				"psr-4": {"PHPFUI\\InstaDoc\\": "src/PHPFUI/InstaDoc/"}

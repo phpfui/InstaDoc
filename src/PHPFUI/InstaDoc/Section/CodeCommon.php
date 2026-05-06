@@ -9,9 +9,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	protected \PHPFUI\InstaDoc\MarkDownParser $parsedown;
 
 	/**
-	 * @var \ReflectionClass<object> | \ReflectionEnum | \ReflectionFunction
+	 * @var \ReflectionClass | \ReflectionEnum | \ReflectionFunction
 	 */
-	protected $reflection;
+	protected $reflection;	// @phpstan-ignore-line
 
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller, string $fullClassPath = '')
 		{
@@ -205,9 +205,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	/**
 	 * Format comments without indentation
 	 * @template T of \ReflectionClass
-	 * @param \ReflectionMethod | \ReflectionClass<T> | null $reflection if \ReflectionClass, then grab the comments from the class header
+	 * @param \ReflectionMethod | \ReflectionClass | null $reflection if \ReflectionClass, then grab the comments from the class header
 	 */
-	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock, \ReflectionMethod | \ReflectionClass | null $reflection = null) : string
+	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock, \ReflectionMethod | \ReflectionClass | null $reflection = null) : string // @phpstan-ignore-line
 		{
 		if (! $docBlock)
 			{
