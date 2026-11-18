@@ -6,6 +6,10 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 	{
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassName) : \PHPFUI\Container
 		{
+		if (str_starts_with($fullClassName, '../'))
+			{
+			$fullClassName = str_replace('../', '', $fullClassName);
+			}
 		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
 		$container = new \PHPFUI\Container();
 
@@ -58,9 +62,9 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			$file = 0;
 			}
 		$classes = [
-			\Gitonomy\Git\Diff\FileChange::LINE_ADD => 'git-added',
-			\Gitonomy\Git\Diff\FileChange::LINE_CONTEXT => 'git-unchanged',
-			\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-removed',
+			\Gitonomy\Git\Diff\DiffLineType::Addition->value => 'git-added',
+			\Gitonomy\Git\Diff\DiffLineType::Context->value => 'git-unchanged',
+			\Gitonomy\Git\Diff\DiffLineType::Deletion->value => 'git-removed',
 		];
 
 		if ($file)
@@ -72,13 +76,11 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 				{
 				$codeBlock->add($hr);
 				$hr = '<hr>';
-
-				foreach ($change->getLines() as $line)
+				foreach ($change->getDiffLines() as $line)
 					{
-					[$type, $code] = $line;
 					$span = new \PHPFUI\HTML5Element('span');
-					$span->addClass($classes[$type]);
-					$span->add(\PHPFUI\TextHelper::htmlentities(\str_replace("\t", $tabSize, $code)));
+					$span->addClass($classes[$line->getType()->value]);
+					$span->add(\PHPFUI\TextHelper::htmlentities(\str_replace("\t", $tabSize, $line->getContent())));
 					$codeBlock->add($span . "\n");
 					}
 				}

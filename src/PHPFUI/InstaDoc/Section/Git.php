@@ -6,10 +6,14 @@ class Git extends \PHPFUI\InstaDoc\Section
 	{
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
+		if (str_starts_with($fullClassPath, '../'))
+			{
+			$fullClassPath = str_replace('../', '', $fullClassPath);
+			}
 		$container = new \PHPFUI\Container();
 
 		$gitPage = (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, '0');
-		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, '20');
+		$limit = (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, '20');
 
 		$offset = $this->controller->getGitFileOffset();
 
@@ -38,10 +42,11 @@ class Git extends \PHPFUI\InstaDoc\Section
 			return $container;
 			}
 
+		$count = 0;
 		try
 			{
-			$log = $repo->getLog([$branch], [$fullClassPath], 0, 10);
-			$count = $log->countCommits();
+			$log = $repo->getLog([$branch], [$fullClassPath], $gitPage * $limit, $limit);
+			$count = (int)$log->countCommits();
 			}
 		catch (\Exception $e)
 			{
@@ -50,22 +55,14 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 			return $container;
 			}
-
-		$count = (int)$count;
-		$limit = (int)$limit;
 		$lastPage = (int)(($count - 1) / $limit) + 1;
-
-		$log->withOffset($gitPage * $limit);
-		$log->withLimit($limit);
 
 		$table = new \PHPFUI\Table();
 		$table->setHeaders(['Title', 'Name', 'Date', 'Diff']);
 		$localTZ = new \DateTimeZone(\date_default_timezone_get());
 		$parameters = $this->controller->getParameters();
 
-		$commits = $log->getCommits();
-
-		if (! \count($commits))
+		if (! $count)
 			{
 			$container->add(new \PHPFUI\SubHeader('No commits found'));
 			}
