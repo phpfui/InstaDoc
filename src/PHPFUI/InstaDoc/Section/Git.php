@@ -41,7 +41,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		try
 			{
 			$log = $repo->getLog([$branch], [$fullClassPath], 0, 10);
-			$count = $log->count();
+			$count = $log->countCommits();
 			}
 		catch (\Exception $e)
 			{
@@ -55,8 +55,8 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$limit = (int)$limit;
 		$lastPage = (int)(($count - 1) / $limit) + 1;
 
-		$log->setOffset($gitPage * $limit);
-		$log->setLimit($limit);
+		$log->withOffset($gitPage * $limit);
+		$log->withLimit($limit);
 
 		$table = new \PHPFUI\Table();
 		$table->setHeaders(['Title', 'Name', 'Date', 'Diff']);
@@ -72,7 +72,8 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		foreach ($log->getCommits() as $commit)
 			{
-			$row['Title'] = $commit->getShortMessage();
+			$row['Title'] =  new \Symfony\Component\String\UnicodeString($commit->getSubjectMessage())
+				->truncate(50, '...', \Symfony\Component\String\TruncateMode::WordBefore);
 			$row['Name'] = \PHPFUI\Link::email($commit->getCommitterEmail(), $commit->getCommitterName(), 'Your commit ' . $commit->getHash());
 			$row['Date'] = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
 			$revealLink = new \PHPFUI\Link('#', $commit->getShortHash(), false);
