@@ -6,9 +6,9 @@ class Git extends \PHPFUI\InstaDoc\Section
 	{
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
-		if (str_starts_with($fullClassPath, '../'))
+		if (\str_starts_with($fullClassPath, '../'))
 			{
-			$fullClassPath = str_replace('../', '', $fullClassPath);
+			$fullClassPath = \str_replace('../', '', $fullClassPath);
 			}
 		$container = new \PHPFUI\Container();
 
@@ -43,6 +43,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 			}
 
 		$count = 0;
+
 		try
 			{
 			$log = $repo->getLog([$branch], [$fullClassPath], $gitPage * $limit, $limit);
@@ -69,7 +70,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 
 		foreach ($log->getCommits() as $commit)
 			{
-			$row['Title'] =  new \Symfony\Component\String\UnicodeString($commit->getSubjectMessage())
+			$row['Title'] = new \Symfony\Component\String\UnicodeString($commit->getSubjectMessage())
 				->truncate(50, '...', \Symfony\Component\String\TruncateMode::WordBefore);
 			$row['Name'] = \PHPFUI\Link::email($commit->getCommitterEmail(), $commit->getCommitterName(), 'Your commit ' . $commit->getHash());
 			$row['Date'] = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');

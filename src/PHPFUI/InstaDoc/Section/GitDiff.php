@@ -6,9 +6,9 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 	{
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $fullClassName) : \PHPFUI\Container
 		{
-		if (str_starts_with($fullClassName, '../'))
+		if (\str_starts_with($fullClassName, '../'))
 			{
-			$fullClassName = str_replace('../', '', $fullClassName);
+			$fullClassName = \str_replace('../', '', $fullClassName);
 			}
 		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
 		$container = new \PHPFUI\Container();
@@ -76,6 +76,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 				{
 				$codeBlock->add($hr);
 				$hr = '<hr>';
+
 				foreach ($change->getDiffLines() as $line)
 					{
 					$span = new \PHPFUI\HTML5Element('span');
