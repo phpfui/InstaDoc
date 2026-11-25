@@ -9,12 +9,11 @@ This security policy outlines how we handle security concerns and maintain the i
 **This is a PHP Packagist compatible repository.** It contains the following components:
 - src directory containing all source files
 - tests directory containing all PHPUnit tests
+- css customized css source
+- highlighter css for displaying hightlighted PHP code
+- scss source for generated css
 - .github directory containing all github workflows
 - .githooks directory containing local githooks
-- sss directory containing required css
-- scss directory containing examples scss code to generate css
-- highlighter directory containing PHP code to highlight PHP code
-- translations directory with English translations
 
 ## Supported Versions
 
@@ -172,6 +171,6 @@ For security questions, contact:
 
 ---
 
-**Last Updated:** 2026-11-18
+**Last Updated:** 2026-11-25
 **License:** MIT
 
