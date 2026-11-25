@@ -15,7 +15,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		{
 		$container = new \PHPFUI\Container();
 
-		$this->class = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::NAMESPACE) . '\\' . $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CLASS_NAME);
+		$this->class = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::NAME_SPACE) . '\\' . $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CLASS_NAME);
 
 		if (empty($this->class) || '\\' === $this->class)	// don't document null classes
 			{

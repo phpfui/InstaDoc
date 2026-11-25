@@ -71,7 +71,7 @@ class Section
 
 		if (\in_array(Controller::GIT_PAGE, $allowedMenus))
 			{
-			$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
+			$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAME_SPACE]);
 
 			if ($node->getGit())
 				{

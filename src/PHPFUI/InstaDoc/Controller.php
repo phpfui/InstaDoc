@@ -21,7 +21,7 @@ class Controller
 
 	public const GIT_SHA1 = 'gs';
 
-	public const NAMESPACE = 'n';
+	public const NAME_SPACE = 'n';
 
 	public const PAGE = 'p';
 
@@ -44,7 +44,7 @@ class Controller
 	];
 
 	private const VALID_PARAMETERS = [
-		Controller::NAMESPACE => '',
+		Controller::NAME_SPACE => '',
 		Controller::CLASS_NAME => '',
 		Controller::TAB_SIZE => '',
 		Controller::CSS_FILE => '',
@@ -56,7 +56,7 @@ class Controller
 
 	// valid static page parameters
 	private const VALID_STATIC_PARTS = [
-		Controller::NAMESPACE,
+		Controller::NAME_SPACE,
 		Controller::CLASS_NAME,
 		Controller::PAGE,
 	];
@@ -132,13 +132,13 @@ class Controller
 		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
 
-		if (! $this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
+		if (! $this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAME_SPACE))
 			{
-			$mainColumn->add($this->getSection('Landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
+			$mainColumn->add($this->getSection('Landing')->generate($page, $this->getParameter(Controller::NAME_SPACE)));
 			}
 		elseif ($this->getParameter(Controller::CLASS_NAME))
 			{
-			$nameSpace = $this->getParameter(Controller::NAMESPACE);
+			$nameSpace = $this->getParameter(Controller::NAME_SPACE);
 
 			if ($nameSpace)
 				{
@@ -146,7 +146,7 @@ class Controller
 				}
 
 			$fullClassName = $nameSpace . $this->getParameter(Controller::CLASS_NAME);
-			$tree = NamespaceTree::findNamespace($this->getParameter(Controller::NAMESPACE));
+			$tree = NamespaceTree::findNamespace($this->getParameter(Controller::NAME_SPACE));
 			$files = $tree->getClassFilenames();
 			$fullClassPath = $files[$fullClassName] ?? '';
 
@@ -234,7 +234,7 @@ class Controller
 		foreach (NamespaceTree::getAllClasses() as $path => $class)
 			{
 			$parameters = $this->getClassParts($class);
-			$namespaces[$parameters[Controller::NAMESPACE]] = true;
+			$namespaces[$parameters[Controller::NAME_SPACE]] = true;
 
 			foreach ($pagesToInclude as $page)
 				{
@@ -254,7 +254,7 @@ class Controller
 
 		foreach ($namespaces as $namespace => $value)
 			{
-			$parameters[Controller::NAMESPACE] = $namespace;
+			$parameters[Controller::NAME_SPACE] = $namespace;
 			// always create a new page
 			$page = $this->getPage();
 			$page->setPageName($this->siteTitle);
@@ -296,7 +296,7 @@ class Controller
 		$class = $parts[0];
 
 		$parameters = [
-			Controller::NAMESPACE => $namespace,
+			Controller::NAME_SPACE => $namespace,
 			Controller::CLASS_NAME => $class,
 		];
 
@@ -387,7 +387,7 @@ class Controller
 		{
 		$parameters = $this->getParameters();
 
-		$parameters[Controller::NAMESPACE] = $namespace;
+		$parameters[Controller::NAME_SPACE] = $namespace;
 		unset($parameters[Controller::CLASS_NAME], $parameters[Controller::PAGE]);
 
 		$url = $this->getUrl($parameters);
@@ -409,7 +409,7 @@ class Controller
 			}
 
 		NamespaceTree::setActiveClass($this->getParameter(Controller::CLASS_NAME));
-		NamespaceTree::setActiveNamespace($this->getParameter(Controller::NAMESPACE));
+		NamespaceTree::setActiveNamespace($this->getParameter(Controller::NAME_SPACE));
 		NamespaceTree::setController($this);
 
 		if (! $menu)
@@ -433,7 +433,7 @@ class Controller
 			$namespace = \substr($namespace, 1);
 			}
 
-		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE, Controller::NAMESPACE => $namespace] + $this->getParameters());
+		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE, Controller::NAME_SPACE => $namespace] + $this->getParameters());
 
 		return $url;
 		}
